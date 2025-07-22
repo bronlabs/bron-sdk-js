@@ -4,7 +4,7 @@ import BronClient from "../src/client.js";
 
 describe("BronClient", () => {
   it("should create client with API endpoints", () => {
-    const client = new BronClient("test-jwk", "workspace-123");
+    const client = new BronClient({ apiKey: "test-jwk", workspaceId: "workspace-123" });
 
     expect(client.workspaceId).toBe("workspace-123");
     expect(client.balances).toBeDefined();
