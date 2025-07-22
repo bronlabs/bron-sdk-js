@@ -9,6 +9,8 @@ import { TransactionLimitsAPI } from "./api/transactionLimits.js";
 import { TransactionsAPI } from "./api/transactions.js";
 
 export default class BronClient {
+  public workspaceId: string;
+
   public balances: BalancesAPI;
   public workspace: WorkspaceAPI;
   public addressBook: AddressBookAPI;
@@ -18,12 +20,18 @@ export default class BronClient {
   public transactionLimits: TransactionLimitsAPI;
   public transactions: TransactionsAPI;
 
-  constructor(
-    apiKeyJwk: string,
-    public workspaceId: string,
-    baseUrl = "https://api.bron.org"
-  ) {
-    const http = new HttpClient(baseUrl, apiKeyJwk);
+  constructor({
+    apiKey,
+    workspaceId,
+    baseUrl = 'https://api.bron.org'
+  }: {
+    apiKey: string;
+    workspaceId: string;
+    baseUrl?: string;
+  }) {
+    const http = new HttpClient(baseUrl, apiKey);
+    this.workspaceId = workspaceId;
+
     this.balances = new BalancesAPI(http, workspaceId);
     this.workspace = new WorkspaceAPI(http);
     this.addressBook = new AddressBookAPI(http, workspaceId);
