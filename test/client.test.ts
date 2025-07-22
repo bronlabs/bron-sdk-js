@@ -1,10 +1,11 @@
-import { describe, it, expect, vi } from "vitest";
-import BronClient from "./client.js";
+import { describe, it, expect } from "vitest";
+
+import BronClient from "../src/client.js";
 
 describe("BronClient", () => {
   it("should create client with API endpoints", () => {
     const client = new BronClient("test-jwk", "workspace-123");
-    
+
     expect(client.workspaceId).toBe("workspace-123");
     expect(client.balances).toBeDefined();
     expect(client.workspace).toBeDefined();

@@ -4,14 +4,15 @@ export interface HttpRequestOptions {
   method: string;
   path: string;
   body?: any;
-  query?: Record<string, string | string[]>;
+  query?: object;
 }
 
 export class HttpClient {
   constructor(
     private baseUrl: string,
     private apiKeyJwk: string
-  ) {}
+  ) {
+  }
 
   async request<T>({
     method,
@@ -32,11 +33,11 @@ export class HttpClient {
       }
       fullPath += `?${params.toString()}`;
     }
-    
+
     const url = `${this.baseUrl}${fullPath}`;
-    
+
     const { privateKey, kid } = parseJwkEcPrivateKey(this.apiKeyJwk);
-    
+
     const jwt = generateBronJwt({
       method,
       path: fullPath,
@@ -44,24 +45,26 @@ export class HttpClient {
       privateKey,
       body: body ? JSON.stringify(body) : ""
     });
-    
+
     const headers: Record<string, string> = {
       Authorization: `ApiKey ${jwt}`
     };
 
-    if (body) headers["Content-Type"] = "application/json";
+    if (body) {
+      headers["Content-Type"] = "application/json";
+    }
 
     const res = await fetch(url, {
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined
     });
-    
+
     if (!res.ok) {
       const errText = await res.text();
       throw new Error(`HTTP ${res.status}: ${errText}`);
     }
-    
+
     return res.json();
   }
 }

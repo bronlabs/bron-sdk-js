@@ -14,23 +14,22 @@
     "type": "git",
     "url": "https://github.com/bronlabs/bron-js-sdk.git"
   },
-  "main": "dist/index.js",
+  "main": "dist/client.js",
   "type": "module",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/client.js",
+  "types": "dist/client.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/client.js",
+      "require": "./dist/client.js",
+      "types": "./dist/client.d.ts"
     }
   },
   "scripts": {
     "build": "tsc",
     "test": "vitest",
     "lint": "eslint src --ext .ts",
-    "prepublishOnly": "npm run build && npm test",
-    "dev": "npm run build && node dist/index.js"
+    "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",

@@ -22,26 +22,6 @@ export interface TransactionExtra {
   withdrawTransactionId?: string;
 }
 
-export interface TransactionParams {
-  amount: string;
-  assetId: string;
-  feeLevel?: string;
-  includeFee?: string;
-  memo?: string;
-  networkFees?: {
-    feePerByte?: string;
-    gasLimit?: string;
-    gasPriceGwei?: string;
-    maxFeePerGas?: string;
-    maxPriorityFeePerGas?: string;
-  };
-  networkId: string;
-  symbol: string;
-  toAccountId?: string;
-  toAddress?: string;
-  toAddressBookRecordId?: string;
-}
-
 export interface Transaction {
   accountId: string;
   accountType: string;
@@ -49,7 +29,7 @@ export interface Transaction {
   createdBy: string;
   externalId: string;
   extra: TransactionExtra;
-  params: TransactionParams;
+  params?: object;
   status: string;
   terminatedAt?: string;
   transactionId: string;
@@ -84,17 +64,7 @@ export interface GetTransactionsResponse {
 
 export interface CreateTransactionRequest {
   accountId: string;
-  externalId?: string; // Now optional
-  params: TransactionParams;
+  externalId: string;
   transactionType: string;
+  params?: object;
 }
-
-export type CreateTransactionResponse = Transaction;
-
-export interface CreateMultipleTransactionsRequest {
-  transactions: CreateTransactionRequest[];
-}
-
-export interface CreateMultipleTransactionsResponse {
-  transactions: Transaction[];
-} 

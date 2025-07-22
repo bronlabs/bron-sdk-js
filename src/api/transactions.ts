@@ -1,17 +1,12 @@
-import { HttpClient } from "../utils/http.js";
-import {
-  GetTransactionsParams,
-  GetTransactionsResponse,
-  CreateTransactionRequest,
-  CreateTransactionResponse,
-  CreateMultipleTransactionsRequest,
-  CreateMultipleTransactionsResponse,
-} from "../types/transactions.js";
 import { v4 as uuidv4 } from "uuid";
+
+import { HttpClient } from "../utils/http.js";
+import { GetTransactionsParams, GetTransactionsResponse, CreateTransactionRequest, Transaction } from "../types/transactions.js";
+
 
 export class TransactionsAPI {
   private client: HttpClient;
-  private workspaceId: string;
+  private readonly workspaceId: string;
 
   constructor(client: HttpClient, workspaceId: string) {
     this.client = client;
@@ -19,48 +14,25 @@ export class TransactionsAPI {
   }
 
   async getTransactions(params?: GetTransactionsParams): Promise<GetTransactionsResponse> {
-    const query: Record<string, string> = {};
-    if (params) {
-      for (const [key, value] of Object.entries(params)) {
-        if (Array.isArray(value)) {
-          if (value.length) query[key] = value.join(",");
-        } else if (value !== undefined) {
-          query[key] = String(value);
-        }
-      }
-    }
     return this.client.request<GetTransactionsResponse>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transactions`,
-      query: Object.keys(query).length ? query : undefined,
+      query: params
     });
   }
 
-  async createTransaction(body: CreateTransactionRequest): Promise<CreateTransactionResponse> {
-    // Auto-generate externalId if not provided
-    if (!body.externalId) {
-      body.externalId = uuidv4();
-    }
-    return this.client.request<CreateTransactionResponse>({
-      method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/`,
-      body,
+  async getTransactionById(transactionId: string): Promise<Transaction> {
+    return this.client.request<Transaction>({
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}`
     });
   }
 
-  async createMultipleTransactions(
-    body: CreateMultipleTransactionsRequest
-  ): Promise<CreateMultipleTransactionsResponse> {
-    // Auto-generate externalId for any transaction missing it
-    for (const tx of body.transactions) {
-      if (!tx.externalId) {
-        tx.externalId = uuidv4();
-      }
-    }
-    return this.client.request<CreateMultipleTransactionsResponse>({
+  async createTransaction(body: CreateTransactionRequest): Promise<Transaction> {
+    return this.client.request<Transaction>({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/bulk-create`,
-      body,
+      path: `/workspaces/${this.workspaceId}/transactions`,
+      body
     });
   }
-} 
+}

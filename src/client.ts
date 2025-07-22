@@ -7,7 +7,6 @@ import { AddressesAPI } from "./api/addresses.js";
 import { HttpClient } from "./utils/http.js";
 import { TransactionLimitsAPI } from "./api/transactionLimits.js";
 import { TransactionsAPI } from "./api/transactions.js";
-import { v4 as uuidv4 } from "uuid";
 
 export default class BronClient {
   public balances: BalancesAPI;
@@ -33,60 +32,5 @@ export default class BronClient {
     this.addresses = new AddressesAPI(http, workspaceId);
     this.transactionLimits = new TransactionLimitsAPI(http, workspaceId);
     this.transactions = new TransactionsAPI(http, workspaceId);
-  }
-
-  /**
-   * Convenience method to transfer assets by address and symbol/network.
-   */
-  async transfer({
-    senderAddress,
-    receiverAddress,
-    amount,
-    symbol,
-    networkId
-  }: {
-    senderAddress: string;
-    receiverAddress: string;
-    amount: string;
-    symbol: string;
-    networkId: string;
-  }) {
-    // 1. Find sender accountId
-    const accounts = await this.accounts.getAccounts();
-    const sender = accounts.accounts.find(
-      (acc) =>
-        acc.extra &&
-        acc.extra.networkId === networkId &&
-        acc.extra.address &&
-        acc.extra.address.toLowerCase() === senderAddress.toLowerCase()
-    );
-    if (!sender) throw new Error("Sender account not found for address: " + senderAddress);
-
-    // 2. Find assetId
-    const assets = await this.assets.getAssets();
-    const asset = assets.assets.find(
-      (a) => a.networkId === networkId && a.symbolId.toUpperCase() === symbol.toUpperCase()
-    );
-    if (!asset) throw new Error(`AssetId not found for symbol ${symbol} on network ${networkId}`);
-
-    // 3. Create withdrawal transaction
-    return this.transactions.createTransaction({
-      accountId: sender.accountId,
-      externalId: uuidv4(),
-      params: {
-        amount,
-        assetId: asset.assetId,
-        networkId,
-        symbol: symbol.toUpperCase(),
-        toAddress: receiverAddress
-      },
-      transactionType: "withdrawal"
-    });
-  }
-
-  public async createMultipleTransactions(
-    body: import("./types/transactions.js").CreateMultipleTransactionsRequest
-  ) {
-    return this.transactions.createMultipleTransactions(body);
   }
 }
