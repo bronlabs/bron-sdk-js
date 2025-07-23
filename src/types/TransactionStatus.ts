@@ -1,0 +1,1 @@
+export type TransactionStatus = "new" | "waiting-confirmations" | "waiting-approval" | "approved" | "completed" | "canceled" | "signing-required" | "signing" | "signed" | "broadcasted" | "manual-resolving" | "failed-on-blockchain" | "error";

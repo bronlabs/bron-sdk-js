@@ -4,7 +4,9 @@
     "module": "NodeNext",
     "outDir": "./dist",
     "rootDir": "./src",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "allowJs": false,
     "strict": true,
     "useDefineForClassFields": false,
@@ -21,10 +23,10 @@
     "emitDecoratorMetadata": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "declaration": true,
+    "declaration": true
   },
   "include": [
-    "src/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules/**/*"

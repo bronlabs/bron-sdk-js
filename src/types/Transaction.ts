@@ -1,0 +1,15 @@
+export interface Transaction {
+  accountId: string;
+  accountType: "vault";
+  createdAt: string;
+  createdBy?: string;
+  externalId: string;
+  extra?: { approvers?: { approvedBy?: string[]; availableApprovers?: string[]; limitId?: string; number?: string; skipApproval?: boolean }; blockchainDetails?: { blockchainTxId?: string; networkId?: string }[]; confirmations?: string; depositTransactionId?: string; description?: string; externalBroadcast?: boolean; fromAccountId?: string; fromAddress?: string; memo?: string; toAccountId?: string; toAddress?: string; withdrawTransactionId?: string };
+  params?: any;
+  status: "new" | "waiting-confirmations" | "waiting-approval" | "approved" | "completed" | "canceled" | "signing-required" | "signing" | "signed" | "broadcasted" | "manual-resolving" | "failed-on-blockchain" | "error";
+  terminatedAt?: string;
+  transactionId: string;
+  transactionType: "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "swap-lifi" | "intents";
+  updatedAt?: string;
+  workspaceId: string;
+}

@@ -1,16 +1,3 @@
-export interface Balance {
-  balanceId: string;
-  accountId: string;
-  accountType: string;
-  workspaceId: string;
-  assetId: string;
-  createdAt?: string;
-  updatedAt?: string;
-  networkId?: string;
-  symbol?: string;
-  totalBalance?: string;
+export interface Balances {
+  balances: { accountId: string; accountType: "vault"; assetId: string; balanceId: string; createdAt?: string; networkId?: string; symbol?: string; totalBalance?: string; updatedAt?: string; workspaceId: string }[];
 }
-
-export interface BalancesResponse {
-  balances: Balance[];
-} 

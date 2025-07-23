@@ -29,6 +29,7 @@
     "build": "tsc",
     "test": "vitest",
     "lint": "eslint src --ext .ts",
+    "generate": "tsc src/utils/generator.ts && node dist/utils/generator.js",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
