@@ -1,5 +1,5 @@
 import { BalancesAPI } from "./api/balances.js";
-import { WorkspaceAPI } from "./api/workspace.js";
+import { WorkspacesAPI } from "./api/workspaces.js";
 import { AddressBookAPI } from "./api/addressBook.js";
 import { AssetsAPI } from "./api/assets.js";
 import { AccountsAPI } from "./api/accounts.js";
@@ -12,7 +12,7 @@ export default class BronClient {
   public workspaceId: string;
 
   public balances: BalancesAPI;
-  public workspace: WorkspaceAPI;
+  public workspaces: WorkspacesAPI;
   public addressBook: AddressBookAPI;
   public assets: AssetsAPI;
   public accounts: AccountsAPI;
@@ -33,7 +33,7 @@ export default class BronClient {
     this.workspaceId = workspaceId;
 
     this.balances = new BalancesAPI(http, workspaceId);
-    this.workspace = new WorkspaceAPI(http);
+    this.workspaces = new WorkspacesAPI(http);
     this.addressBook = new AddressBookAPI(http, workspaceId);
     this.assets = new AssetsAPI(http);
     this.accounts = new AccountsAPI(http, workspaceId);

@@ -3,7 +3,6 @@ import { Networks } from "../types/Networks.js";
 import { SymbolMarketPrices } from "../types/SymbolMarketPrices.js";
 import { Symbols } from "../types/Symbols.js";
 import { HttpClient } from "../utils/http.js";
-
 export interface AssetsParams {
   assetIds?: string[];
   networkIds?: string[];
@@ -29,34 +28,36 @@ export interface SymbolsParams {
 }
 
 export class AssetsAPI {
-  constructor(private http: HttpClient, private workspaceId: string) {}
-
-async getAssets(params?: AssetsParams): Promise<Assets> {
-  return this.http.request<Assets>({
+  constructor(private http: HttpClient, private workspaceId?: string) {}
+  async getAssets(params?: AssetsParams): Promise<Assets> {
+    return this.http.request<Assets>({
     method: "GET",
     path: `/dictionary/assets`,
     query: params
   });
-}
-async getNetworks(params?: NetworksParams): Promise<Networks> {
-  return this.http.request<Networks>({
+  }
+
+  async getNetworks(params?: NetworksParams): Promise<Networks> {
+    return this.http.request<Networks>({
     method: "GET",
     path: `/dictionary/networks`,
     query: params
   });
-}
-async getPrices(params?: PricesParams): Promise<SymbolMarketPrices> {
-  return this.http.request<SymbolMarketPrices>({
+  }
+
+  async getPrices(params?: PricesParams): Promise<SymbolMarketPrices> {
+    return this.http.request<SymbolMarketPrices>({
     method: "GET",
     path: `/dictionary/symbol-market-prices`,
     query: params
   });
-}
-async getSymbols(params?: SymbolsParams): Promise<Symbols> {
-  return this.http.request<Symbols>({
+  }
+
+  async getSymbols(params?: SymbolsParams): Promise<Symbols> {
+    return this.http.request<Symbols>({
     method: "GET",
     path: `/dictionary/symbols`,
     query: params
   });
-}
+  }
 }

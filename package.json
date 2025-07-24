@@ -29,7 +29,8 @@
     "build": "tsc",
     "test": "vitest",
     "lint": "eslint src --ext .ts",
-    "generate": "tsc src/utils/generator.ts && node dist/utils/generator.js",
+    "build:generator": "npx tsc src/utils/generator.ts --outDir dist --module NodeNext --target ES2024 --skipLibCheck",
+    "generate": "rm -rf dist && npm run build:generator && node dist/generator.js && npm run build",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
