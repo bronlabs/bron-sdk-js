@@ -1,8 +1,8 @@
-import { HttpClient } from "../utils/http.js";
-import { TransactionLimits } from "../types/transactionLimits.js";
+import { TransactionLimits } from "../types/TransactionLimits.js";
 import { TransactionLimit } from "../types/TransactionLimit.js";
+import { HttpClient } from "../utils/http.js";
 
-type GetTransactionLimitsParams = {
+export interface TransactionLimitsParams {
   statuses?: string[];
   fromAccountIds?: string[];
   toAddressBookRecordIds?: string[];
@@ -11,29 +11,27 @@ type GetTransactionLimitsParams = {
   appliesToGroupIds?: string[];
   limit?: string;
   offset?: string;
-};
+}
+
+export interface TransactionLimitByIDParams {
+  limitId: string;
+}
 
 export class TransactionLimitsAPI {
-  private client: HttpClient;
-  private workspaceId: string;
+  constructor(private http: HttpClient, private workspaceId: string) {}
 
-  constructor(client: HttpClient, workspaceId: string) {
-    this.client = client;
-    this.workspaceId = workspaceId;
-  }
-
-  async getTransactionLimits(params?: GetTransactionLimitsParams): Promise<TransactionLimits> {
-    return this.client.request<TransactionLimits>({
-      method: "GET",
-      path: `/workspaces/${this.workspaceId}/transaction-limits`,
-      query: params,
-    });
-  }
-
-  async getTransactionLimitById(limitId: string): Promise<TransactionLimit> {
-    return this.client.request<TransactionLimit>({
-      method: "GET",
-      path: `/workspaces/${this.workspaceId}/transaction-limits/${limitId}`,
-    });
-  }
-} 
+async getTransactionLimits(params?: TransactionLimitsParams): Promise<TransactionLimits> {
+  return this.http.request<TransactionLimits>({
+    method: "GET",
+    path: `/workspaces/${this.workspaceId}/transaction-limits`,
+    query: params
+  });
+}
+async getTransactionLimitByID(params: TransactionLimitByIDParams): Promise<TransactionLimit> {
+  return this.http.request<TransactionLimit>({
+    method: "GET",
+    path: `/workspaces/${this.workspaceId}/transaction-limits/  `,
+    query: params
+  });
+}
+}

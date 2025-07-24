@@ -1,54 +1,101 @@
-import { v4 as uuidv4 } from "uuid";
-
-import { HttpClient } from "../utils/http.js";
-import { Transactions } from "../types/transactions.js";
+import { Transactions } from "../types/Transactions.js";
+import { CreateTransaction } from "../types/CreateTransaction.js";
+import { CreateTransactions } from "../types/CreateTransactions.js";
 import { Transaction } from "../types/Transaction.js";
+import { CancelTransaction } from "../types/CancelTransaction.js";
+import { HttpClient } from "../utils/http.js";
 
-type GetTransactionsParams = {
-  statuses?: string[];
-  fromAccountIds?: string[];
-  toAccountIds?: string[];
+export interface TransactionsParams {
+  transactionIds?: string[];
+  transactionTypes?: string[];
+  accountTypes?: string[];
+  accountIds?: string[];
+  transactionStatuses?: string[];
+  transactionStatusNotIn?: string[];
+  blockchainTxId?: string;
+  toAccountId?: string;
+  toAddress?: string;
+  isTerminated?: boolean;
+  terminatedAtFrom?: string;
+  terminatedAtTo?: string;
+  createdAtFrom?: string;
+  createdAtTo?: string;
+  sortDirection?: string;
   limit?: string;
   offset?: string;
-};
+}
 
-type CreateTransactionRequest = {
-  fromAccountId: string;
-  toAccountId: string;
-  amount: string;
-  assetId: string;
-  memo?: string;
-};
+export interface TransactionParams {
+}
+
+export interface MultipleTransactionsParams {
+}
+
+export interface DryRunTransactionParams {
+}
+
+export interface TransactionByIDParams {
+  transactionId: string;
+}
+
+export interface CancelTransactionParams {
+  transactionId: string;
+}
+
+export interface SigningRequestParams {
+  transactionId: string;
+}
 
 export class TransactionsAPI {
-  private client: HttpClient;
-  private readonly workspaceId: string;
+  constructor(private http: HttpClient, private workspaceId: string) {}
 
-  constructor(client: HttpClient, workspaceId: string) {
-    this.client = client;
-    this.workspaceId = workspaceId;
-  }
-
-  async getTransactions(params?: GetTransactionsParams): Promise<Transactions> {
-    return this.client.request<Transactions>({
-      method: "GET",
-      path: `/workspaces/${this.workspaceId}/transactions`,
-      query: params
-    });
-  }
-
-  async getTransactionById(transactionId: string): Promise<Transaction> {
-    return this.client.request<Transaction>({
-      method: "GET",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}`
-    });
-  }
-
-  async createTransaction(body: CreateTransactionRequest): Promise<Transaction> {
-    return this.client.request<Transaction>({
-      method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions`,
-      body
-    });
-  }
+async getTransactions(params?: TransactionsParams): Promise<Transactions> {
+  return this.http.request<Transactions>({
+    method: "GET",
+    path: `/workspaces/${this.workspaceId}/transactions`,
+    query: params
+  });
+}
+async createTransaction(params: CreateTransaction) {
+  return this.http.request({
+    method: "POST",
+    path: `/workspaces/${this.workspaceId}/transactions/`,
+    body: params
+  });
+}
+async createMultipleTransactions(params: CreateTransactions) {
+  return this.http.request({
+    method: "POST",
+    path: `/workspaces/${this.workspaceId}/transactions/bulk-create`,
+    body: params
+  });
+}
+async dryRunTransaction(params: CreateTransaction): Promise<Transaction> {
+  return this.http.request<Transaction>({
+    method: "POST",
+    path: `/workspaces/${this.workspaceId}/transactions/dry-run`,
+    body: params
+  });
+}
+async getTransactionByID(params: TransactionByIDParams): Promise<Transaction> {
+  return this.http.request<Transaction>({
+    method: "GET",
+    path: `/workspaces/${this.workspaceId}/transactions/  `,
+    query: params
+  });
+}
+async cancelTransaction(params: CancelTransaction): Promise<Transaction> {
+  return this.http.request<Transaction>({
+    method: "POST",
+    path: `/workspaces/${this.workspaceId}/transactions/  /cancel`,
+    body: params
+  });
+}
+async createSigningRequest(params: SigningRequestParams): Promise<Transaction> {
+  return this.http.request<Transaction>({
+    method: "POST",
+    path: `/workspaces/${this.workspaceId}/transactions/  /create-signing-request`,
+    body: params
+  });
+}
 }

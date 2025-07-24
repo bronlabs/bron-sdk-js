@@ -1,25 +1,38 @@
-import { Balance } from "../types/Balance.js";
 import { Balances } from "../types/Balances.js";
+import { Balance } from "../types/Balance.js";
 import { HttpClient } from "../utils/http.js";
 
+export interface BalancesParams {
+  accountIds?: string[];
+  balanceIds?: string[];
+  assetIds?: string[];
+  networkId?: string;
+  accountTypes?: string[];
+  excludedAccountTypes?: string[];
+  nonEmpty?: boolean;
+  limit?: string;
+  offset?: string;
+}
+
+export interface BalanceByIDParams {
+  balanceId: string;
+}
+
 export class BalancesAPI {
-  constructor(
-    private http: HttpClient,
-    private workspaceId: string
-  ) {}
+  constructor(private http: HttpClient, private workspaceId: string) {}
 
-  async getBalances(params: { accountIds?: string[] } = {}): Promise<Balances> {
-    return this.http.request<Balances>({
-      method: "GET",
-      path: `/workspaces/${this.workspaceId}/balances`,
-      query: params.accountIds ? { accountIds: params.accountIds } : undefined
-    });
-  }
-
-  async getBalanceById(balanceId: string): Promise<Balance> {
-    return this.http.request<Balance>({
-      method: "GET",
-      path: `/workspaces/${this.workspaceId}/balances/${balanceId}`
-    });
-  }
-} 
+async getBalances(params?: BalancesParams): Promise<Balances> {
+  return this.http.request<Balances>({
+    method: "GET",
+    path: `/workspaces/${this.workspaceId}/balances`,
+    query: params
+  });
+}
+async getBalanceByID(params: BalanceByIDParams): Promise<Balance> {
+  return this.http.request<Balance>({
+    method: "GET",
+    path: `/workspaces/${this.workspaceId}/balances/  `,
+    query: params
+  });
+}
+}
