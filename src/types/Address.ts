@@ -9,7 +9,7 @@ export interface Address {
   createdBy: string;
   externalId: string;
   memo?: string;
-  metadata?: { [key: string]: any };
+  metadata?: Record<string, any>;
   networkId: string;
   requiresAssetsActivation: boolean;
   status: "new" | "pending" | "approval-pending" | "enabled" | "disabled" | "error" | "account-archived";

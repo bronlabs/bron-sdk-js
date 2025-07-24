@@ -1,5 +1,17 @@
 import { HttpClient } from "../utils/http.js";
-import { GetDepositAddressesParams, GetDepositAddressesResponse } from "../types/addresses.js";
+import { Addresses } from "../types/addresses.js";
+
+type GetDepositAddressesParams = {
+  addressIds?: string[];
+  externalId?: string;
+  accountTypes?: string[];
+  networkId?: string;
+  address?: string;
+  statuses?: string[];
+  sortDirection?: "ASC" | "DESC";
+  limit?: string;
+  offset?: string;
+};
 
 export class AddressesAPI {
   private client: HttpClient;
@@ -10,22 +22,11 @@ export class AddressesAPI {
     this.workspaceId = workspaceId;
   }
 
-  async getDepositAddresses(params?: GetDepositAddressesParams): Promise<GetDepositAddressesResponse> {
-    // Convert params to query object (arrays as comma-separated strings)
-    const query: Record<string, string> = {};
-    if (params) {
-      for (const [key, value] of Object.entries(params)) {
-        if (Array.isArray(value)) {
-          if (value.length) query[key] = value.join(",");
-        } else if (value !== undefined) {
-          query[key] = String(value);
-        }
-      }
-    }
-    return this.client.request<GetDepositAddressesResponse>({
+  async getDepositAddresses(params?: GetDepositAddressesParams): Promise<Addresses> {
+    return this.client.request<Addresses>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/addresses`,
-      query: Object.keys(query).length ? query : undefined,
+      query: params
     });
   }
 }  

@@ -1,4 +1,5 @@
-import { BalancesResponse, Balance } from "../types/balances.js";
+import { Balance } from "../types/Balance.js";
+import { Balances } from "../types/Balances.js";
 import { HttpClient } from "../utils/http.js";
 
 export class BalancesAPI {
@@ -7,8 +8,8 @@ export class BalancesAPI {
     private workspaceId: string
   ) {}
 
-  async getBalances(params: { accountIds?: string[] } = {}): Promise<BalancesResponse> {
-    return this.http.request<BalancesResponse>({
+  async getBalances(params: { accountIds?: string[] } = {}): Promise<Balances> {
+    return this.http.request<Balances>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/balances`,
       query: params.accountIds ? { accountIds: params.accountIds } : undefined

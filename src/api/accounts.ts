@@ -1,4 +1,5 @@
-import { AccountsResponse, Account } from "../types/accounts.js";
+import { Account } from "../types/Account.js";
+import { Accounts } from "../types/accounts.js";
 import { HttpClient } from "../utils/http.js";
 
 export interface GetAccountsParams {
@@ -25,8 +26,8 @@ function toQuery(params: Record<string, any>): Record<string, string | string[]>
 export class AccountsAPI {
   constructor(private http: HttpClient, private workspaceId: string) {}
 
-  async getAccounts(params: GetAccountsParams = {}): Promise<AccountsResponse> {
-    return this.http.request<AccountsResponse>({
+  async getAccounts(params: GetAccountsParams = {}): Promise<Accounts> {
+    return this.http.request<Accounts>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/accounts`,
       query: toQuery(params)

@@ -1,4 +1,5 @@
-import { AddressBookRecordsResponse, AddressBookRecord } from "../types/addressBook.js";
+import { AddressBookRecord } from "../types/AddressBookRecord.js";
+import { AddressBookRecords } from "../types/AddressBookRecords.js";
 import { HttpClient } from "../utils/http.js";
 
 export interface GetAddressBookRecordsParams {
@@ -36,8 +37,8 @@ export class AddressBookAPI {
     private workspaceId: string
   ) {}
 
-  async getRecords(params: GetAddressBookRecordsParams = {}): Promise<AddressBookRecordsResponse> {
-    return this.http.request<AddressBookRecordsResponse>({
+  async getRecords(params: GetAddressBookRecordsParams = {}): Promise<AddressBookRecords> {
+    return this.http.request<AddressBookRecords>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/address-book-records`,
       query: toQuery(params)

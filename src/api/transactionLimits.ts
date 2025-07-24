@@ -1,9 +1,17 @@
 import { HttpClient } from "../utils/http.js";
-import {
-  GetTransactionLimitsParams,
-  GetTransactionLimitsResponse,
-  TransactionLimit,
-} from "../types/transactionLimits.js";
+import { TransactionLimits } from "../types/transactionLimits.js";
+import { TransactionLimit } from "../types/TransactionLimit.js";
+
+type GetTransactionLimitsParams = {
+  statuses?: string[];
+  fromAccountIds?: string[];
+  toAddressBookRecordIds?: string[];
+  toAccountIds?: string[];
+  appliesToUserIds?: string[];
+  appliesToGroupIds?: string[];
+  limit?: string;
+  offset?: string;
+};
 
 export class TransactionLimitsAPI {
   private client: HttpClient;
@@ -14,21 +22,11 @@ export class TransactionLimitsAPI {
     this.workspaceId = workspaceId;
   }
 
-  async getTransactionLimits(params?: GetTransactionLimitsParams): Promise<GetTransactionLimitsResponse> {
-    const query: Record<string, string> = {};
-    if (params) {
-      for (const [key, value] of Object.entries(params)) {
-        if (Array.isArray(value)) {
-          if (value.length) query[key] = value.join(",");
-        } else if (value !== undefined) {
-          query[key] = String(value);
-        }
-      }
-    }
-    return this.client.request<GetTransactionLimitsResponse>({
+  async getTransactionLimits(params?: GetTransactionLimitsParams): Promise<TransactionLimits> {
+    return this.client.request<TransactionLimits>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transaction-limits`,
-      query: Object.keys(query).length ? query : undefined,
+      query: params,
     });
   }
 

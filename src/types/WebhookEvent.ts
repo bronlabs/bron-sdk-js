@@ -1,6 +1,6 @@
 export interface WebhookEvent {
   event: string;
   eventId: string;
-  payload: { [key: string]: any };
+  payload: Record<string, any>;
   subscriptionId: string;
 }
