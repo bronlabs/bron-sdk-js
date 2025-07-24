@@ -1,60 +1,41 @@
 import { AddressBookRecords } from "../types/AddressBookRecords.js";
+import { AddressBookRecordsQuery } from "../types/AddressBookRecordsQuery.js";
 import { CreateAddressBookRecord } from "../types/CreateAddressBookRecord.js";
 import { Unit } from "../types/Unit.js";
 import { AddressBookRecord } from "../types/AddressBookRecord.js";
 import { HttpClient } from "../utils/http.js";
-export interface AddressBookRecordsParams {
-  recordIds?: string[];
-  networkIds?: string[];
-  addresses?: string[];
-  memo?: string;
-  limit?: string;
-  offset?: string;
-  statuses?: string[];
-  workspaceId: string;
-}
-
-export interface AddressBookRecordParams {
-  workspaceId: string;
-  recordId: string;
-}
-
-export interface AddressBookRecordByIDParams {
-  workspaceId: string;
-  recordId: string;
-}
 
 export class AddressBookAPI {
+
   constructor(private http: HttpClient, private workspaceId?: string) {}
-  async getAddressBookRecords(params: AddressBookRecordsParams): Promise<AddressBookRecords> {
+
+  async getAddressBookRecords(query?: AddressBookRecordsQuery): Promise<AddressBookRecords> {
     return this.http.request<AddressBookRecords>({
-    method: "GET",
-    path: `/workspaces/${this.workspaceId}/address-book-records`,
-    query: params
-  });
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/address-book-records`,
+      query
+    });
   }
 
-  async createAddressBookRecord(params: CreateAddressBookRecord) {
+  async createAddressBookRecord(body: CreateAddressBookRecord) {
     return this.http.request({
-    method: "POST",
-    path: `/workspaces/${this.workspaceId}/address-book-records`,
-    body: params
-  });
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/address-book-records`,
+      body
+    });
   }
 
-  async deactivateAddressBookRecord(params: AddressBookRecordParams): Promise<Unit> {
+  async deactivateAddressBookRecord(recordId: string): Promise<Unit> {
     return this.http.request<Unit>({
-    method: "DELETE",
-    path: `/workspaces/${this.workspaceId}/address-book-records/${params.recordId}`,
-    query: params
-  });
+      method: "DELETE",
+      path: `/workspaces/${this.workspaceId}/address-book-records/${recordId}`
+    });
   }
 
-  async getAddressBookRecordByID(params: AddressBookRecordByIDParams): Promise<AddressBookRecord> {
+  async getAddressBookRecordById(recordId: string): Promise<AddressBookRecord> {
     return this.http.request<AddressBookRecord>({
-    method: "GET",
-    path: `/workspaces/${this.workspaceId}/address-book-records/${params.recordId}`,
-    query: params
-  });
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/address-book-records/${recordId}`
+    });
   }
 }

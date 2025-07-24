@@ -77,7 +77,6 @@ export class OpenApiSdkGenerator {
 
     const fileData: Record<string, {
       types: Set<string>;
-      interfaces: Record<string, string>;
       methods: string[];
     }> = {};
 
@@ -85,17 +84,17 @@ export class OpenApiSdkGenerator {
       Object.entries(methods).forEach(([method, op]) => {
         if (!op.summary) return;
         const fileName = this.getFileName(op);
-        if (!fileData[fileName]) fileData[fileName] = { types: new Set(), interfaces: {}, methods: [] };
+        if (!fileData[fileName]) fileData[fileName] = { types: new Set(), methods: [] };
 
-        const { paramType, paramOptional, localInterface } = this.processParameters(op);
+        const { paramType, paramOptional, pathParams, isQueryInterface } = this.processParameters(op);
         const returnType = this.getReturnType(op);
 
-        if (localInterface) fileData[fileName].interfaces[paramType] = localInterface;
+        if (isQueryInterface) this.saveQueryInterface(paramType);
         if (returnType) fileData[fileName].types.add(returnType);
-        if (this.isRefType(paramType)) fileData[fileName].types.add(paramType);
+        if (this.isRefType(paramType) || isQueryInterface) fileData[fileName].types.add(paramType);
 
         fileData[fileName].methods.push(
-          this.generateMethod(this.toCamelCase(op.summary), method, route, paramType, paramOptional, returnType)
+          this.generateMethod(this.toCamelCase(op.summary).replace(/ID/g, 'Id'), method, route, paramType, paramOptional, returnType, pathParams, op)
         );
       })
     );
@@ -103,7 +102,7 @@ export class OpenApiSdkGenerator {
     Object.entries(fileData).forEach(([fileName, data]) =>
       fs.writeFileSync(
         path.join(this.apiDir, `${fileName}.ts`),
-        this.generateApiFile(fileName, data)
+        this.generateApiFile(fileName, { types: data.types, methods: data.methods })
       )
     );
   }
@@ -126,79 +125,147 @@ export class OpenApiSdkGenerator {
     return `export interface ${name} {\n${properties}\n}`;
   }
 
-  private processParameters(op: OpenApiOperation): { paramType: string; paramOptional: string; localInterface?: string } {
+  private processParameters(op: OpenApiOperation): {
+    paramType: string;
+    paramOptional: string;
+    pathParams?: Array<{ name: string, required: boolean }>;
+    isQueryInterface?: boolean
+  } {
+    const pathParams = op.parameters?.filter(p => p.in === 'path' && p.name !== 'workspaceId').map(p => ({
+      name: p.name,
+      required: p.required || false
+    })) || [];
+    const queryParams = op.parameters?.filter(p => p.in === 'query') || [];
+
     if (op.requestBody?.content?.['application/json']?.schema) {
       const schema = op.requestBody.content['application/json'].schema;
       if (schema.$ref) {
-        return { paramType: this.extractRefName(schema.$ref), paramOptional: '' };
+        return {
+          paramType: this.extractRefName(schema.$ref),
+          paramOptional: '',
+          pathParams
+        };
       }
       if (schema.type === 'object' && schema.properties) {
         const interfaceName = this.getInterfaceName(op, 'Request');
         return {
           paramType: interfaceName,
           paramOptional: this.areAllFieldsOptional(schema) ? '?' : '',
-          localInterface: this.generateLocalInterface(interfaceName, schema)
+          pathParams
         };
       }
     }
 
-    if (op.parameters?.length) {
+    if (queryParams.length && !pathParams.length) {
+      const interfaceName = this.getInterfaceName(op, 'Query');
+      return {
+        paramType: interfaceName,
+        paramOptional: '?',
+        pathParams,
+        isQueryInterface: true
+      };
+    }
+
+    if (queryParams.length && pathParams.length) {
       const interfaceName = this.getInterfaceName(op, 'Params');
-      const fields = op.parameters
-        .filter(p => p.in === 'query' || p.in === 'path')
-        .map(p => `  ${p.name}${p.required ? '' : '?'}: ${this.getParameterType(p.schema)};`)
-        .join('\n');
-
-      if (fields) {
-        const localInterface = `export interface ${interfaceName} {\n${fields}\n}\n`;
-        return {
-          paramType: interfaceName,
-          paramOptional: this.areInterfaceFieldsOptional(localInterface) ? '?' : '',
-          localInterface
-        };
-      }
+      return {
+        paramType: interfaceName,
+        paramOptional: '',
+        pathParams
+      };
     }
 
-    return { paramType: 'any', paramOptional: '?' };
+    return { paramType: 'any', paramOptional: '?', pathParams };
   }
 
-  private generateMethod(funcName: string, method: string, route: string, paramType: string, paramOptional: string, returnType?: string): string {
+  private generateMethod(funcName: string, method: string, route: string, paramType: string, paramOptional: string, returnType?: string, pathParams?: Array<{
+    name: string,
+    required: boolean
+  }>, op?: OpenApiOperation): string {
+    const hasRequestBody = op?.requestBody?.content?.['application/json']?.schema;
+    const hasPathParams = pathParams && pathParams.length > 0;
+
+    if (hasRequestBody && hasPathParams) {
+      const pathArgs = pathParams.map(p => `${p.name}: string`).join(', ');
+      const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
+        p1 === 'workspaceId' ? '${this.workspaceId}' : `\${${p1}}`
+      );
+
+      const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``, 'body'];
+      const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n      ${args.join(',\n      ')}\n    });`;
+      const signature = `async ${funcName}(${pathArgs}, body${paramOptional}: ${paramType})${returnType ? `: Promise<${returnType}>` : ''}`;
+
+      return `  ${signature} {\n    ${methodBody}\n  }`;
+    }
+
+    if (!hasRequestBody && hasPathParams) {
+      const pathArgs = pathParams.map(p => `${p.name}: string`).join(', ');
+      const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
+        p1 === 'workspaceId' ? '${this.workspaceId}' : `\${${p1}}`
+      );
+
+      const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
+      const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n      ${args.join(',\n      ')}\n    });`;
+      const signature = `async ${funcName}(${pathArgs})${returnType ? `: Promise<${returnType}>` : ''}`;
+
+      return `  ${signature} {\n    ${methodBody}\n  }`;
+    }
+
     const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
       p1 === 'workspaceId' ? '${this.workspaceId}' : `\${params.${p1}}`
     );
 
     const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
     if (paramType !== 'any') {
-      args.push(['get', 'delete'].includes(method) ? 'query: params' : 'body: params');
+      const argName = hasRequestBody ? 'body' : (['get', 'delete'].includes(method) ? 'query' : 'body');
+      args.push(argName);
     }
 
-    const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n    ${args.join(',\n    ')}\n  });`;
+    const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n      ${args.join(',\n      ')}\n    });`;
+    const paramName = hasRequestBody ? 'body' : 'query';
     const signature = paramType === 'any'
       ? `async ${funcName}()${returnType ? `: Promise<${returnType}>` : ''}`
-      : `async ${funcName}(params${paramOptional}: ${paramType})${returnType ? `: Promise<${returnType}>` : ''}`;
+      : `async ${funcName}(${paramName}${paramOptional}: ${paramType})${returnType ? `: Promise<${returnType}>` : ''}`;
 
     return `  ${signature} {\n    ${methodBody}\n  }`;
   }
 
-  private generateApiFile(fileName: string, data: { types: Set<string>; interfaces: Record<string, string>; methods: string[] }): string {
+  private generateApiFile(fileName: string, data: { types: Set<string>; methods: string[] }): string {
     const imports = [
       ...Array.from(data.types).map(type => `import { ${type} } from "../types/${type}.js";`),
       'import { HttpClient } from "../utils/http.js";'
     ].join('\n');
 
-    const localInterfaces = Object.values(data.interfaces).join('\n');
     const className = `${fileName.charAt(0).toUpperCase() + fileName.slice(1)}API`;
 
     return [
-      imports,
-      '',
-      localInterfaces,
-      `export class ${className} {`,
-      '  constructor(private http: HttpClient, private workspaceId?: string) {}',
-      '',
+      imports + '\n',
+      `export class ${className} {\n`,
+      '  constructor(private http: HttpClient, private workspaceId?: string) {}\n',
       data.methods.join('\n\n'),
       '}'
     ].filter(Boolean).join('\n');
+  }
+
+  private saveQueryInterface(interfaceName: string): void {
+    for (const [route, methods] of Object.entries(this.spec.paths)) {
+      for (const [method, op] of Object.entries(methods as any)) {
+        if (this.getInterfaceName(op as any, 'Query') === interfaceName) {
+          const queryParams = (op as any).parameters?.filter((p: any) => p.in === 'query') || [];
+          
+          if (queryParams.length) {
+            const fields = queryParams.map((p: any) => `  ${p.name}${p.required ? '' : '?'}: ${this.getParameterType(p.schema)};`).join('\n');
+            const interfaceContent = `export interface ${interfaceName} {\n${fields}\n}`;
+            
+            fs.writeFileSync(
+              path.join(this.typesDir, `${interfaceName}.ts`),
+              interfaceContent + '\n'
+            );
+          }
+          return;
+        }
+      }
+    }
   }
 
   private resolveType(schema: OpenApiSchema, seen = new Set<string>()): string {

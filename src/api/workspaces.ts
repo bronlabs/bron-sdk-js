@@ -1,55 +1,36 @@
 import { Workspace } from "../types/Workspace.js";
+import { WorkspaceByIDQuery } from "../types/WorkspaceByIDQuery.js";
 import { Activities } from "../types/Activities.js";
+import { ActivitiesQuery } from "../types/ActivitiesQuery.js";
 import { WorkspaceMembers } from "../types/WorkspaceMembers.js";
+import { WorkspaceMembersQuery } from "../types/WorkspaceMembersQuery.js";
 import { HttpClient } from "../utils/http.js";
-export interface WorkspaceByIDParams {
-  workspaceIds?: string[];
-  limit?: string;
-  offset?: string;
-  workspaceId: string;
-}
-
-export interface ActivitiesParams {
-  accountIds?: string[];
-  offset?: string;
-  limit?: string;
-  search?: string;
-  userIds?: string[];
-  activityTypes?: string[];
-  excludedActivityTypes?: string[];
-  workspaceId: string;
-}
-
-export interface WorkspaceMembersParams {
-  includePermissionGroups?: boolean;
-  includeUsersProfiles?: boolean;
-  includeEmails?: boolean;
-  workspaceId: string;
-}
 
 export class WorkspacesAPI {
+
   constructor(private http: HttpClient, private workspaceId?: string) {}
-  async getWorkspaceByID(params: WorkspaceByIDParams): Promise<Workspace> {
+
+  async getWorkspaceById(query?: WorkspaceByIDQuery): Promise<Workspace> {
     return this.http.request<Workspace>({
-    method: "GET",
-    path: `/workspaces/${this.workspaceId}`,
-    query: params
-  });
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}`,
+      query
+    });
   }
 
-  async getActivities(params: ActivitiesParams): Promise<Activities> {
+  async getActivities(query?: ActivitiesQuery): Promise<Activities> {
     return this.http.request<Activities>({
-    method: "GET",
-    path: `/workspaces/${this.workspaceId}/activities`,
-    query: params
-  });
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/activities`,
+      query
+    });
   }
 
-  async getWorkspaceMembers(params: WorkspaceMembersParams): Promise<WorkspaceMembers> {
+  async getWorkspaceMembers(query?: WorkspaceMembersQuery): Promise<WorkspaceMembers> {
     return this.http.request<WorkspaceMembers>({
-    method: "GET",
-    path: `/workspaces/${this.workspaceId}/members`,
-    query: params
-  });
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/members`,
+      query
+    });
   }
 }
