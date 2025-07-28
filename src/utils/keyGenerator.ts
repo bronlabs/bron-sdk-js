@@ -40,7 +40,7 @@ export async function generateBronKeyPair(): Promise<GeneratedKeyPair> {
     
     return {
       publicJwk: JSON.stringify(publicJwk, null, 2),
-      privateJwk: JSON.stringify(privateJwk, null, 2),
+      privateJwk: JSON.stringify(privateJwk),
       kid
     };
   } catch (error) {
