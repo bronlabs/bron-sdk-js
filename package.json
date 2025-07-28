@@ -31,11 +31,14 @@
     "lint": "eslint src --ext .ts",
     "build:generator": "npx tsc src/utils/generator.ts --outDir dist --module NodeNext --target ES2024 --skipLibCheck",
     "generate": "rm -rf dist && npm run build:generator && node dist/generator.js && npm run build",
+    "generate-keys": "node generate-keys.js",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.10",
+    "cuid": "^3.0.0",
     "dotenv": "^17.2.0",
+    "jose": "^5.2.0",
     "jsonwebtoken": "^9.0.2",
     "jwk-to-pem": "^2.0.7",
     "undici": "^6.14.0",

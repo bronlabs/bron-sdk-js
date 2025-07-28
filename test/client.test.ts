@@ -8,7 +8,7 @@ describe("BronClient", () => {
 
     expect(client.workspaceId).toBe("workspace-123");
     expect(client.balances).toBeDefined();
-    expect(client.workspace).toBeDefined();
+    expect(client.workspaces).toBeDefined();
     expect(client.addressBook).toBeDefined();
     expect(client.assets).toBeDefined();
     expect(client.accounts).toBeDefined();
