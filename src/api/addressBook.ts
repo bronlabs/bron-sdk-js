@@ -9,33 +9,32 @@ export class AddressBookAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getAddressBookRecords(query?: AddressBookRecordsQuery): Promise<AddressBookRecords> {
+  async getAddressBookRecords(workspaceId?: string): Promise<AddressBookRecords> {
     return this.http.request<AddressBookRecords>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/address-book-records`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}/address-book-records`
     });
   }
 
-  async createAddressBookRecord(body: CreateAddressBookRecord) {
+  async createAddressBookRecord(body: CreateAddressBookRecord, workspaceId?: string) {
     return this.http.request({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/address-book-records`,
+      path: `/workspaces/${workspaceId || this.workspaceId}/address-book-records`,
       body
     });
   }
 
-  async deactivateAddressBookRecord(recordId: string): Promise<Unit> {
+  async deactivateAddressBookRecord(recordId: string, workspaceId?: string): Promise<Unit> {
     return this.http.request<Unit>({
       method: "DELETE",
-      path: `/workspaces/${this.workspaceId}/address-book-records/${recordId}`
+      path: `/workspaces/${workspaceId || this.workspaceId}/address-book-records/${recordId}`
     });
   }
 
-  async getAddressBookRecordById(recordId: string): Promise<AddressBookRecord> {
+  async getAddressBookRecordById(recordId: string, workspaceId?: string): Promise<AddressBookRecord> {
     return this.http.request<AddressBookRecord>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/address-book-records/${recordId}`
+      path: `/workspaces/${workspaceId || this.workspaceId}/address-book-records/${recordId}`
     });
   }
 }

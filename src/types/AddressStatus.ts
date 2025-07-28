@@ -1,1 +1,1 @@
-export type AddressStatus = "new" | "pending" | "approval-pending" | "enabled" | "disabled" | "error" | "account-archived";
+export type AddressStatus = "new" | "pending" | "address-activation-required" | "address-creation-required" | "approval-pending" | "enabled" | "disabled" | "error" | "account-archived";

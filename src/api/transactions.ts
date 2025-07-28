@@ -10,57 +10,56 @@ export class TransactionsAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getTransactions(query?: TransactionsQuery): Promise<Transactions> {
+  async getTransactions(workspaceId?: string): Promise<Transactions> {
     return this.http.request<Transactions>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/transactions`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions`
     });
   }
 
-  async createTransaction(body: CreateTransaction) {
+  async createTransaction(body: CreateTransaction, workspaceId?: string) {
     return this.http.request({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/`,
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions/`,
       body
     });
   }
 
-  async createMultipleTransactions(body: CreateTransactions) {
+  async createMultipleTransactions(body: CreateTransactions, workspaceId?: string) {
     return this.http.request({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/bulk-create`,
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions/bulk-create`,
       body
     });
   }
 
-  async dryRunTransaction(body: CreateTransaction): Promise<Transaction> {
+  async dryRunTransaction(body: CreateTransaction, workspaceId?: string): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/dry-run`,
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions/dry-run`,
       body
     });
   }
 
-  async getTransactionById(transactionId: string): Promise<Transaction> {
+  async getTransactionById(transactionId: string, workspaceId?: string): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}`
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions/${transactionId}`
     });
   }
 
-  async cancelTransaction(transactionId: string, body: CancelTransaction): Promise<Transaction> {
+  async cancelTransaction(body: CancelTransaction, transactionId: string, workspaceId?: string): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/cancel`,
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions/${transactionId}/cancel`,
       body
     });
   }
 
-  async createSigningRequest(transactionId: string): Promise<Transaction> {
+  async createSigningRequest(transactionId: string, workspaceId?: string): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/create-signing-request`
+      path: `/workspaces/${workspaceId || this.workspaceId}/transactions/${transactionId}/create-signing-request`
     });
   }
 }

@@ -1,1 +1,1 @@
-export type TransactionType = "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "swap-lifi" | "intents";
+export type TransactionType = "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "address-activation" | "address-creation" | "swap-lifi" | "intents";

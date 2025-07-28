@@ -1,0 +1,15 @@
+export interface SigningRequest {
+  accountId?: string;
+  blockchainNonce?: string;
+  messagesForSigning?: { messages?: { hashFunction?: "none" | "sha256d" | "keccak256" | "blake2b256" | "sha256" | "sha512" | "sha512_half" | "sha512_256" | "poseidon"; keyType?: "secp256k1" | "edwards25519" | "BLS12381G1" | "pallas" | "RSA4096"; message?: string; signatureScheme?: "ecdsa" | "eddsa" | "bls" | "schnorr" | "rsa-pss"; signatureVariant?: "zilliqa" | "mina" }[]; publicKey?: string; useBackupPrimitive?: boolean };
+  networkId?: string;
+  requestParameters?: Record<string, any>;
+  shouldBeBroadcasted?: boolean;
+  signed?: {  };
+  signingData?: {  };
+  signingRequestId?: string;
+  status?: "new" | "signed" | "broadcasted" | "under-rbf" | "completed" | "manual-resolving" | "canceled" | "error-on-broadcast" | "failed-on-chain" | "marked-as-error";
+  transactionId?: string;
+  transactionType?: "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "address-activation" | "address-creation" | "swap-lifi" | "intents";
+  workspaceId?: string;
+}

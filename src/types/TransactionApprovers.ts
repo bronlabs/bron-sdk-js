@@ -3,5 +3,7 @@ export interface TransactionApprovers {
   availableApprovers?: string[];
   limitId?: string;
   number?: string;
+  securityDelayDuration?: string;
+  securityDelayExpiresAt?: string;
   skipApproval?: boolean;
 }

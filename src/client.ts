@@ -33,7 +33,7 @@ export default class BronClient {
     this.workspaceId = workspaceId;
 
     this.balances = new BalancesAPI(http, workspaceId);
-    this.workspaces = new WorkspacesAPI(http);
+    this.workspaces = new WorkspacesAPI(http, workspaceId);
     this.addressBook = new AddressBookAPI(http, workspaceId);
     this.assets = new AssetsAPI(http);
     this.accounts = new AccountsAPI(http, workspaceId);

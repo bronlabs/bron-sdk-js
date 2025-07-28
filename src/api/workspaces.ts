@@ -10,27 +10,24 @@ export class WorkspacesAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getWorkspaceById(query?: WorkspaceByIDQuery): Promise<Workspace> {
+  async getWorkspaceById(workspaceId?: string): Promise<Workspace> {
     return this.http.request<Workspace>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}`
     });
   }
 
-  async getActivities(query?: ActivitiesQuery): Promise<Activities> {
+  async getActivities(workspaceId?: string): Promise<Activities> {
     return this.http.request<Activities>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/activities`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}/activities`
     });
   }
 
-  async getWorkspaceMembers(query?: WorkspaceMembersQuery): Promise<WorkspaceMembers> {
+  async getWorkspaceMembers(workspaceId?: string): Promise<WorkspaceMembers> {
     return this.http.request<WorkspaceMembers>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/members`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}/members`
     });
   }
 }

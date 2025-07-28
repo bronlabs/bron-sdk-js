@@ -108,7 +108,12 @@ export class OpenApiSdkGenerator {
   }
 
   private generateTypeDefinition(name: string, schema: OpenApiSchema): string {
-    if (schema.enum) return `export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
+    if (schema.enum) {
+      if (schema.enum.length === 0) {
+        return `export type ${name} = string;`;
+      }
+      return `export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
+    }
     if (schema.allOf?.length === 1 && schema.allOf[0].$ref) return `export type ${name} = ${this.extractRefName(schema.allOf[0].$ref)};`;
     if (schema.$ref) return `export type ${name} = ${this.extractRefName(schema.$ref)};`;
     if (this.isEmptyObject(schema)) return `export type ${name} = Record<string, any>;`;
@@ -131,11 +136,18 @@ export class OpenApiSdkGenerator {
     pathParams?: Array<{ name: string, required: boolean }>;
     isQueryInterface?: boolean
   } {
-    const pathParams = op.parameters?.filter(p => p.in === 'path' && p.name !== 'workspaceId').map(p => ({
+    const allPathParams = op.parameters?.filter(p => p.in === 'path') || [];
+    const hasWorkspaceId = allPathParams.some(p => p.name === 'workspaceId');
+    const otherPathParams = allPathParams.filter(p => p.name !== 'workspaceId').map(p => ({
       name: p.name,
       required: p.required || false
     })) || [];
     const queryParams = op.parameters?.filter(p => p.in === 'query') || [];
+
+    // Combine other path params with optional workspaceId
+    const pathParams = hasWorkspaceId 
+      ? [...otherPathParams, { name: 'workspaceId', required: false }]
+      : otherPathParams;
 
     if (op.requestBody?.content?.['application/json']?.schema) {
       const schema = op.requestBody.content['application/json'].schema;
@@ -156,17 +168,17 @@ export class OpenApiSdkGenerator {
       }
     }
 
-    if (queryParams.length && !pathParams.length) {
+    if (queryParams.length && !otherPathParams.length) {
       const interfaceName = this.getInterfaceName(op, 'Query');
       return {
         paramType: interfaceName,
         paramOptional: '?',
-        pathParams,
+        pathParams: hasWorkspaceId ? [{ name: 'workspaceId', required: false }] : [],
         isQueryInterface: true
       };
     }
 
-    if (queryParams.length && pathParams.length) {
+    if (queryParams.length && otherPathParams.length) {
       const interfaceName = this.getInterfaceName(op, 'Params');
       return {
         paramType: interfaceName,
@@ -175,7 +187,11 @@ export class OpenApiSdkGenerator {
       };
     }
 
-    return { paramType: 'any', paramOptional: '?', pathParams };
+    return { 
+      paramType: 'any', 
+      paramOptional: '?', 
+      pathParams 
+    };
   }
 
   private generateMethod(funcName: string, method: string, route: string, paramType: string, paramOptional: string, returnType?: string, pathParams?: Array<{
@@ -186,23 +202,39 @@ export class OpenApiSdkGenerator {
     const hasPathParams = pathParams && pathParams.length > 0;
 
     if (hasRequestBody && hasPathParams) {
-      const pathArgs = pathParams.map(p => `${p.name}: string`).join(', ');
-      const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
-        p1 === 'workspaceId' ? '${this.workspaceId}' : `\${${p1}}`
-      );
+      // Sort parameters: required first, then optional
+      const requiredParams = pathParams.filter(p => p.required);
+      const optionalParams = pathParams.filter(p => !p.required);
+      const sortedParams = [...requiredParams, ...optionalParams];
+      
+      const pathArgs = sortedParams.map(p => `${p.name}${p.required ? '' : '?'}: string`).join(', ');
+      const pathExpr = route.replace(/{(\w+)}/g, (_, p1) => {
+        if (p1 === 'workspaceId') {
+          return '${workspaceId || this.workspaceId}';
+        }
+        return `\${${p1}}`;
+      });
 
       const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``, 'body'];
       const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n      ${args.join(',\n      ')}\n    });`;
-      const signature = `async ${funcName}(${pathArgs}, body${paramOptional}: ${paramType})${returnType ? `: Promise<${returnType}>` : ''}`;
+      const signature = `async ${funcName}(body${paramOptional}: ${paramType}, ${pathArgs})${returnType ? `: Promise<${returnType}>` : ''}`;
 
       return `  ${signature} {\n    ${methodBody}\n  }`;
     }
 
     if (!hasRequestBody && hasPathParams) {
-      const pathArgs = pathParams.map(p => `${p.name}: string`).join(', ');
-      const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
-        p1 === 'workspaceId' ? '${this.workspaceId}' : `\${${p1}}`
-      );
+      // Sort parameters: required first, then optional
+      const requiredParams = pathParams.filter(p => p.required);
+      const optionalParams = pathParams.filter(p => !p.required);
+      const sortedParams = [...requiredParams, ...optionalParams];
+      
+      const pathArgs = sortedParams.map(p => `${p.name}${p.required ? '' : '?'}: string`).join(', ');
+      const pathExpr = route.replace(/{(\w+)}/g, (_, p1) => {
+        if (p1 === 'workspaceId') {
+          return '${workspaceId || this.workspaceId}';
+        }
+        return `\${${p1}}`;
+      });
 
       const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
       const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n      ${args.join(',\n      ')}\n    });`;
@@ -211,9 +243,12 @@ export class OpenApiSdkGenerator {
       return `  ${signature} {\n    ${methodBody}\n  }`;
     }
 
-    const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
-      p1 === 'workspaceId' ? '${this.workspaceId}' : `\${params.${p1}}`
-    );
+    const pathExpr = route.replace(/{(\w+)}/g, (_, p1) => {
+      if (p1 === 'workspaceId') {
+        return '${params.workspaceId || this.workspaceId}';
+      }
+      return `\${params.${p1}}`;
+    });
 
     const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
     if (paramType !== 'any') {
@@ -275,7 +310,12 @@ export class OpenApiSdkGenerator {
       seen.add(refName);
       return this.spec.components.schemas[refName] ? this.resolveType(this.spec.components.schemas[refName], seen) : refName;
     }
-    if (schema.enum) return schema.enum.map(v => JSON.stringify(v)).join(' | ');
+    if (schema.enum) {
+      if (schema.enum.length === 0) {
+        return 'string';
+      }
+      return schema.enum.map(v => JSON.stringify(v)).join(' | ');
+    }
 
     const mapper = this.typeMappers.get(schema.type || 'unknown');
     return mapper ? mapper(schema) : 'any';

@@ -1,6 +1,7 @@
 export interface SwapParams {
-  fromAmount: string;
+  fromAmount?: string;
   fromAssetId: string;
-  quoteId?: string;
+  quoteId: string;
+  toAmount?: string;
   toAssetId: string;
 }

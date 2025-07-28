@@ -12,7 +12,7 @@ export interface Address {
   metadata?: Record<string, any>;
   networkId: string;
   requiresAssetsActivation: boolean;
-  status: "new" | "pending" | "approval-pending" | "enabled" | "disabled" | "error" | "account-archived";
+  status: "new" | "pending" | "address-activation-required" | "address-creation-required" | "approval-pending" | "enabled" | "disabled" | "error" | "account-archived";
   updatedAt: string;
   updatedBy: string;
   workspaceId?: string;

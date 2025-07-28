@@ -6,11 +6,10 @@ export class AddressesAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getDepositAddresses(query?: DepositAddressesQuery): Promise<Addresses> {
+  async getDepositAddresses(workspaceId?: string): Promise<Addresses> {
     return this.http.request<Addresses>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/addresses`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}/addresses`
     });
   }
 }
