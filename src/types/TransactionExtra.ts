@@ -1,7 +1,11 @@
+import { TransactionApprovers } from './TransactionApprovers.js';
+import { BlockchainTxDetails } from './BlockchainTxDetails.js';
+import { BlockchainRequest } from './BlockchainRequest.js';
+
 export interface TransactionExtra {
-  approvers?: { approvedBy?: string[]; availableApprovers?: string[]; limitId?: string; number?: string; securityDelayDuration?: string; securityDelayExpiresAt?: string; skipApproval?: boolean };
-  blockchainDetails?: { blockchainTxId?: string; networkId?: string }[];
-  blockchainRequest?: { networkId?: string };
+  approvers?: TransactionApprovers;
+  blockchainDetails?: BlockchainTxDetails[];
+  blockchainRequest?: BlockchainRequest;
   confirmations?: string;
   depositTransactionId?: string;
   description?: string;

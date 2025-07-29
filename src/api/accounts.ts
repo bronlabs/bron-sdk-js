@@ -15,7 +15,7 @@ export class AccountsAPI {
     });
   }
 
-  async retrieveAccountById(accountId: string): Promise<Account> {
+  async getAccountById(accountId: string): Promise<Account> {
     return this.http.request<Account>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/accounts/${accountId}`

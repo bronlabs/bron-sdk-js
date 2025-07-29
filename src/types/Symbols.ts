@@ -1,3 +1,5 @@
+import { Symbol } from './Symbol.js';
+
 export interface Symbols {
-  symbols: { name: string; symbol: string; symbolId: string }[];
+  symbols: Symbol[];
 }

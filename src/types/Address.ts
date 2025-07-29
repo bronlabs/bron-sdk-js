@@ -1,8 +1,12 @@
+import { AccountType } from './AccountType.js';
+import { ActivatedAsset } from './ActivatedAsset.js';
+import { AddressStatus } from './AddressStatus.js';
+
 export interface Address {
   acceptsAllAssets: boolean;
   accountId?: string;
-  accountType: "vault";
-  activatedAssets?: {  }[];
+  accountType: AccountType;
+  activatedAssets?: ActivatedAsset[];
   address?: string;
   addressId: string;
   createdAt: string;
@@ -12,7 +16,7 @@ export interface Address {
   metadata?: Record<string, any>;
   networkId: string;
   requiresAssetsActivation: boolean;
-  status: "new" | "pending" | "address-activation-required" | "address-creation-required" | "approval-pending" | "enabled" | "disabled" | "error" | "account-archived";
+  status: AddressStatus;
   updatedAt: string;
   updatedBy: string;
   workspaceId?: string;

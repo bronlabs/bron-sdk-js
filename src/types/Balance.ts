@@ -1,6 +1,8 @@
+import { AccountType } from './AccountType.js';
+
 export interface Balance {
   accountId: string;
-  accountType: "vault";
+  accountType: AccountType;
   assetId: string;
   balanceId: string;
   createdAt?: string;

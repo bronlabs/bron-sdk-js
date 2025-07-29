@@ -1,4 +1,6 @@
+import { LimitAmount } from './LimitAmount.js';
+
 export interface LimitTransactionParams {
-  aboveAmount?: { amount?: string };
+  aboveAmount?: LimitAmount;
   durationHours?: string;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@bronlabs/bron-sdk",
-  "version": "0.1.5",
+  "version": "0.1.0",
   "description": "TypeScript SDK for the Bron API",
   "keywords": [
     "sdk",
@@ -29,24 +29,21 @@
     "build": "tsc",
     "test": "vitest",
     "lint": "eslint src --ext .ts",
-    "build:generator": "npx tsc src/utils/generator.ts --outDir dist --module NodeNext --target ES2024 --skipLibCheck",
-    "generate": "rm -rf dist && npm run build:generator && node dist/generator.js && npm run build",
-    "generate-keys": "node dist/utils/keyGenerator.js",
+    "generate-keys": "npm run build && node dist/utils/keyGenerator.js",
+    "build:generator": "npx tsc src/utils/generator.ts --outDir dist/utils --module NodeNext --target ES2024 --skipLibCheck",
+    "generate": "rm -rf dist && npm run build:generator && node dist/utils/generator.js && npm run build",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
-    "@types/jsonwebtoken": "^9.0.10",
-    "cuid": "^3.0.0",
-    "dotenv": "^17.2.0",
-    "jose": "^5.2.0",
     "jsonwebtoken": "^9.0.2",
-    "jwk-to-pem": "^2.0.7",
-    "undici": "^6.14.0",
-    "uuid": "^11.1.0"
+    "jwk-to-pem": "^2.0.7"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/jwk-to-pem": "^2.0.3",
     "@types/node": "^20.10.6",
+    "dotenv": "^17.2.1",
+    "cuid": "^3.0.0",
     "eslint": "^9.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3",

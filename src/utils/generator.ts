@@ -108,12 +108,15 @@ export class OpenApiSdkGenerator {
   }
 
   private generateTypeDefinition(name: string, schema: OpenApiSchema): string {
-    if (schema.enum) return `export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
-    if (schema.allOf?.length === 1 && schema.allOf[0].$ref) return `export type ${name} = ${this.extractRefName(schema.allOf[0].$ref)};`;
-    if (schema.$ref) return `export type ${name} = ${this.extractRefName(schema.$ref)};`;
-    if (this.isEmptyObject(schema)) return `export type ${name} = Record<string, any>;`;
-    if (schema.type === 'object' || schema.properties) return this.generateInterface(name, schema);
-    return `export type ${name} = any;`;
+    const imports = this.collectImports(schema);
+    const importsStr = imports.length > 0 ? imports.map(imp => `import { ${imp} } from './${imp}.js';`).join('\n') + '\n\n' : '';
+    
+    if (schema.enum) return `${importsStr}export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
+    if (schema.allOf?.length === 1 && schema.allOf[0].$ref) return `${importsStr}export type ${name} = ${this.extractRefName(schema.allOf[0].$ref)};`;
+    if (schema.$ref) return `${importsStr}export type ${name} = ${this.extractRefName(schema.$ref)};`;
+    if (this.isEmptyObject(schema)) return `${importsStr}export type ${name} = Record<string, any>;`;
+    if (schema.type === 'object' || schema.properties) return `${importsStr}${this.generateInterface(name, schema)}`;
+    return `${importsStr}export type ${name} = any;`;
   }
 
   private generateInterface(name: string, schema: OpenApiSchema): string {
@@ -273,7 +276,7 @@ export class OpenApiSdkGenerator {
       const refName = this.extractRefName(schema.$ref);
       if (seen.has(refName)) return refName;
       seen.add(refName);
-      return this.spec.components.schemas[refName] ? this.resolveType(this.spec.components.schemas[refName], seen) : refName;
+      return refName;
     }
     if (schema.enum) return schema.enum.map(v => JSON.stringify(v)).join(' | ');
 
@@ -369,6 +372,35 @@ export class OpenApiSdkGenerator {
   private toPascalCase(str: string): string {
     return str.replace(/(^|[^a-zA-Z0-9]+)([a-zA-Z0-9])/g, (_, __, c) => c ? c.toUpperCase() : '')
       .replace(/[^a-zA-Z0-9]/g, '');
+  }
+
+  private collectImports(schema: OpenApiSchema, collected = new Set<string>()): string[] {
+    if (schema.$ref) {
+      const refName = this.extractRefName(schema.$ref);
+      collected.add(refName);
+    }
+    
+    if (schema.properties) {
+      Object.values(schema.properties).forEach(prop => this.collectImports(prop, collected));
+    }
+    
+    if (schema.items) {
+      this.collectImports(schema.items, collected);
+    }
+    
+    if (schema.allOf) {
+      schema.allOf.forEach(s => this.collectImports(s, collected));
+    }
+    
+    if (schema.oneOf) {
+      schema.oneOf.forEach(s => this.collectImports(s, collected));
+    }
+    
+    if (schema.anyOf) {
+      schema.anyOf.forEach(s => this.collectImports(s, collected));
+    }
+    
+    return Array.from(collected);
   }
 }
 

@@ -1,7 +1,9 @@
+import { ActivityType } from './ActivityType.js';
+
 export interface Activity {
   accountId?: string;
   activityId: string;
-  activityType: "login" | "new-device-login" | "new-address-book-record" | "update-address-book-record" | "delete-address-book-record" | "workspace-creation" | "workspace-settings-approval-update" | "workspace-name-change" | "workspace-tag-change" | "only-address-book-withdrawals-settings-update" | "transaction-approval-settings-update" | "workspace-members-approval-update" | "address-book-settings-approval-update" | "transaction-limits-approval-settings-update" | "member-creation" | "service-member-creation" | "transaction-limit-creation" | "transaction-limit-update" | "account-creation" | "passkey-creation" | "passkey-deletion" | "2fa-change" | "account-pins-reset" | "shard-access-request-created" | "shard-access-request-finished" | "transaction-completed";
+  activityType: ActivityType;
   createdAt: string;
   description?: string;
   title: string;

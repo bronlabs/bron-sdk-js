@@ -1,3 +1,5 @@
+import { NetworkTag } from './NetworkTag.js';
+
 export interface Network {
   addressExplorerUrl?: string;
   confirmations?: string;
@@ -5,5 +7,5 @@ export interface Network {
   isTestnet?: boolean;
   name?: string;
   networkId?: string;
-  tags?: "show-vault" | "supports-rbf" | "supports-memo" | "swap" | "supports-parallel-signing" | "supports-chained-signing"[];
+  tags?: NetworkTag[];
 }

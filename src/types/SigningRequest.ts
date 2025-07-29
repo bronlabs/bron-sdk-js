@@ -1,15 +1,21 @@
+import { MessagesForSigning } from './MessagesForSigning.js';
+import { Signed } from './Signed.js';
+import { BlockchainSigningRequest } from './BlockchainSigningRequest.js';
+import { SigningRequestStatus } from './SigningRequestStatus.js';
+import { TransactionType } from './TransactionType.js';
+
 export interface SigningRequest {
   accountId?: string;
   blockchainNonce?: string;
-  messagesForSigning?: { messages?: { hashFunction?: "none" | "sha256d" | "keccak256" | "blake2b256" | "sha256" | "sha512" | "sha512_half" | "sha512_256" | "poseidon"; keyType?: "secp256k1" | "edwards25519" | "BLS12381G1" | "pallas" | "RSA4096"; message?: string; signatureScheme?: "ecdsa" | "eddsa" | "bls" | "schnorr" | "rsa-pss"; signatureVariant?: "zilliqa" | "mina" }[]; publicKey?: string; useBackupPrimitive?: boolean };
+  messagesForSigning?: MessagesForSigning;
   networkId?: string;
   requestParameters?: Record<string, any>;
   shouldBeBroadcasted?: boolean;
-  signed?: {  };
-  signingData?: {  };
+  signed?: Signed;
+  signingData?: BlockchainSigningRequest;
   signingRequestId?: string;
-  status?: "new" | "signed" | "broadcasted" | "under-rbf" | "completed" | "manual-resolving" | "canceled" | "error-on-broadcast" | "failed-on-chain" | "marked-as-error";
+  status?: SigningRequestStatus;
   transactionId?: string;
-  transactionType?: "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "address-activation" | "address-creation" | "swap-lifi" | "intents";
+  transactionType?: TransactionType;
   workspaceId?: string;
 }

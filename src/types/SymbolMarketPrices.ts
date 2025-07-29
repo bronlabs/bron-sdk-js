@@ -1,3 +1,5 @@
+import { SymbolMarketPrice } from './SymbolMarketPrice.js';
+
 export interface SymbolMarketPrices {
-  prices: { baseSymbolId: string; price: string; quoteSymbolId: string }[];
+  prices: SymbolMarketPrice[];
 }

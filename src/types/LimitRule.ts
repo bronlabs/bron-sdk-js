@@ -1,5 +1,8 @@
+import { LimitRuleApprove } from './LimitRuleApprove.js';
+import { LimitRuleSecurityDelay } from './LimitRuleSecurityDelay.js';
+
 export interface LimitRule {
-  approve?: { authorisedApproversUserIds?: string[]; numberOfApprovals: string };
-  securityDelay?: { durationHours: string };
+  approve?: LimitRuleApprove;
+  securityDelay?: LimitRuleSecurityDelay;
   skipApproval?: boolean;
 }

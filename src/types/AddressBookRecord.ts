@@ -1,3 +1,5 @@
+import { RecordStatus } from './RecordStatus.js';
+
 export interface AddressBookRecord {
   accountIds?: string[];
   address: string;
@@ -9,7 +11,7 @@ export interface AddressBookRecord {
   name: string;
   networkId: string;
   recordId: string;
-  status: "new" | "active" | "rejected" | "deleted";
+  status: RecordStatus;
   updatedAt?: string;
   updatedBy?: string;
   workspaceId: string;

@@ -3178,7 +3178,7 @@
             "description": "Conflict"
           }
         },
-        "summary": "Retrieve Account by ID",
+        "summary": "Get Account by ID",
         "tags": [
           "accounts"
         ]

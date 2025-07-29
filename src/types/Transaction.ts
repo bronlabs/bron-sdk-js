@@ -1,17 +1,25 @@
+import { AccountType } from './AccountType.js';
+import { TransactionEmbedded } from './TransactionEmbedded.js';
+import { TransactionExtra } from './TransactionExtra.js';
+import { WithdrawalParams } from './WithdrawalParams.js';
+import { SwapParams } from './SwapParams.js';
+import { TransactionStatus } from './TransactionStatus.js';
+import { TransactionType } from './TransactionType.js';
+
 export interface Transaction {
   accountId: string;
-  accountType: "vault";
+  accountType: AccountType;
   createdAt: string;
   createdBy?: string;
-  embedded?: { currentSigningRequest?: { accountId?: string; blockchainNonce?: string; messagesForSigning?: { messages?: { hashFunction?: "none" | "sha256d" | "keccak256" | "blake2b256" | "sha256" | "sha512" | "sha512_half" | "sha512_256" | "poseidon"; keyType?: "secp256k1" | "edwards25519" | "BLS12381G1" | "pallas" | "RSA4096"; message?: string; signatureScheme?: "ecdsa" | "eddsa" | "bls" | "schnorr" | "rsa-pss"; signatureVariant?: "zilliqa" | "mina" }[]; publicKey?: string; useBackupPrimitive?: boolean }; networkId?: string; requestParameters?: Record<string, any>; shouldBeBroadcasted?: boolean; signed?: {  }; signingData?: {  }; signingRequestId?: string; status?: "new" | "signed" | "broadcasted" | "under-rbf" | "completed" | "manual-resolving" | "canceled" | "error-on-broadcast" | "failed-on-chain" | "marked-as-error"; transactionId?: string; transactionType?: "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "address-activation" | "address-creation" | "swap-lifi" | "intents"; workspaceId?: string } };
+  embedded?: TransactionEmbedded;
   expiresAt?: string;
   externalId: string;
-  extra?: { approvers?: { approvedBy?: string[]; availableApprovers?: string[]; limitId?: string; number?: string; securityDelayDuration?: string; securityDelayExpiresAt?: string; skipApproval?: boolean }; blockchainDetails?: { blockchainTxId?: string; networkId?: string }[]; blockchainRequest?: { networkId?: string }; confirmations?: string; depositTransactionId?: string; description?: string; externalBroadcast?: boolean; fromAccountId?: string; fromAddress?: string; memo?: string; signingRequestId?: string; toAccountId?: string; toAddress?: string; withdrawTransactionId?: string };
+  extra?: TransactionExtra;
   params?: any;
-  status: "new" | "waiting-confirmations" | "waiting-approval" | "approved" | "awaiting-security-policy" | "completed" | "canceled" | "expired" | "signing-required" | "signing" | "signed" | "broadcasted" | "manual-resolving" | "failed-on-blockchain" | "error";
+  status: TransactionStatus;
   terminatedAt?: string;
   transactionId: string;
-  transactionType: "deposit" | "withdrawal" | "multi-withdrawal" | "negative-deposit" | "auto-withdrawal" | "allowance" | "raw-transaction" | "address-activation" | "address-creation" | "swap-lifi" | "intents";
+  transactionType: TransactionType;
   updatedAt?: string;
   workspaceId: string;
 }

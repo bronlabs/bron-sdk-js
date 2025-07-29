@@ -1,5 +1,8 @@
+import { Identity } from './Identity.js';
+import { UserProfile } from './UserProfile.js';
+
 export interface WorkspaceMemberEmbedded {
-  identities?: { createdAt: string; createdBy?: string; identityId: string; identityType: "email"; identityValue: string; lastUsedAt?: string; updatedAt?: string; userId: string }[];
+  identities?: Identity[];
   permissionGroups?: string[];
-  profile?: { imageId?: string; name?: string; userId: string };
+  profile?: UserProfile;
 }

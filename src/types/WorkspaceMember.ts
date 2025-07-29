@@ -1,8 +1,11 @@
+import { WorkspaceMemberEmbedded } from './WorkspaceMemberEmbedded.js';
+import { MemberStatus } from './MemberStatus.js';
+
 export interface WorkspaceMember {
-  _embedded?: { identities?: { createdAt: string; createdBy?: string; identityId: string; identityType: "email"; identityValue: string; lastUsedAt?: string; updatedAt?: string; userId: string }[]; permissionGroups?: string[]; profile?: { imageId?: string; name?: string; userId: string } };
+  _embedded?: WorkspaceMemberEmbedded;
   createdAt: string;
   deactivatedAt?: string;
-  status: "new" | "active" | "rejected" | "deactivated";
+  status: MemberStatus;
   updatedAt?: string;
   userId: string;
   workspaceId: string;
