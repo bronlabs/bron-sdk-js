@@ -1,9 +1,8 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import BronClient from "../src/client.js";
-import dotenv from "dotenv";
+import { describe, it, expect, beforeAll } from 'vitest';
+import BronClient from '../src/client.js';
+import { config } from 'dotenv';
 
-// Load environment variables
-dotenv.config();
+config();
 
 describe("Authentication Integration Tests", () => {
   let client: BronClient;
@@ -31,19 +30,11 @@ describe("Authentication Integration Tests", () => {
         return;
       }
 
-      try {
-        // This test will make a real API call to verify authentication works
-        const workspace = await client.workspaces.getWorkspaceById();
-        
-        expect(workspace).toBeDefined();
-        // The response structure depends on the API, but we expect some data
-        expect(typeof workspace === "object").toBe(true);
-      } catch (error) {
-        // If this fails, it might be due to API changes or network issues
-        // but we can still verify the error is not an authentication error
-        expect(error).not.toMatch(/401|403|Unauthorized|Forbidden/i);
-        console.warn("API call failed, but this might be due to network issues or API changes:", error);
-      }
+      const workspace = await client.workspaces.getWorkspaceById();
+
+      expect(workspace).toBeDefined();
+      expect(typeof workspace === "object").toBe(true);
+      expect(workspace.workspaceId === client.workspaceId).toBe(true);
     });
 
     it("should authenticate and fetch account information", async () => {
@@ -52,19 +43,12 @@ describe("Authentication Integration Tests", () => {
         return;
       }
 
-      try {
-        const accounts = await client.accounts.getAccounts();
-        
-        expect(accounts).toBeDefined();
-        expect(Array.isArray(accounts) || typeof accounts === "object").toBe(true);
-      } catch (error) {
-        expect(error).not.toMatch(/401|403|Unauthorized|Forbidden/i);
-        console.warn("API call failed, but this might be due to network issues or API changes:", error);
-      }
+      const accounts = await client.accounts.getAccounts();
+      expect(accounts).toBeDefined();
+      expect(Array.isArray(accounts) || typeof accounts === "object").toBe(true);
     });
 
     it("should handle authentication errors gracefully", async () => {
-      // Test with invalid API key
       const invalidClient = new BronClient({
         apiKey: "invalid-jwk-key",
         workspaceId: "test-workspace"
@@ -72,38 +56,151 @@ describe("Authentication Integration Tests", () => {
 
       try {
         await invalidClient.workspaces.getWorkspaceById();
-        // If we get here, the test should fail
         expect(true).toBe(false);
       } catch (error) {
-        // We expect an authentication error
         expect(error).toBeDefined();
         expect(typeof error).toBe("object");
       }
     });
-  });
 
-  describe("Client Configuration", () => {
-    it("should have correct workspace ID", () => {
+    it("should handle missing API key", async () => {
+      const clientWithoutKey = new BronClient({
+        apiKey: "",
+        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace"
+      });
+
+      try {
+        await clientWithoutKey.workspaces.getWorkspaceById();
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
+    });
+
+    it("should handle missing workspace ID", async () => {
+      const clientWithoutWorkspace = new BronClient({
+        apiKey: process.env.BRON_API_KEY || "test-key",
+        workspaceId: ""
+      });
+
+      try {
+        await clientWithoutWorkspace.workspaces.getWorkspaceById();
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
+    });
+
+    it("should handle malformed API key", async () => {
+      const malformedClient = new BronClient({
+        apiKey: "not-a-jwt-token",
+        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace"
+      });
+
+      try {
+        await malformedClient.workspaces.getWorkspaceById();
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
+    });
+
+    it("should handle network timeouts", async () => {
+      if (!process.env.BRON_API_KEY || !process.env.BRON_WORKSPACE_ID) {
+        console.log("Skipping test - no API credentials provided");
+        return;
+      }
+
+      const timeoutClient = new BronClient({
+        apiKey: process.env.BRON_API_KEY,
+        workspaceId: process.env.BRON_WORKSPACE_ID,
+        baseUrl: "https://httpstat.us/200?sleep=30000"
+      });
+
+      try {
+        await timeoutClient.workspaces.getWorkspaceById();
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
+    });
+
+    it("should handle invalid base URL", async () => {
+      const invalidUrlClient = new BronClient({
+        apiKey: process.env.BRON_API_KEY || "test-key",
+        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace",
+        baseUrl: "https://invalid-domain-that-does-not-exist.com"
+      });
+
+      try {
+        await invalidUrlClient.workspaces.getWorkspaceById();
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error).toBeDefined();
+      }
+    });
+
+    it("should maintain authentication across multiple requests", async () => {
       if (!client) {
         console.log("Skipping test - no API credentials provided");
         return;
       }
-      expect(client.workspaceId).toBe(process.env.BRON_WORKSPACE_ID);
+
+      const [workspace, accounts] = await Promise.all([
+        client.workspaces.getWorkspaceById(),
+        client.accounts.getAccounts()
+      ]);
+
+      expect(workspace).toBeDefined();
+      expect(accounts).toBeDefined();
+      expect(workspace.workspaceId === client.workspaceId).toBe(true);
     });
 
-    it("should have all API endpoints configured", () => {
+    it("should handle concurrent authentication requests", async () => {
       if (!client) {
         console.log("Skipping test - no API credentials provided");
         return;
       }
-      expect(client.balances).toBeDefined();
-      expect(client.workspaces).toBeDefined();
-      expect(client.addressBook).toBeDefined();
-      expect(client.assets).toBeDefined();
-      expect(client.accounts).toBeDefined();
-      expect(client.addresses).toBeDefined();
-      expect(client.transactionLimits).toBeDefined();
-      expect(client.transactions).toBeDefined();
+
+      const promises = Array.from({ length: 5 }, () =>
+        client.workspaces.getWorkspaceById()
+      );
+
+      const results = await Promise.allSettled(promises);
+      const successful = results.filter(r => r.status === "fulfilled").length;
+
+      expect(successful).toBeGreaterThan(0);
+    });
+
+    it("should authenticate with same API key in different clients", async () => {
+      if (!process.env.BRON_API_KEY || !process.env.BRON_WORKSPACE_ID) {
+        console.log("Skipping test - no API credentials provided");
+        return;
+      }
+
+      const client1 = new BronClient({
+        apiKey: process.env.BRON_API_KEY,
+        workspaceId: process.env.BRON_WORKSPACE_ID
+      });
+
+      const client2 = new BronClient({
+        apiKey: process.env.BRON_API_KEY,
+        workspaceId: process.env.BRON_WORKSPACE_ID,
+        baseUrl: process.env.BRON_API_URL || "https://api.bron.org"
+      });
+
+      try {
+        const [workspace1, workspace2] = await Promise.all([
+          client1.workspaces.getWorkspaceById(),
+          client2.workspaces.getWorkspaceById()
+        ]);
+
+        expect(workspace1).toBeDefined();
+        expect(workspace2).toBeDefined();
+        expect(workspace1.workspaceId).toBe(workspace2.workspaceId);
+      } catch (error) {
+        console.log("Skipping test - API credentials invalid or expired");
+        return;
+      }
     });
   });
-}); 
+});

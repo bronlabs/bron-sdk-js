@@ -86,7 +86,7 @@ export class OpenApiSdkGenerator {
         const fileName = this.getFileName(op);
         if (!fileData[fileName]) fileData[fileName] = { types: new Set(), methods: [] };
 
-        const { paramType, paramOptional, pathParams, isQueryInterface } = this.processParameters(op);
+        const { paramType, paramOptional, pathParams, isQueryInterface } = this.processParameters(op, route, method);
         const returnType = this.getReturnType(op);
 
         if (isQueryInterface) this.saveQueryInterface(paramType);
@@ -110,7 +110,7 @@ export class OpenApiSdkGenerator {
   private generateTypeDefinition(name: string, schema: OpenApiSchema): string {
     const imports = this.collectImports(schema);
     const importsStr = imports.length > 0 ? imports.map(imp => `import { ${imp} } from './${imp}.js';`).join('\n') + '\n\n' : '';
-    
+
     if (schema.enum) return `${importsStr}export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
     if (schema.allOf?.length === 1 && schema.allOf[0].$ref) return `${importsStr}export type ${name} = ${this.extractRefName(schema.allOf[0].$ref)};`;
     if (schema.$ref) return `${importsStr}export type ${name} = ${this.extractRefName(schema.$ref)};`;
@@ -128,17 +128,22 @@ export class OpenApiSdkGenerator {
     return `export interface ${name} {\n${properties}\n}`;
   }
 
-  private processParameters(op: OpenApiOperation): {
+  private processParameters(op: OpenApiOperation, route?: string, method?: string): {
     paramType: string;
     paramOptional: string;
     pathParams?: Array<{ name: string, required: boolean }>;
     isQueryInterface?: boolean
   } {
-    const pathParams = op.parameters?.filter(p => p.in === 'path' && p.name !== 'workspaceId').map(p => ({
+    const isWorkspaceGetEndpoint = method === 'get' && route === '/workspaces/{workspaceId}';
+    const pathParams = op.parameters?.filter(p => p.in === 'path' && (isWorkspaceGetEndpoint || p.name !== 'workspaceId')).map(p => ({
       name: p.name,
       required: p.required || false
     })) || [];
     const queryParams = op.parameters?.filter(p => p.in === 'query') || [];
+
+    if (isWorkspaceGetEndpoint) {
+      return { paramType: 'string', paramOptional: '?', pathParams };
+    }
 
     if (op.requestBody?.content?.['application/json']?.schema) {
       const schema = op.requestBody.content['application/json'].schema;
@@ -187,11 +192,12 @@ export class OpenApiSdkGenerator {
   }>, op?: OpenApiOperation): string {
     const hasRequestBody = op?.requestBody?.content?.['application/json']?.schema;
     const hasPathParams = pathParams && pathParams.length > 0;
+    const isWorkspaceGetEndpoint = method === 'get' && route === '/workspaces/{workspaceId}';
 
     if (hasRequestBody && hasPathParams) {
       const pathArgs = pathParams.map(p => `${p.name}: string`).join(', ');
       const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
-        p1 === 'workspaceId' ? '${this.workspaceId}' : `\${${p1}}`
+        (p1 === 'workspaceId' && !isWorkspaceGetEndpoint) ? '${this.workspaceId}' : `\${${p1}}`
       );
 
       const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``, 'body'];
@@ -202,9 +208,9 @@ export class OpenApiSdkGenerator {
     }
 
     if (!hasRequestBody && hasPathParams) {
-      const pathArgs = pathParams.map(p => `${p.name}: string`).join(', ');
+      const pathArgs = pathParams.map(p => `${p.name}${isWorkspaceGetEndpoint ? '?' : ''}: string`).join(', ');
       const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
-        p1 === 'workspaceId' ? '${this.workspaceId}' : `\${${p1}}`
+        (p1 === 'workspaceId' && !isWorkspaceGetEndpoint) ? '${this.workspaceId}' : (p1 === 'workspaceId' ? `\${${p1} || this.workspaceId}` : `\${${p1}}`)
       );
 
       const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
@@ -215,7 +221,8 @@ export class OpenApiSdkGenerator {
     }
 
     const pathExpr = route.replace(/{(\w+)}/g, (_, p1) =>
-      p1 === 'workspaceId' ? '${this.workspaceId}' : `\${params.${p1}}`
+      (p1 === 'workspaceId' && !isWorkspaceGetEndpoint) ? '${this.workspaceId}' :
+        isWorkspaceGetEndpoint ? `\${${p1} || this.workspaceId}` : `\${params.${p1}}`
     );
 
     const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
@@ -225,7 +232,7 @@ export class OpenApiSdkGenerator {
     }
 
     const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ''}({\n      ${args.join(',\n      ')}\n    });`;
-    const paramName = hasRequestBody ? 'body' : 'query';
+    const paramName = isWorkspaceGetEndpoint ? 'workspaceId' : (hasRequestBody ? 'body' : 'query');
     const signature = paramType === 'any'
       ? `async ${funcName}()${returnType ? `: Promise<${returnType}>` : ''}`
       : `async ${funcName}(${paramName}${paramOptional}: ${paramType})${returnType ? `: Promise<${returnType}>` : ''}`;
@@ -351,7 +358,8 @@ export class OpenApiSdkGenerator {
   }
 
   private isRefType(paramType: string): boolean {
-    return paramType !== 'any' && !paramType.endsWith('Params') && !paramType.endsWith('Request');
+    const primitiveTypes = ['string', 'number', 'boolean', 'any'];
+    return !primitiveTypes.includes(paramType) && !paramType.endsWith('Params') && !paramType.endsWith('Request');
   }
 
   private isEmptyObject(schema: OpenApiSchema): boolean {
@@ -379,27 +387,27 @@ export class OpenApiSdkGenerator {
       const refName = this.extractRefName(schema.$ref);
       collected.add(refName);
     }
-    
+
     if (schema.properties) {
       Object.values(schema.properties).forEach(prop => this.collectImports(prop, collected));
     }
-    
+
     if (schema.items) {
       this.collectImports(schema.items, collected);
     }
-    
+
     if (schema.allOf) {
       schema.allOf.forEach(s => this.collectImports(s, collected));
     }
-    
+
     if (schema.oneOf) {
       schema.oneOf.forEach(s => this.collectImports(s, collected));
     }
-    
+
     if (schema.anyOf) {
       schema.anyOf.forEach(s => this.collectImports(s, collected));
     }
-    
+
     return Array.from(collected);
   }
 }

@@ -1,5 +1,4 @@
 import { Workspace } from "../types/Workspace.js";
-import { WorkspaceQuery } from "../types/WorkspaceQuery.js";
 import { Activities } from "../types/Activities.js";
 import { ActivitiesQuery } from "../types/ActivitiesQuery.js";
 import { WorkspaceMembers } from "../types/WorkspaceMembers.js";
@@ -10,11 +9,10 @@ export class WorkspacesAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getWorkspace(query?: WorkspaceQuery): Promise<Workspace> {
+  async getWorkspaceById(workspaceId?: string): Promise<Workspace> {
     return this.http.request<Workspace>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}`,
-      query
+      path: `/workspaces/${workspaceId || this.workspaceId}`
     });
   }
 

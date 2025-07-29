@@ -27,7 +27,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "vitest",
+    "test": "vitest run",
     "lint": "eslint src --ext .ts",
     "generate-keys": "npm run build && node dist/utils/keyGenerator.js",
     "build:generator": "npx tsc src/utils/generator.ts --outDir dist/utils --module NodeNext --target ES2024 --skipLibCheck",

@@ -15,11 +15,12 @@ export interface BronJwtOptions {
 
 export function generateBronJwt({ method, path, body = "", kid, privateKey }: BronJwtOptions): string {
   const iat = Math.floor(Date.now() / 1000);
-  const messageString = `${iat}${method.toUpperCase()}${path}${body}`;
+  const exp = iat + 300;
+  const messageString = `${iat}${method?.toUpperCase() || ""}${path || ""}${body}`;
   const hash = crypto.createHash("sha256").update(messageString).digest("hex");
 
   const header = { alg: "ES256", kid };
-  const payload = { iat, message: hash };
+  const payload = { iat, exp, method, path, message: hash };
   const options: SignOptions = { algorithm: "ES256", header };
 
   return sign(payload, privateKey, options);

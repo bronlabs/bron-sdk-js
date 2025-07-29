@@ -9,7 +9,7 @@ export class StakeAPI {
   async getStakes(query?: StakesQuery): Promise<Stakes> {
     return this.http.request<Stakes>({
       method: "GET",
-      path: `/stakes/`,
+      path: `/workspaces/${this.workspaceId}/stakes`,
       query
     });
   }
