@@ -108,12 +108,7 @@ export class OpenApiSdkGenerator {
   }
 
   private generateTypeDefinition(name: string, schema: OpenApiSchema): string {
-    if (schema.enum) {
-      if (schema.enum.length === 0) {
-        return `export type ${name} = string;`;
-      }
-      return `export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
-    }
+    if (schema.enum) return `export type ${name} = ${schema.enum.map(v => JSON.stringify(v)).join(' | ')};`;
     if (schema.allOf?.length === 1 && schema.allOf[0].$ref) return `export type ${name} = ${this.extractRefName(schema.allOf[0].$ref)};`;
     if (schema.$ref) return `export type ${name} = ${this.extractRefName(schema.$ref)};`;
     if (this.isEmptyObject(schema)) return `export type ${name} = Record<string, any>;`;
