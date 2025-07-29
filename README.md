@@ -6,7 +6,6 @@ TypeScript SDK for the Bron API with comprehensive authentication and key genera
 
 - 🔐 **Authentication**: JWT-based authentication with ES256 keys
 - 🔑 **Key Generation**: Built-in tools for generating ES256 key pairs
-- 🧪 **Testing**: Comprehensive test suite for authentication
 - 📚 **Documentation**: Complete API documentation and examples
 
 ## Quick Start
@@ -24,6 +23,7 @@ npm run generate-keys
 ```
 
 This generates a new ES256 key pair and displays:
+
 - Public JWK (send to Bron Labs)
 - Private JWK (keep secure)
 - Environment setup instructions
@@ -39,8 +39,8 @@ const client = new BronClient({
 });
 
 // Use the client
-const workspaces = await client.workspaces.getWorkspaceById();
 const accounts = await client.accounts.getAccounts();
+const balances = await client.balances.getBalances();
 ```
 
 ## Key Generation
@@ -103,7 +103,7 @@ npm test test/keyGenerator.test.ts
 new BronClient({
   apiKey: string;        // Your private JWK
   workspaceId: string;   // Your workspace ID
-  baseUrl?: string;      // Optional, defaults to https://api.bron.org
+  baseUrl? : string;      // Optional, defaults to https://api.bron.org
 })
 ```
 

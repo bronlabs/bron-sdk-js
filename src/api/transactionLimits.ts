@@ -7,17 +7,18 @@ export class TransactionLimitsAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getTransactionLimits(workspaceId?: string): Promise<TransactionLimits> {
+  async getTransactionLimits(query?: TransactionLimitsQuery): Promise<TransactionLimits> {
     return this.http.request<TransactionLimits>({
       method: "GET",
-      path: `/workspaces/${workspaceId || this.workspaceId}/transaction-limits`
+      path: `/workspaces/${this.workspaceId}/transaction-limits`,
+      query
     });
   }
 
-  async getTransactionLimitById(limitId: string, workspaceId?: string): Promise<TransactionLimit> {
+  async getTransactionLimitById(limitId: string): Promise<TransactionLimit> {
     return this.http.request<TransactionLimit>({
       method: "GET",
-      path: `/workspaces/${workspaceId || this.workspaceId}/transaction-limits/${limitId}`
+      path: `/workspaces/${this.workspaceId}/transaction-limits/${limitId}`
     });
   }
 }

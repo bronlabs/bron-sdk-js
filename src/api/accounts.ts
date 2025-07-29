@@ -7,17 +7,18 @@ export class AccountsAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getAccounts(workspaceId?: string): Promise<Accounts> {
+  async getAccounts(query?: AccountsQuery): Promise<Accounts> {
     return this.http.request<Accounts>({
       method: "GET",
-      path: `/workspaces/${workspaceId || this.workspaceId}/accounts`
+      path: `/workspaces/${this.workspaceId}/accounts`,
+      query
     });
   }
 
-  async retrieveAccountById(accountId: string, workspaceId?: string): Promise<Account> {
+  async retrieveAccountById(accountId: string): Promise<Account> {
     return this.http.request<Account>({
       method: "GET",
-      path: `/workspaces/${workspaceId || this.workspaceId}/accounts/${accountId}`
+      path: `/workspaces/${this.workspaceId}/accounts/${accountId}`
     });
   }
 }
