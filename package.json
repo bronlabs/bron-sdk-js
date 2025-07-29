@@ -31,7 +31,7 @@
     "lint": "eslint src --ext .ts",
     "build:generator": "npx tsc src/utils/generator.ts --outDir dist --module NodeNext --target ES2024 --skipLibCheck",
     "generate": "rm -rf dist && npm run build:generator && node dist/generator.js && npm run build",
-    "generate-keys": "node generate-keys.js",
+    "generate-keys": "node dist/utils/keyGenerator.js",
     "prepublishOnly": "npm run build && npm test"
   },
   "dependencies": {
