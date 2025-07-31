@@ -6,6 +6,8 @@ export interface Network {
   explorerUrl?: string;
   isTestnet?: boolean;
   name?: string;
+  nativeAssetId?: string;
+  nativeAssetSymbol?: string;
   networkId?: string;
   tags?: NetworkTag[];
 }
