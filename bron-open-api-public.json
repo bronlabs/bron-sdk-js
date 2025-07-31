@@ -805,6 +805,12 @@
             "examples" : [ "Ethereum" ],
             "type" : "string"
           },
+          "nativeAssetId" : {
+            "type" : "string"
+          },
+          "nativeAssetSymbol" : {
+            "type" : "string"
+          },
           "networkId" : {
             "description" : "The unique ID for this blockchain network",
             "examples" : [ "BTC" ],
@@ -1634,6 +1640,14 @@
               "type" : "string"
             },
             "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include assets that have this contract address",
+          "in" : "query",
+          "name" : "contractAddress",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
           }
         }, {
           "description" : "Filter by what kind of asset. [See details](/enums/AssetType)",
