@@ -1,4 +1,5 @@
 export interface DepositAddressesQuery {
+  accountId?: string;
   addressIds?: string[];
   externalId?: string;
   accountTypes?: string[];

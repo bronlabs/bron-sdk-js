@@ -21,7 +21,7 @@ export class TransactionsAPI {
   async createTransaction(body: CreateTransaction) {
     return this.http.request({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/`,
+      path: `/workspaces/${this.workspaceId}/transactions`,
       body
     });
   }

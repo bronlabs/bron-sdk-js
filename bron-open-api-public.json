@@ -1330,7 +1330,7 @@
         "type" : "object"
       },
       "TransactionStatus" : {
-        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "error" ],
+        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error" ],
         "type" : "string"
       },
       "TransactionType" : {
@@ -3044,7 +3044,15 @@
       "get" : {
         "description" : "Retrieve information about all deposit addresses in an workspace\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
         "parameters" : [ {
-          "description" : "List of comma-separated address",
+          "description" : "Filter addresses by account id",
+          "in" : "query",
+          "name" : "accountId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "List of comma-separated address IDs",
           "in" : "query",
           "name" : "addressIds",
           "required" : false,
@@ -3082,6 +3090,7 @@
             "type" : "string"
           }
         }, {
+          "description" : "Address string, case insensitive",
           "in" : "query",
           "name" : "address",
           "required" : false,
@@ -4248,9 +4257,7 @@
         },
         "summary" : "Get Transactions",
         "tags" : [ "transactions" ]
-      }
-    },
-    "/workspaces/{workspaceId}/transactions/" : {
+      },
       "post" : {
         "description" : "Universal Create Transaction endpoint for moving on-chain assets with full control over parameters. Use it to:\n\n* Transfer base currencies (BTC, ETH, etc.) or any supported token between your own accounts.\n\n* Send funds to any external blockchain address — directly or via a saved address-book record.\n\n* Fine-tune fees and network settings.\n\n<sup>API Key permissions: Manage Transfers</sup>",
         "parameters" : [ {
