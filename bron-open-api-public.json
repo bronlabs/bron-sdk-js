@@ -4560,6 +4560,14 @@
             "type" : "string"
           }
         }, {
+          "description" : "External Id",
+          "in" : "query",
+          "name" : "externalId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "in" : "path",
           "name" : "workspaceId",
           "required" : true,

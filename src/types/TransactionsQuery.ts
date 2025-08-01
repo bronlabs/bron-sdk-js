@@ -19,4 +19,5 @@ export interface TransactionsQuery {
   sortDirection?: string;
   limit?: string;
   offset?: string;
+  externalId?: string;
 }
