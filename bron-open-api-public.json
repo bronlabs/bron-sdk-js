@@ -1752,6 +1752,163 @@
         "tags" : [ "assets" ]
       }
     },
+    "/dictionary/assets/{assetId}" : {
+      "get" : {
+        "description" : "Retrieves information about a single asset by its ID\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "parameters" : [ {
+          "description" : "Filter results to only include these specific asset IDs",
+          "example" : [ "1,2,3" ],
+          "in" : "query",
+          "name" : "assetIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include assets from these blockchain networks",
+          "example" : [ "BTC,ETH" ],
+          "in" : "query",
+          "name" : "networkIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include assets that represent these specific symbols",
+          "example" : [ "s20153" ],
+          "in" : "query",
+          "name" : "symbolIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include assets that have this contract address",
+          "in" : "query",
+          "name" : "contractAddress",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Filter by what kind of asset. [See details](/enums/AssetType)",
+          "in" : "query",
+          "name" : "assetType",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/AssetType",
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "assetId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Asset"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Asset by ID",
+        "tags" : [ "assets" ]
+      }
+    },
     "/dictionary/networks" : {
       "get" : {
         "description" : "Networks represent the underlying blockchain infrastructure or traditional financial systems where assets can exist and be transacted.\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
@@ -1844,6 +2001,96 @@
           }
         },
         "summary" : "Get Networks",
+        "tags" : [ "assets" ]
+      }
+    },
+    "/dictionary/networks/{networkId}" : {
+      "get" : {
+        "description" : "Retrieves information about a single network by its ID\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "networkId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Network"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Network by ID",
         "tags" : [ "assets" ]
       }
     },
@@ -2058,6 +2305,132 @@
           }
         },
         "summary" : "Get Symbols",
+        "tags" : [ "assets" ]
+      }
+    },
+    "/dictionary/symbols/{symbolId}" : {
+      "get" : {
+        "description" : "Retrieves information about a single symbol by its ID\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "parameters" : [ {
+          "description" : "Filter results to only include these specific symbol IDs",
+          "in" : "query",
+          "name" : "symbolIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include symbols that are used by these specific asset IDs. Useful when you want to know which symbols are available for certain assets.",
+          "in" : "query",
+          "name" : "assetIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "symbolId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Symbol"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Symbol by ID",
         "tags" : [ "assets" ]
       }
     },
