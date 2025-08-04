@@ -43,7 +43,7 @@ export class HttpClient {
       path: fullPath,
       kid,
       privateKey,
-      body: body ? JSON.stringify(body) : ""
+      body: body ? jsonStringify(body) : ""
     });
 
     const headers: Record<string, string> = {
@@ -57,7 +57,7 @@ export class HttpClient {
     const res = await fetch(url, {
       method,
       headers,
-      body: body ? JSON.stringify(body) : undefined
+      body: body ? jsonStringify(body) : undefined
     });
 
     if (!res.ok) {
@@ -67,4 +67,18 @@ export class HttpClient {
 
     return res.json();
   }
+}
+
+export function jsonStringify(obj: unknown, space?: string | number): string {
+  return JSON.stringify(
+    obj,
+    (_, value) => {
+      if (value === null) {
+        return undefined; // Filtering out properties
+      }
+
+      return typeof value === 'bigint' ? Number(value) : value;
+    },
+    space
+  );
 }
