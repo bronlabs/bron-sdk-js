@@ -1,4 +1,5 @@
 import { generateBronJwt, parseJwkEcPrivateKey } from "./auth.js";
+import { SDK_VERSION } from "./version.js";
 
 export interface HttpRequestOptions {
   method: string;
@@ -8,10 +9,13 @@ export interface HttpRequestOptions {
 }
 
 export class HttpClient {
+  private userAgent: string;
+
   constructor(
     private baseUrl: string,
     private apiKeyJwk: string
   ) {
+    this.userAgent = `bron-sdk-js/${SDK_VERSION}`;
   }
 
   async request<T>({
@@ -47,7 +51,8 @@ export class HttpClient {
     });
 
     const headers: Record<string, string> = {
-      Authorization: `ApiKey ${jwt}`
+      Authorization: `ApiKey ${jwt}`,
+      "User-Agent": this.userAgent
     };
 
     if (body) {
