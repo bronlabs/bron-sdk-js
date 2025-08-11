@@ -9,13 +9,13 @@ export interface HttpRequestOptions {
 }
 
 export class HttpClient {
-  private userAgent: string;
+  private readonly userAgent: string;
 
   constructor(
     private baseUrl: string,
     private apiKeyJwk: string
   ) {
-    this.userAgent = `bron-sdk-js/${SDK_VERSION}`;
+    this.userAgent = `Bron SDK JS/${SDK_VERSION}`;
   }
 
   async request<T>({
