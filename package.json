@@ -26,7 +26,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "update-version": "node scripts/update-version.js",
+    "build": "npm run update-version && tsc",
     "test": "vitest run",
     "lint": "eslint src --ext .ts",
     "generate-keys": "npm run build && node dist/utils/keyGenerator.js",
