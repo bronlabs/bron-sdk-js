@@ -82,6 +82,16 @@
         "required" : [ "accounts" ],
         "type" : "object"
       },
+      "ActivateParams" : {
+        "properties" : {
+          "assetId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Activate",
+        "type" : "object"
+      },
       "ActivatedAsset" : {
         "properties" : { },
         "type" : "object"
@@ -216,6 +226,16 @@
         "required" : [ "addressId", "externalId", "accountType", "status", "networkId", "createdBy", "updatedBy", "createdAt", "updatedAt", "acceptsAllAssets", "requiresAssetsActivation" ],
         "type" : "object"
       },
+      "AddressActivationParams" : {
+        "properties" : {
+          "assetId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Address activation",
+        "type" : "object"
+      },
       "AddressBookRecord" : {
         "properties" : {
           "accountIds" : {
@@ -304,6 +324,16 @@
         "required" : [ "records" ],
         "type" : "object"
       },
+      "AddressCreationParams" : {
+        "properties" : {
+          "assetId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Address creation",
+        "type" : "object"
+      },
       "AddressStatus" : {
         "enum" : [ "new", "pending", "address-activation-required", "address-creation-required", "approval-pending", "enabled", "disabled", "error", "account-archived" ],
         "type" : "string"
@@ -318,6 +348,25 @@
           }
         },
         "required" : [ "addresses" ],
+        "type" : "object"
+      },
+      "AllowanceParams" : {
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "assetId" : {
+            "type" : "string"
+          },
+          "toAddress" : {
+            "type" : "string"
+          },
+          "unlimited" : {
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "assetId", "toAddress" ],
+        "title" : "Allowance",
         "type" : "object"
       },
       "Asset" : {
@@ -531,6 +580,28 @@
             "description" : "Transaction specific parameters",
             "oneOf" : [ {
               "$ref" : "#/components/schemas/WithdrawalParams"
+            }, {
+              "$ref" : "#/components/schemas/ActivateParams"
+            }, {
+              "$ref" : "#/components/schemas/AddressActivationParams"
+            }, {
+              "$ref" : "#/components/schemas/AddressCreationParams"
+            }, {
+              "$ref" : "#/components/schemas/AllowanceParams"
+            }, {
+              "$ref" : "#/components/schemas/IntentsParams"
+            }, {
+              "$ref" : "#/components/schemas/SetupParams"
+            }, {
+              "$ref" : "#/components/schemas/StakeClaimParams"
+            }, {
+              "$ref" : "#/components/schemas/StakeDelegationParams"
+            }, {
+              "$ref" : "#/components/schemas/StakeUnDelegationParams"
+            }, {
+              "$ref" : "#/components/schemas/SwapParams"
+            }, {
+              "$ref" : "#/components/schemas/WithdrawalParams"
             } ]
           },
           "transactionType" : {
@@ -553,6 +624,27 @@
           }
         },
         "required" : [ "transactions" ],
+        "type" : "object"
+      },
+      "DepositParams" : {
+        "properties" : {
+          "amount" : {
+            "description" : "The amount of transaction",
+            "examples" : [ "10.123" ],
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "The asset ID for the transaction",
+            "examples" : [ "14212" ],
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "The asset's blockchain network name for the transaction",
+            "examples" : [ "ETH" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "amount", "assetId", "networkId" ],
         "type" : "object"
       },
       "FeeLevel" : {
@@ -604,6 +696,20 @@
       "IdentityType" : {
         "enum" : [ "email" ],
         "type" : "string"
+      },
+      "IntentsParams" : {
+        "properties" : {
+          "feeLevel" : {
+            "$ref" : "#/components/schemas/FeeLevel",
+            "description" : "[See details](/enums/FeeLevel)"
+          },
+          "intentId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "intentId" ],
+        "title" : "Intent",
+        "type" : "object"
       },
       "KeyType" : {
         "enum" : [ "secp256k1", "edwards25519", "BLS12381G1", "pallas", "RSA4096" ],
@@ -841,6 +947,34 @@
         },
         "type" : "object"
       },
+      "RawTransactionParams" : {
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "assetId" : {
+            "type" : "string"
+          },
+          "data" : {
+            "type" : "string"
+          },
+          "feeLevel" : {
+            "$ref" : "#/components/schemas/FeeLevel",
+            "description" : "[See details](/enums/FeeLevel)"
+          },
+          "rawTransactions" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "toAddress" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId", "toAddress" ],
+        "type" : "object"
+      },
       "RecordStatus" : {
         "enum" : [ "new", "active", "rejected", "deleted" ],
         "type" : "string"
@@ -863,6 +997,16 @@
             "type" : "string"
           }
         },
+        "type" : "object"
+      },
+      "SetupParams" : {
+        "properties" : {
+          "assetId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Setup",
         "type" : "object"
       },
       "SignatureScheme" : {
@@ -955,6 +1099,54 @@
       "SortingDirection" : {
         "enum" : [ "ASC", "DESC" ],
         "type" : "string"
+      },
+      "StakeClaimParams" : {
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "assetId" : {
+            "type" : "string"
+          },
+          "stakeId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Stake claim",
+        "type" : "object"
+      },
+      "StakeDelegationParams" : {
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "assetId" : {
+            "type" : "string"
+          },
+          "poolId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Stake delegation",
+        "type" : "object"
+      },
+      "StakeUnDelegationParams" : {
+        "properties" : {
+          "amount" : {
+            "type" : "string"
+          },
+          "assetId" : {
+            "type" : "string"
+          },
+          "stakeId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId" ],
+        "title" : "Stake undelegation",
+        "type" : "object"
       },
       "Stakes" : {
         "properties" : { },
@@ -1095,6 +1287,28 @@
               "$ref" : "#/components/schemas/WithdrawalParams"
             }, {
               "$ref" : "#/components/schemas/SwapParams"
+            }, {
+              "$ref" : "#/components/schemas/ActivateParams"
+            }, {
+              "$ref" : "#/components/schemas/AddressActivationParams"
+            }, {
+              "$ref" : "#/components/schemas/AddressCreationParams"
+            }, {
+              "$ref" : "#/components/schemas/AllowanceParams"
+            }, {
+              "$ref" : "#/components/schemas/DepositParams"
+            }, {
+              "$ref" : "#/components/schemas/IntentsParams"
+            }, {
+              "$ref" : "#/components/schemas/RawTransactionParams"
+            }, {
+              "$ref" : "#/components/schemas/SetupParams"
+            }, {
+              "$ref" : "#/components/schemas/StakeClaimParams"
+            }, {
+              "$ref" : "#/components/schemas/StakeDelegationParams"
+            }, {
+              "$ref" : "#/components/schemas/StakeUnDelegationParams"
             } ]
           },
           "status" : {
