@@ -1,0 +1,1 @@
+export type EventType = "in" | "out" | "fee" | "negative-deposit" | "stake-delegation" | "stake-undelegation" | "stake-claim" | "stake-earn-reward" | "stake-reward-accrued" | "allowance" | "nft-in" | "nft-out";

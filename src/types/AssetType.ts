@@ -1,1 +1,1 @@
-export type AssetType = "blockchain" | "exchange" | "fiat";
+export type AssetType = "blockchain" | "exchange" | "fiat" | "nft";

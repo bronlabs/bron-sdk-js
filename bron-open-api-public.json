@@ -409,7 +409,7 @@
         "type" : "object"
       },
       "AssetType" : {
-        "enum" : [ "blockchain", "exchange", "fiat" ],
+        "enum" : [ "blockchain", "exchange", "fiat", "nft" ],
         "type" : "string"
       },
       "Assets" : {
@@ -559,11 +559,49 @@
         "required" : [ "externalId", "networkId", "name", "address" ],
         "type" : "object"
       },
+      "CreateIntent" : {
+        "properties" : {
+          "accountId" : {
+            "description" : "The id of the account where the intent transaction should be placed",
+            "examples" : [ "kqftx9zd3g6qdp09or" ],
+            "type" : "string"
+          },
+          "fromAmount" : {
+            "description" : "The amount of asset that will be sent. Optional, one of `fromAmount` or `toAmount` must be specified.",
+            "examples" : [ "120.015" ],
+            "type" : "string"
+          },
+          "fromAssetId" : {
+            "examples" : [ "2" ],
+            "type" : "string"
+          },
+          "intentId" : {
+            "description" : "Unique intent identifier from client (should be unique per the account)",
+            "examples" : [ "w2u573pjj5wl975z4a9" ],
+            "type" : "string"
+          },
+          "toAmount" : {
+            "examples" : [ "117500.03" ],
+            "type" : "string"
+          },
+          "toAssetId" : {
+            "examples" : [ "5002" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "accountId", "intentId", "fromAssetId", "toAssetId" ],
+        "type" : "object"
+      },
       "CreateTransaction" : {
         "properties" : {
           "accountId" : {
             "description" : "The id of the account where the transaction should be placed",
             "examples" : [ "w9jh0gf3w9qaxlre7enezt17" ],
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "The description of the transaction",
+            "examples" : [ "Withdrawal to an exchange" ],
             "type" : "string"
           },
           "expiresAt" : {
@@ -647,6 +685,64 @@
         "required" : [ "amount", "assetId", "networkId" ],
         "type" : "object"
       },
+      "EventAllowance" : {
+        "properties" : { },
+        "type" : "object"
+      },
+      "EventExtra" : {
+        "properties" : {
+          "allowance" : {
+            "description" : "For 'allowance' event. Specify to which address allowance was granted",
+            "items" : {
+              "$ref" : "#/components/schemas/EventAllowance"
+            },
+            "type" : "array"
+          },
+          "in" : {
+            "description" : "For 'in' event. Specify from which address the funds are transferred",
+            "items" : {
+              "$ref" : "#/components/schemas/EventInput"
+            },
+            "type" : "array"
+          },
+          "out" : {
+            "description" : "For 'out' event. Specify to which address the funds are transferred",
+            "items" : {
+              "$ref" : "#/components/schemas/EventOutput"
+            },
+            "type" : "array"
+          },
+          "rewardInfo" : {
+            "$ref" : "#/components/schemas/RewardInfo",
+            "description" : "Detail information for earn reward.",
+            "type" : "object"
+          },
+          "stakeInfo" : {
+            "description" : "Detail information for 'stake' operations. ",
+            "items" : {
+              "$ref" : "#/components/schemas/StakeInfo"
+            },
+            "type" : "array"
+          },
+          "transactionFailed" : {
+            "description" : "If transaction was added to block, but transaction execution failed (e.g. smart contract execution failed)",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "EventInput" : {
+        "properties" : { },
+        "type" : "object"
+      },
+      "EventOutput" : {
+        "properties" : { },
+        "type" : "object"
+      },
+      "EventType" : {
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out" ],
+        "type" : "string"
+      },
       "FeeLevel" : {
         "enum" : [ "low", "medium", "high" ],
         "type" : "string"
@@ -695,6 +791,71 @@
       },
       "IdentityType" : {
         "enum" : [ "email" ],
+        "type" : "string"
+      },
+      "Intent" : {
+        "properties" : {
+          "createdAt" : {
+            "description" : "Creation timestamp of the intent (epoch millis)",
+            "examples" : [ "1794678400000" ],
+            "type" : "string"
+          },
+          "expiresAt" : {
+            "description" : "Expiration timestamp of the intent (epoch millis)",
+            "examples" : [ "1758188560749" ],
+            "type" : "string"
+          },
+          "fromAmount" : {
+            "description" : "Amount of the from-asset specified by the user",
+            "examples" : [ "100.50" ],
+            "type" : "string"
+          },
+          "fromAssetId" : {
+            "description" : "ID of the asset being sent",
+            "examples" : [ "2" ],
+            "type" : "string"
+          },
+          "intentId" : {
+            "description" : "Unique user-generated ID of the intent",
+            "examples" : [ "rzsdziq1iknnzszmmtqz" ],
+            "type" : "string"
+          },
+          "price" : {
+            "description" : "Execution price of the swap (quote/base)",
+            "examples" : [ "101.2312" ],
+            "type" : "string"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/IntentOrderStatus",
+            "description" : "Current status of the intent order. [See details](/enums/IntentOrderStatus)",
+            "examples" : [ "auction-in-progress" ]
+          },
+          "toAmount" : {
+            "description" : "Amount of the to-asset requested or estimated",
+            "examples" : [ "0.0025" ],
+            "type" : "string"
+          },
+          "toAssetId" : {
+            "description" : "ID of the asset to receive",
+            "examples" : [ "5002" ],
+            "type" : "string"
+          },
+          "updatedAt" : {
+            "description" : "Last update timestamp of the intent (epoch millis)",
+            "examples" : [ "1794764800000" ],
+            "type" : "string"
+          },
+          "userSettlementDeadline" : {
+            "description" : "Deadline timestamp for user settlement (epoch millis)",
+            "examples" : [ "1759188567456" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "intentId", "status", "fromAssetId", "toAssetId", "updatedAt", "createdAt" ],
+        "type" : "object"
+      },
+      "IntentOrderStatus" : {
+        "enum" : [ "not-exist", "user-initiated", "auction-in-progress", "wait-for-oracle-confirm-user-tx", "wait-for-solver-tx", "wait-for-oracle-confirm-solver-tx", "completed", "liquidated", "cancelled" ],
         "type" : "string"
       },
       "IntentsParams" : {
@@ -999,6 +1160,10 @@
         },
         "type" : "object"
       },
+      "RewardInfo" : {
+        "properties" : { },
+        "type" : "object"
+      },
       "SetupParams" : {
         "properties" : {
           "assetId" : {
@@ -1130,6 +1295,10 @@
         },
         "required" : [ "assetId" ],
         "title" : "Stake delegation",
+        "type" : "object"
+      },
+      "StakeInfo" : {
+        "properties" : { },
         "type" : "object"
       },
       "StakeUnDelegationParams" : {
@@ -1391,8 +1560,74 @@
             "$ref" : "#/components/schemas/SigningRequest",
             "description" : "Current signing request",
             "type" : "object"
+          },
+          "events" : {
+            "description" : "List of related to transaction events",
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionEvent"
+            },
+            "type" : "array"
           }
         },
+        "type" : "object"
+      },
+      "TransactionEvent" : {
+        "properties" : {
+          "accountId" : {
+            "description" : "Account ID",
+            "type" : "string"
+          },
+          "accountType" : {
+            "$ref" : "#/components/schemas/AccountType",
+            "description" : "Account Type. [See details](/enums/AccountType)"
+          },
+          "amount" : {
+            "description" : "Amount",
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "Asset ID",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "description" : "Created at",
+            "type" : "string"
+          },
+          "eventId" : {
+            "description" : "Event ID",
+            "type" : "string"
+          },
+          "eventType" : {
+            "$ref" : "#/components/schemas/EventType",
+            "description" : "Event type. [See details](/enums/EventType)"
+          },
+          "extra" : {
+            "$ref" : "#/components/schemas/EventExtra",
+            "description" : "Extra",
+            "type" : "object"
+          },
+          "networkId" : {
+            "description" : "Network ID",
+            "type" : "string"
+          },
+          "symbol" : {
+            "description" : "Symbol",
+            "type" : "string"
+          },
+          "transactionId" : {
+            "description" : "Transaction ID",
+            "type" : "string"
+          },
+          "usdAmount" : {
+            "description" : "Total approximate amount in USD",
+            "type" : "string"
+          },
+          "workspaceId" : {
+            "description" : "Workspace ID",
+            "type" : "string"
+          }
+        },
+        "required" : [ "eventId", "transactionId", "accountId", "accountType", "workspaceId", "eventType", "assetId", "createdAt" ],
         "type" : "object"
       },
       "TransactionExtra" : {
@@ -4096,6 +4331,202 @@
         "tags" : [ "balances" ]
       }
     },
+    "/workspaces/{workspaceId}/intents" : {
+      "post" : {
+        "description" : "Creates an intent for swaps between two assets. [More details](/intents/about).\n\n<sup>API Key permissions: Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateIntent"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Intent"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Create Intent request",
+        "tags" : [ "intents" ]
+      }
+    },
+    "/workspaces/{workspaceId}/intents/{intentId}" : {
+      "get" : {
+        "description" : "Returns the details of a single intents with price and status.\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "intentId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Intent"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Intent request by ID",
+        "tags" : [ "intents" ]
+      }
+    },
     "/workspaces/{workspaceId}/members" : {
       "get" : {
         "description" : "Retrieve information about workspace members\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
@@ -5474,6 +5905,8 @@
     "name" : "balances"
   }, {
     "name" : "addresses"
+  }, {
+    "name" : "intents"
   }, {
     "name" : "assets"
   }, {
