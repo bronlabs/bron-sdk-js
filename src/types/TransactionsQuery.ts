@@ -20,4 +20,5 @@ export interface TransactionsQuery {
   limit?: string;
   offset?: string;
   externalId?: string;
+  includeEvents?: boolean;
 }

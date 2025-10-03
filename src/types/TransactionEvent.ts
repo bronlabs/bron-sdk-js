@@ -7,6 +7,7 @@ export interface TransactionEvent {
   accountType: AccountType;
   amount?: string;
   assetId: string;
+  blockchainTxId?: string;
   createdAt: string;
   eventId: string;
   eventType: EventType;

@@ -493,6 +493,10 @@
       },
       "BlockchainRequest" : {
         "properties" : {
+          "externalBroadcast" : {
+            "description" : "Withdraw is requested to be processed by external system. In that case we don't broadcast it to blockchain",
+            "type" : "boolean"
+          },
           "networkId" : {
             "type" : "string"
           }
@@ -686,7 +690,24 @@
         "type" : "object"
       },
       "EventAllowance" : {
-        "properties" : { },
+        "properties" : {
+          "address" : {
+            "description" : "Allowance address",
+            "type" : "string"
+          },
+          "amount" : {
+            "description" : "Allowance amount",
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "Allowance network ID",
+            "type" : "string"
+          },
+          "unlimited" : {
+            "description" : "Allowance unlimited flag. If true then allowance is unlimited, amount will be ignored",
+            "type" : "boolean"
+          }
+        },
         "type" : "object"
       },
       "EventExtra" : {
@@ -732,15 +753,61 @@
         "type" : "object"
       },
       "EventInput" : {
-        "properties" : { },
+        "properties" : {
+          "address" : {
+            "description" : "Address",
+            "type" : "string"
+          },
+          "amount" : {
+            "description" : "Amount in event's asset units",
+            "type" : "string"
+          },
+          "fromAccountId" : {
+            "description" : "Account ID where assets were sent from",
+            "type" : "string"
+          },
+          "fromAddressBookRecordId" : {
+            "description" : "Address Book Record ID where assets were sent from",
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "Network ID",
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "EventOutput" : {
-        "properties" : { },
+        "properties" : {
+          "address" : {
+            "description" : "Address",
+            "type" : "string"
+          },
+          "amount" : {
+            "description" : "Amount in event's asset units",
+            "type" : "string"
+          },
+          "memo" : {
+            "description" : "Address memo",
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "Network ID",
+            "type" : "string"
+          },
+          "toAccountId" : {
+            "description" : "Account ID where assets were sent to",
+            "type" : "string"
+          },
+          "toAddressBookRecordId" : {
+            "description" : "Address Book Record ID where assets were sent to",
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "EventType" : {
-        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out" ],
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out", "loyalty-lock", "loyalty-unlock", "loyalty-reward" ],
         "type" : "string"
       },
       "FeeLevel" : {
@@ -1562,7 +1629,7 @@
             "type" : "object"
           },
           "events" : {
-            "description" : "List of related to transaction events",
+            "description" : "Transaction events",
             "items" : {
               "$ref" : "#/components/schemas/TransactionEvent"
             },
@@ -1587,6 +1654,10 @@
           },
           "assetId" : {
             "description" : "Asset ID",
+            "type" : "string"
+          },
+          "blockchainTxId" : {
+            "description" : "Blockchain transaction hash ID",
             "type" : "string"
           },
           "createdAt" : {
@@ -1630,6 +1701,18 @@
         "required" : [ "eventId", "transactionId", "accountId", "accountType", "workspaceId", "eventType", "assetId", "createdAt" ],
         "type" : "object"
       },
+      "TransactionEvents" : {
+        "properties" : {
+          "events" : {
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionEvent"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "events" ],
+        "type" : "object"
+      },
       "TransactionExtra" : {
         "properties" : {
           "approvers" : {
@@ -1661,10 +1744,6 @@
             "description" : "The description of the transaction",
             "examples" : [ "Withdrawal to an exchange" ],
             "type" : "string"
-          },
-          "externalBroadcast" : {
-            "description" : "Withdraw is requested to be processed by external system. In that case we don't broadcast it to blockchain",
-            "type" : "boolean"
           },
           "fromAccountId" : {
             "description" : "The ID of a account where an order was made from",
@@ -1785,15 +1864,19 @@
         "type" : "object"
       },
       "TransactionStatus" : {
-        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error" ],
+        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit" ],
         "type" : "string"
       },
       "TransactionType" : {
-        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "raw-transaction", "address-activation", "address-creation", "swap-lifi", "intents" ],
+        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "swap-lifi", "intents", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "nft-deposit", "nft-withdrawal" ],
         "type" : "string"
       },
       "Transactions" : {
         "properties" : {
+          "embedded" : {
+            "$ref" : "#/components/schemas/TransactionEmbedded",
+            "type" : "object"
+          },
           "transactions" : {
             "items" : {
               "$ref" : "#/components/schemas/Transaction"
@@ -4082,7 +4165,7 @@
             "type" : "array"
           }
         }, {
-          "description" : "Filter wallets by assetId",
+          "description" : "Filter balances by assetId",
           "in" : "query",
           "name" : "assetIds",
           "required" : false,
@@ -4093,12 +4176,15 @@
             "type" : "array"
           }
         }, {
-          "description" : "Filter wallets by networkId",
+          "description" : "Filter balances by networkId",
           "in" : "query",
-          "name" : "networkId",
+          "name" : "networkIds",
           "required" : false,
           "schema" : {
-            "type" : "string"
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
           }
         }, {
           "description" : "Filter balances by account types. [See details](/enums/AccountType)",
@@ -4123,7 +4209,7 @@
             "type" : "array"
           }
         }, {
-          "description" : "Filter only wallets with non-zero balance",
+          "description" : "Filter only balances with non-zero balance",
           "in" : "query",
           "name" : "nonEmpty",
           "required" : false,
@@ -5213,6 +5299,14 @@
             "type" : "string"
           }
         }, {
+          "description" : "Include events in the response _embedded field",
+          "in" : "query",
+          "name" : "includeEvents",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
           "in" : "path",
           "name" : "workspaceId",
           "required" : true,
@@ -5891,6 +5985,103 @@
           }
         },
         "summary" : "Create signing request",
+        "tags" : [ "transactions" ]
+      }
+    },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/events" : {
+      "get" : {
+        "description" : "<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionEvents"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Transaction Events",
         "tags" : [ "transactions" ]
       }
     }

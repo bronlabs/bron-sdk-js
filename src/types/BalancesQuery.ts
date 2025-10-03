@@ -2,7 +2,7 @@ export interface BalancesQuery {
   accountIds?: string[];
   balanceIds?: string[];
   assetIds?: string[];
-  networkId?: string;
+  networkIds?: string[];
   accountTypes?: string[];
   excludedAccountTypes?: string[];
   nonEmpty?: boolean;

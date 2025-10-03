@@ -9,7 +9,6 @@ export interface TransactionExtra {
   confirmations?: string;
   depositTransactionId?: string;
   description?: string;
-  externalBroadcast?: boolean;
   fromAccountId?: string;
   fromAddress?: string;
   memo?: string;

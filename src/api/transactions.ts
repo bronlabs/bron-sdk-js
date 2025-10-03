@@ -4,6 +4,7 @@ import { CreateTransaction } from "../types/CreateTransaction.js";
 import { CreateTransactions } from "../types/CreateTransactions.js";
 import { Transaction } from "../types/Transaction.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
+import { TransactionEvents } from "../types/TransactionEvents.js";
 import { HttpClient } from "../utils/http.js";
 
 export class TransactionsAPI {
@@ -61,6 +62,13 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/create-signing-request`
+    });
+  }
+
+  async getTransactionEvents(transactionId: string): Promise<TransactionEvents> {
+    return this.http.request<TransactionEvents>({
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/events`
     });
   }
 }
