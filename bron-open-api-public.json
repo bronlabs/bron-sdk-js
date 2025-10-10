@@ -738,6 +738,11 @@
             "description" : "Detail information for earn reward.",
             "type" : "object"
           },
+          "signingMessage" : {
+            "$ref" : "#/components/schemas/SigningMessage",
+            "description" : "Detail information about signing message",
+            "type" : "object"
+          },
           "stakeInfo" : {
             "description" : "Detail information for 'stake' operations. ",
             "items" : {
@@ -807,7 +812,7 @@
         "type" : "object"
       },
       "EventType" : {
-        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out", "loyalty-lock", "loyalty-unlock", "loyalty-reward" ],
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "message-signed" ],
         "type" : "string"
       },
       "FeeLevel" : {
@@ -1251,6 +1256,20 @@
       },
       "Signed" : {
         "properties" : { },
+        "type" : "object"
+      },
+      "SigningMessage" : {
+        "properties" : {
+          "message" : {
+            "description" : "Signing message",
+            "type" : "string"
+          },
+          "version" : {
+            "description" : "Message version",
+            "type" : "string"
+          }
+        },
+        "required" : [ "message" ],
         "type" : "object"
       },
       "SigningRequest" : {
@@ -1864,7 +1883,7 @@
         "type" : "object"
       },
       "TransactionStatus" : {
-        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit" ],
+        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "partially-completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit", "awaiting-defi-execution" ],
         "type" : "string"
       },
       "TransactionType" : {
@@ -2641,6 +2660,18 @@
             },
             "type" : "array"
           }
+        }, {
+          "description" : "The asset IDs you want to get market prices for",
+          "example" : [ "1,2,3" ],
+          "in" : "query",
+          "name" : "baseAssetIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -3091,7 +3122,7 @@
     },
     "/workspaces/{workspaceId}/accounts" : {
       "get" : {
-        "description" : "Retrieve your accounts\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "description" : "Retrieve your accounts\n\n<sup>API Key permissions: View only, Manage Transfers, MPC Hot Signer</sup>",
         "parameters" : [ {
           "description" : "Filter by account types. [See details](/enums/AccountType)",
           "in" : "query",
@@ -3258,7 +3289,7 @@
     },
     "/workspaces/{workspaceId}/accounts/{accountId}" : {
       "get" : {
-        "description" : "<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "description" : "<sup>API Key permissions: View only, Manage Transfers, MPC Hot Signer</sup>",
         "parameters" : [ {
           "in" : "path",
           "name" : "workspaceId",
@@ -5108,7 +5139,7 @@
     },
     "/workspaces/{workspaceId}/transactions" : {
       "get" : {
-        "description" : "<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "description" : "<sup>API Key permissions: View only, Manage Transfers, MPC Hot Signer</sup>",
         "parameters" : [ {
           "description" : "Comma-separated transaction ids",
           "in" : "query",
@@ -5690,7 +5721,7 @@
     },
     "/workspaces/{workspaceId}/transactions/{transactionId}" : {
       "get" : {
-        "description" : "<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "description" : "<sup>API Key permissions: View only, Manage Transfers, MPC Hot Signer</sup>",
         "parameters" : [ {
           "in" : "path",
           "name" : "workspaceId",
@@ -5893,7 +5924,7 @@
     },
     "/workspaces/{workspaceId}/transactions/{transactionId}/create-signing-request" : {
       "post" : {
-        "description" : "Create signing request for an transaction\n\n<sup>API Key permissions: Manage Transfers</sup>",
+        "description" : "Create signing request for an transaction\n\n<sup>API Key permissions: Manage Transfers, MPC Hot Signer</sup>",
         "parameters" : [ {
           "in" : "path",
           "name" : "workspaceId",
