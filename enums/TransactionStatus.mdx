@@ -1,0 +1,25 @@
+---
+title: 'TransactionStatus'
+---
+
+| Value  | Description |
+| :----- | :---------- |
+| <nobr>`new`</nobr> | Transaction is initially created and pending processing |
+| <nobr>`waiting-confirmations`</nobr> | Transaction is submitted to the blockchain and awaiting block confirmations |
+| <nobr>`waiting-approval`</nobr> | Transaction is pending approval before further processing |
+| <nobr>`approved`</nobr> | Transaction has been approved and is awaiting further processing |
+| <nobr>`awaiting-security-policy`</nobr> | Transaction is pending until the security policy expires |
+| <nobr>`completed`</nobr> | Transaction has been successfully processed and confirmed |
+| <nobr>`partially-completed`</nobr> | Transaction has been partially completed |
+| <nobr>`canceled`</nobr> | Transaction has been canceled and will not be processed further |
+| <nobr>`expired`</nobr> | Transaction has expired |
+| <nobr>`signing-required`</nobr> | Transaction requires user signing action (e.g., 'Start signing' button in UI). |
+| <nobr>`signing`</nobr> | Transaction is currently being signed by the user |
+| <nobr>`signed`</nobr> | Transaction signing request has been successfully signed |
+| <nobr>`broadcasted`</nobr> | Transaction have been broadcasted to the network and are awaiting blockchain confirmations |
+| <nobr>`manual-resolving`</nobr> | Transaction requires manual intervention to resolve an issue |
+| <nobr>`failed-on-blockchain`</nobr> | Transaction failed to execute on the blockchain |
+| <nobr>`removed-from-blockchain`</nobr> | Transaction was removed from blockchain |
+| <nobr>`error`</nobr> | Something went wrong |
+| <nobr>`awaiting-deposit`</nobr> | Transaction is pending and awaiting deposit |
+| <nobr>`awaiting-defi-execution`</nobr> | Transaction was signed and delegated to DeFi for execution |

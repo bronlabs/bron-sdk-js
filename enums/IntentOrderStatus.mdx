@@ -1,0 +1,15 @@
+---
+title: 'IntentOrderStatus'
+---
+
+| Value  | Description |
+| :----- | :---------- |
+| <nobr>`not-exist`</nobr> | Intent does not exist or has not been created yet |
+| <nobr>`user-initiated`</nobr> | Intent was created by the user and is waiting prices |
+| <nobr>`auction-in-progress`</nobr> | Auction is in progress, solvers are submitting bids and best quote is being selected |
+| <nobr>`wait-for-oracle-confirm-user-tx`</nobr> | User’s transaction has been broadcast, waiting for oracles confirmation on-chain |
+| <nobr>`wait-for-solver-tx`</nobr> | Solver transaction is being prepared and broadcast to deliver the requested asset |
+| <nobr>`wait-for-oracle-confirm-solver-tx`</nobr> | Solver transaction was broadcast, waiting for oracles confirmation on-chain |
+| <nobr>`completed`</nobr> | Intent successfully completed and all required transactions confirmed |
+| <nobr>`liquidated`</nobr> | Intent was liquidated due to solver failure, missed deadlines, or protocol rules |
+| <nobr>`cancelled`</nobr> | Intent was cancelled by the user or system (expired) before completion |

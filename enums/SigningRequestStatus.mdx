@@ -1,0 +1,16 @@
+---
+title: 'SigningRequestStatus'
+---
+
+| Value  | Description |
+| :----- | :---------- |
+| <nobr>`new`</nobr> | New signing request |
+| <nobr>`signed`</nobr> | Signing request was signed |
+| <nobr>`broadcasted`</nobr> | all transactions from this request were successfully broadcasted to blockchain network |
+| <nobr>`under-rbf`</nobr> | this request was recreated when transaction/s was already broadcasted. This mean that this signing request can still execute transactions, because recreated request can be ignored or sign long etc. |
+| <nobr>`completed`</nobr> | For case when we broadcast transactions – all transactions from request was added to block on blockchain level. For case when we don't broadcast transactions – all transactions are signed |
+| <nobr>`manual-resolving`</nobr> | Some unexpected error appear during broadcasting one of transaction and devs should manually investigate this problem |
+| <nobr>`canceled`</nobr> | this request was recreated by request, before fully signed transaction was generated. or it was canceled because initial reference cancel it. or RBF request was not completed and other request was completed. New request is available in replacementSigningRequestId |
+| <nobr>`error-on-broadcast`</nobr> | Some known error appear during broadcasting one of transaction and this transaction can't be resend again and require other request for signing |
+| <nobr>`failed-on-chain`</nobr> | One of transaction was successfully broadcasted, but failed on blockchain level |
+| <nobr>`marked-as-error`</nobr> | Related transaction is marked as error so related withdrawals also marked as error |
