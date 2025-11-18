@@ -1,6 +1,10 @@
 {
   "components" : {
     "schemas" : {
+      "AcceptOffer" : {
+        "properties" : { },
+        "type" : "object"
+      },
       "Account" : {
         "properties" : {
           "accountId" : {
@@ -358,6 +362,14 @@
           "assetId" : {
             "type" : "string"
           },
+          "feeLevel" : {
+            "$ref" : "#/components/schemas/FeeLevel",
+            "description" : "[See details](/enums/FeeLevel)"
+          },
+          "networkFees" : {
+            "$ref" : "#/components/schemas/RequestedNetworkFees",
+            "type" : "object"
+          },
           "toAddress" : {
             "type" : "string"
           },
@@ -392,6 +404,11 @@
           },
           "networkId" : {
             "description" : "Which blockchain network this asset lives on (like Ethereum, Bitcoin). Only needed for crypto tokens - not used for regular money or exchange assets",
+            "examples" : [ "BTC" ],
+            "type" : "string"
+          },
+          "symbol" : {
+            "description" : "Human-readable short name for this asset. Note: it can be changed by the issuer at any time.",
             "examples" : [ "BTC" ],
             "type" : "string"
           },
@@ -812,7 +829,7 @@
         "type" : "object"
       },
       "EventType" : {
-        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "message-signed" ],
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "canton-reward", "message-signed", "deposit-offer" ],
         "type" : "string"
       },
       "FeeLevel" : {
@@ -927,7 +944,7 @@
         "type" : "object"
       },
       "IntentOrderStatus" : {
-        "enum" : [ "not-exist", "user-initiated", "auction-in-progress", "wait-for-oracle-confirm-user-tx", "wait-for-solver-tx", "wait-for-oracle-confirm-solver-tx", "completed", "liquidated", "cancelled" ],
+        "enum" : [ "not-exist", "user-initiated", "auction-in-progress", "wait-for-user-tx", "wait-for-oracle-confirm-user-tx", "wait-for-solver-tx", "wait-for-oracle-confirm-solver-tx", "completed", "liquidated", "cancelled" ],
         "type" : "string"
       },
       "IntentsParams" : {
@@ -1166,7 +1183,7 @@
         "type" : "object"
       },
       "NetworkTag" : {
-        "enum" : [ "show-vault", "supports-rbf", "supports-memo", "swap", "supports-parallel-signing", "supports-chained-signing" ],
+        "enum" : [ "show-vault", "supports-rbf", "supports-rbf-cancel", "supports-memo", "swap", "supports-parallel-signing", "supports-chained-signing" ],
         "type" : "string"
       },
       "Networks" : {
@@ -1195,11 +1212,19 @@
             "$ref" : "#/components/schemas/FeeLevel",
             "description" : "[See details](/enums/FeeLevel)"
           },
+          "networkFees" : {
+            "$ref" : "#/components/schemas/RequestedNetworkFees",
+            "description" : "Custom network fees parameters",
+            "type" : "object"
+          },
           "rawTransactions" : {
             "items" : {
               "type" : "string"
             },
             "type" : "array"
+          },
+          "skipSimulation" : {
+            "type" : "boolean"
           },
           "toAddress" : {
             "type" : "string"
@@ -1335,7 +1360,7 @@
         "type" : "object"
       },
       "SigningRequestStatus" : {
-        "enum" : [ "new", "signed", "broadcasted", "under-rbf", "completed", "manual-resolving", "canceled", "error-on-broadcast", "failed-on-chain", "marked-as-error" ],
+        "enum" : [ "new", "signing", "signed", "broadcasted", "under-rbf", "completed", "manual-resolving", "canceled", "error-on-broadcast", "failed-on-chain", "marked-as-error" ],
         "type" : "string"
       },
       "SmartContractInformation" : {
@@ -1343,6 +1368,10 @@
           "contractAddress" : {
             "examples" : [ "0xdac17f958d2ee523a2206206994597c13d831ec7" ],
             "type" : "string"
+          },
+          "standard" : {
+            "$ref" : "#/components/schemas/TokenStandard",
+            "description" : "[See details](/enums/TokenStandard)"
           }
         },
         "type" : "object"
@@ -1494,6 +1523,10 @@
         },
         "required" : [ "symbols" ],
         "type" : "object"
+      },
+      "TokenStandard" : {
+        "enum" : [ "erc20", "erc721", "erc1155", "spl", "trc20" ],
+        "type" : "string"
       },
       "Transaction" : {
         "properties" : {
@@ -1883,11 +1916,11 @@
         "type" : "object"
       },
       "TransactionStatus" : {
-        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "partially-completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit", "awaiting-defi-execution" ],
+        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "partially-completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit", "awaiting-defi-execution", "acceptance-required" ],
         "type" : "string"
       },
       "TransactionType" : {
-        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "swap-lifi", "intents", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "nft-deposit", "nft-withdrawal" ],
+        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "swap-lifi", "intents", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "canton-reward", "nft-deposit", "nft-withdrawal", "nft-allowance" ],
         "type" : "string"
       },
       "Transactions" : {
@@ -2201,6 +2234,14 @@
             "type" : "string"
           }
         }, {
+          "description" : "Filter result to only include assets that have this contract issuer",
+          "in" : "query",
+          "name" : "contractIssuer",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "description" : "Filter by what kind of asset. [See details](/enums/AssetType)",
           "in" : "query",
           "name" : "assetType",
@@ -2346,6 +2387,14 @@
           "description" : "Filter results to only include assets that have this contract address",
           "in" : "query",
           "name" : "contractAddress",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Filter result to only include assets that have this contract issuer",
+          "in" : "query",
+          "name" : "contractIssuer",
           "required" : false,
           "schema" : {
             "type" : "string"
@@ -4198,6 +4247,14 @@
         }, {
           "description" : "Filter balances by assetId",
           "in" : "query",
+          "name" : "assetId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Filter balances by assetIds list",
+          "in" : "query",
           "name" : "assetIds",
           "required" : false,
           "schema" : {
@@ -4208,6 +4265,14 @@
           }
         }, {
           "description" : "Filter balances by networkId",
+          "in" : "query",
+          "name" : "networkId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Filter balances by networkIds list",
           "in" : "query",
           "name" : "networkIds",
           "required" : false,
@@ -5174,6 +5239,13 @@
             "type" : "array"
           }
         }, {
+          "in" : "query",
+          "name" : "accountId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "description" : "Comma-separated account ids",
           "in" : "query",
           "name" : "accountIds",
@@ -5813,6 +5885,112 @@
           }
         },
         "summary" : "Get Transaction by ID",
+        "tags" : [ "transactions" ]
+      }
+    },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/accept-deposit-offer" : {
+      "post" : {
+        "description" : "<sup>API Key permissions: Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AcceptOffer"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Transaction"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Accept Deposit Offer",
         "tags" : [ "transactions" ]
       }
     },

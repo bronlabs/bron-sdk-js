@@ -3,6 +3,7 @@ export interface AssetsQuery {
   networkIds?: string[];
   symbolIds?: string[];
   contractAddress?: string;
+  contractIssuer?: string;
   assetType?: string;
   limit?: string;
   offset?: string;

@@ -2,6 +2,7 @@ export interface TransactionsQuery {
   transactionIds?: string[];
   transactionTypes?: string[];
   accountTypes?: string[];
+  accountId?: string;
   accountIds?: string[];
   transactionStatuses?: string[];
   transactionStatusNotIn?: string[];

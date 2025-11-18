@@ -3,15 +3,14 @@ import { TransactionsQuery } from "../types/TransactionsQuery.js";
 import { CreateTransaction } from "../types/CreateTransaction.js";
 import { CreateTransactions } from "../types/CreateTransactions.js";
 import { Transaction } from "../types/Transaction.js";
+import { AcceptOffer } from "../types/AcceptOffer.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
 import { TransactionEvents } from "../types/TransactionEvents.js";
 import { HttpClient } from "../utils/http.js";
-import { AcceptTransactionRequest } from "../types/AcceptTransactionRequest.js";
 
 export class TransactionsAPI {
 
-  constructor(private http: HttpClient, private workspaceId?: string) {
-  }
+  constructor(private http: HttpClient, private workspaceId?: string) {}
 
   async getTransactions(query?: TransactionsQuery): Promise<Transactions> {
     return this.http.request<Transactions>({
@@ -37,14 +36,6 @@ export class TransactionsAPI {
     });
   }
 
-  async acceptTransactionRequest(body: AcceptTransactionRequest) {
-    return this.http.request({
-      method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/${body.transactionId}/accept-deposit-offer`,
-      body: { accept: body.accept }
-    });
-  }
-
   async dryRunTransaction(body: CreateTransaction): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
@@ -57,6 +48,14 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}`
+    });
+  }
+
+  async acceptDepositOffer(transactionId: string, body: AcceptOffer): Promise<Transaction> {
+    return this.http.request<Transaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/accept-deposit-offer`,
+      body
     });
   }
 

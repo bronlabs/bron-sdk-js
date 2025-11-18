@@ -7,6 +7,7 @@ export interface Asset {
   contractInformation?: SmartContractInformation;
   decimals?: string;
   networkId?: string;
+  symbol?: string;
   symbolId?: string;
   verified?: boolean;
 }
