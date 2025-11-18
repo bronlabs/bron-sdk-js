@@ -1,1 +1,3 @@
-export type AcceptOffer = Record<string, any>;
+export interface AcceptOffer {
+  accept: boolean;
+}

@@ -2,7 +2,12 @@
   "components" : {
     "schemas" : {
       "AcceptOffer" : {
-        "properties" : { },
+        "properties" : {
+          "accept" : {
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "accept" ],
         "type" : "object"
       },
       "Account" : {
