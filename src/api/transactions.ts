@@ -6,10 +6,12 @@ import { Transaction } from "../types/Transaction.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
 import { TransactionEvents } from "../types/TransactionEvents.js";
 import { HttpClient } from "../utils/http.js";
+import { AcceptTransactionRequest } from "../types/AcceptTransactionRequest.js";
 
 export class TransactionsAPI {
 
-  constructor(private http: HttpClient, private workspaceId?: string) {}
+  constructor(private http: HttpClient, private workspaceId?: string) {
+  }
 
   async getTransactions(query?: TransactionsQuery): Promise<Transactions> {
     return this.http.request<Transactions>({
@@ -32,6 +34,14 @@ export class TransactionsAPI {
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/bulk-create`,
       body
+    });
+  }
+
+  async acceptTransactionRequest(body: AcceptTransactionRequest) {
+    return this.http.request({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${body.transactionId}/accept-deposit-offer`,
+      body: { accept: body.accept }
     });
   }
 
