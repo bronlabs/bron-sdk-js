@@ -24,18 +24,25 @@ export class HttpClient {
     body,
     query
   }: HttpRequestOptions): Promise<T> {
-    // Build query string
     let fullPath = path;
+
     if (query && Object.keys(query).length) {
       const params = new URLSearchParams();
+
       for (const [key, value] of Object.entries(query)) {
         if (Array.isArray(value)) {
-          params.append(key, value.join(","));
-        } else {
+          const filtered = value.filter(v => v != null);
+          if (filtered.length > 0) {
+            params.append(key, filtered.join(','));
+          }
+        } else if (value != null) {
           params.append(key, value);
         }
       }
-      fullPath += `?${params.toString()}`;
+
+      if (params.size > 0) {
+        fullPath += `?${params.toString()}`;
+      }
     }
 
     const url = `${this.baseUrl}${fullPath}`;
