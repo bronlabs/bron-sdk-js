@@ -10,5 +10,6 @@ export interface Balance {
   symbol?: string;
   totalBalance?: string;
   updatedAt?: string;
+  withdrawableBalance?: string;
   workspaceId: string;
 }

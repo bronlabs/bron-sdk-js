@@ -2,8 +2,9 @@ import { Transactions } from "../types/Transactions.js";
 import { TransactionsQuery } from "../types/TransactionsQuery.js";
 import { CreateTransaction } from "../types/CreateTransaction.js";
 import { CreateTransactions } from "../types/CreateTransactions.js";
+import { DryRunTransaction } from "../types/DryRunTransaction.js";
 import { Transaction } from "../types/Transaction.js";
-import { AcceptOffer } from "../types/AcceptOffer.js";
+import { OfferActions } from "../types/OfferActions.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
 import { TransactionEvents } from "../types/TransactionEvents.js";
 import { HttpClient } from "../utils/http.js";
@@ -36,8 +37,8 @@ export class TransactionsAPI {
     });
   }
 
-  async dryRunTransaction(body: CreateTransaction): Promise<Transaction> {
-    return this.http.request<Transaction>({
+  async dryRunTransaction(body: CreateTransaction): Promise<DryRunTransaction> {
+    return this.http.request<DryRunTransaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/dry-run`,
       body
@@ -51,7 +52,7 @@ export class TransactionsAPI {
     });
   }
 
-  async acceptDepositOffer(transactionId: string, body: AcceptOffer): Promise<Transaction> {
+  async acceptDepositOffer(transactionId: string, body: OfferActions): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/accept-deposit-offer`,
@@ -78,6 +79,14 @@ export class TransactionsAPI {
     return this.http.request<TransactionEvents>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/events`
+    });
+  }
+
+  async rejectOutgoingOffer(transactionId: string, body: OfferActions): Promise<Transaction> {
+    return this.http.request<Transaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/reject-outgoing-offer`,
+      body
     });
   }
 }

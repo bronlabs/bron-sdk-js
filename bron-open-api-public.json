@@ -1,15 +1,6 @@
 {
   "components" : {
     "schemas" : {
-      "AcceptOffer" : {
-        "properties" : {
-          "accept" : {
-            "type" : "boolean"
-          }
-        },
-        "required" : [ "accept" ],
-        "type" : "object"
-      },
       "Account" : {
         "properties" : {
           "accountId" : {
@@ -157,7 +148,7 @@
         "type" : "object"
       },
       "ActivityType" : {
-        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "account-pins-reset", "shard-access-request-created", "shard-access-request-finished", "transaction-completed" ],
+        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "account-pins-reset", "shard-access-request-updated", "transaction-completed", "subscription-updated" ],
         "type" : "string"
       },
       "Address" : {
@@ -483,12 +474,17 @@
           },
           "totalBalance" : {
             "description" : "The overall balance of a account",
-            "examples" : [ "0.00021084" ],
+            "examples" : [ "2.00021084" ],
             "type" : "string"
           },
           "updatedAt" : {
             "description" : "Last updated at timestamp",
             "examples" : [ "1744372384276" ],
+            "type" : "string"
+          },
+          "withdrawableBalance" : {
+            "description" : "Balance available for withdrawal",
+            "examples" : [ "1.00021084" ],
             "type" : "string"
           },
           "workspaceId" : {
@@ -709,6 +705,39 @@
           }
         },
         "required" : [ "amount", "assetId", "networkId" ],
+        "type" : "object"
+      },
+      "DryRunTransaction" : {
+        "properties" : {
+          "accountId" : {
+            "type" : "string"
+          },
+          "estimations" : {
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionEstimation"
+            },
+            "type" : "array"
+          },
+          "externalId" : {
+            "type" : "string"
+          },
+          "extra" : {
+            "$ref" : "#/components/schemas/TransactionExtra",
+            "type" : "object"
+          },
+          "params" : {
+            "type" : "object"
+          },
+          "transactionType" : {
+            "$ref" : "#/components/schemas/TransactionType",
+            "description" : "[See details](/enums/TransactionType)"
+          },
+          "warning" : {
+            "$ref" : "#/components/schemas/Warning",
+            "type" : "object"
+          }
+        },
+        "required" : [ "transactionType", "accountId" ],
         "type" : "object"
       },
       "EventAllowance" : {
@@ -1188,7 +1217,7 @@
         "type" : "object"
       },
       "NetworkTag" : {
-        "enum" : [ "show-vault", "supports-rbf", "supports-rbf-cancel", "supports-memo", "swap", "supports-parallel-signing", "supports-chained-signing" ],
+        "enum" : [ "show-vault", "supports-rbf", "supports-rbf-cancel", "supports-memo", "swap", "supports-parallel-signing", "supports-chained-signing", "supports-fee-levels" ],
         "type" : "string"
       },
       "Networks" : {
@@ -1200,6 +1229,15 @@
             "type" : "array"
           }
         },
+        "type" : "object"
+      },
+      "OfferActions" : {
+        "properties" : {
+          "accept" : {
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "accept" ],
         "type" : "object"
       },
       "RawTransactionParams" : {
@@ -1695,6 +1733,53 @@
         },
         "type" : "object"
       },
+      "TransactionEstimation" : {
+        "properties" : {
+          "amount" : {
+            "description" : "Amount",
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "Asset ID",
+            "type" : "string"
+          },
+          "createdAt" : {
+            "description" : "Created at",
+            "type" : "string"
+          },
+          "estimationId" : {
+            "description" : "Estimation ID",
+            "type" : "string"
+          },
+          "eventType" : {
+            "$ref" : "#/components/schemas/EventType",
+            "description" : "Event type. [See details](/enums/EventType)"
+          },
+          "extra" : {
+            "$ref" : "#/components/schemas/EventExtra",
+            "description" : "Extra",
+            "type" : "object"
+          },
+          "networkId" : {
+            "description" : "Network ID",
+            "type" : "string"
+          },
+          "symbol" : {
+            "description" : "Symbol",
+            "type" : "string"
+          },
+          "transactionId" : {
+            "description" : "Transaction ID",
+            "type" : "string"
+          },
+          "usdAmount" : {
+            "description" : "Total amount in USD",
+            "type" : "string"
+          }
+        },
+        "required" : [ "estimationId", "transactionId", "eventType", "assetId", "createdAt" ],
+        "type" : "object"
+      },
       "TransactionEvent" : {
         "properties" : {
           "accountId" : {
@@ -1993,6 +2078,18 @@
           }
         },
         "required" : [ "userId" ],
+        "type" : "object"
+      },
+      "Warning" : {
+        "properties" : {
+          "code" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "message" ],
         "type" : "object"
       },
       "WebhookEvent" : {
@@ -5722,7 +5819,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/Transaction"
+                  "$ref" : "#/components/schemas/DryRunTransaction"
                 }
               }
             },
@@ -5915,7 +6012,7 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/AcceptOffer"
+                "$ref" : "#/components/schemas/OfferActions"
               }
             }
           }
@@ -6296,6 +6393,112 @@
           }
         },
         "summary" : "Get Transaction Events",
+        "tags" : [ "transactions" ]
+      }
+    },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/reject-outgoing-offer" : {
+      "post" : {
+        "description" : "<sup>API Key permissions: Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/OfferActions"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Transaction"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Reject Outgoing Offer",
         "tags" : [ "transactions" ]
       }
     }
