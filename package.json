@@ -31,7 +31,7 @@
     "test": "vitest run",
     "lint": "eslint src --ext .ts",
     "generate-keys": "pnpm run build && node dist/utils/keyGenerator.js",
-    "build:generator": "pnpm dlx tsc src/utils/generator.ts --outDir dist/utils --module NodeNext --target ES2024 --skipLibCheck",
+    "build:generator": "tsc src/utils/generator.ts --outDir dist/utils --module NodeNext --target ES2024 --skipLibCheck",
     "generate": "rm -rf dist && pnpm run build:generator && node dist/utils/generator.js && pnpm run build",
     "prepublishOnly": "pnpm run build && pnpm test"
   },
