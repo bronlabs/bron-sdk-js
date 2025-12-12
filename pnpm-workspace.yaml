@@ -1,0 +1,14 @@
+# Delay brand-new releases to reduce supply-chain risk (minutes)
+minimumReleaseAge: 2880 # 2 days
+trustPolicy: no-downgrade
+
+minimumReleaseAgeExclude:
+  - "@bron/*"
+
+# Fail install if a dependency wants to run unreviewed build scripts (it's better to fail so that we know to review the build scripts straight away)
+strictDepBuilds: true
+
+ignoredBuiltDependencies:
+  - "keccak"
+  - "secp256k1"
+  - "esbuild"
