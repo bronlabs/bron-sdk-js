@@ -319,7 +319,7 @@ export class OpenApiSdkGenerator {
   }
 
   private getReturnType(op: OpenApiOperation): string | undefined {
-    const schema = op.responses?.['200']?.content?.['application/json']?.schema;
+    const schema = (op.responses?.['200'] || op.responses?.['201'])?.content?.['application/json']?.schema;
     return schema?.$ref ? this.extractRefName(schema.$ref) : undefined;
   }
 

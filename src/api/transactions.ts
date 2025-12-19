@@ -1,9 +1,9 @@
 import { Transactions } from "../types/Transactions.js";
 import { TransactionsQuery } from "../types/TransactionsQuery.js";
+import { Transaction } from "../types/Transaction.js";
 import { CreateTransaction } from "../types/CreateTransaction.js";
 import { CreateTransactions } from "../types/CreateTransactions.js";
 import { DryRunTransaction } from "../types/DryRunTransaction.js";
-import { Transaction } from "../types/Transaction.js";
 import { OfferActions } from "../types/OfferActions.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
 import { TransactionEvents } from "../types/TransactionEvents.js";
@@ -21,16 +21,16 @@ export class TransactionsAPI {
     });
   }
 
-  async createTransaction(body: CreateTransaction) {
-    return this.http.request({
+  async createTransaction(body: CreateTransaction): Promise<Transaction> {
+    return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions`,
       body
     });
   }
 
-  async createMultipleTransactions(body: CreateTransactions) {
-    return this.http.request({
+  async createMultipleTransactions(body: CreateTransactions): Promise<Transactions> {
+    return this.http.request<Transactions>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/bulk-create`,
       body

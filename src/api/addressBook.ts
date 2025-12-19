@@ -1,8 +1,8 @@
 import { AddressBookRecords } from "../types/AddressBookRecords.js";
 import { AddressBookRecordsQuery } from "../types/AddressBookRecordsQuery.js";
+import { AddressBookRecord } from "../types/AddressBookRecord.js";
 import { CreateAddressBookRecord } from "../types/CreateAddressBookRecord.js";
 import { Unit } from "../types/Unit.js";
-import { AddressBookRecord } from "../types/AddressBookRecord.js";
 import { HttpClient } from "../utils/http.js";
 
 export class AddressBookAPI {
@@ -17,8 +17,8 @@ export class AddressBookAPI {
     });
   }
 
-  async createAddressBookRecord(body: CreateAddressBookRecord) {
-    return this.http.request({
+  async createAddressBookRecord(body: CreateAddressBookRecord): Promise<AddressBookRecord> {
+    return this.http.request<AddressBookRecord>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/address-book-records`,
       body
