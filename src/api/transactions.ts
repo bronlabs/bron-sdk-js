@@ -5,6 +5,7 @@ import { CreateTransaction } from "../types/CreateTransaction.js";
 import { CreateTransactions } from "../types/CreateTransactions.js";
 import { DryRunTransaction } from "../types/DryRunTransaction.js";
 import { OfferActions } from "../types/OfferActions.js";
+import { ApproveTransaction } from "../types/ApproveTransaction.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
 import { TransactionEvents } from "../types/TransactionEvents.js";
 import { HttpClient } from "../utils/http.js";
@@ -60,6 +61,14 @@ export class TransactionsAPI {
     });
   }
 
+  async approveTransaction(transactionId: string, body: ApproveTransaction): Promise<Transaction> {
+    return this.http.request<Transaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/approve`,
+      body
+    });
+  }
+
   async cancelTransaction(transactionId: string, body: CancelTransaction): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
@@ -72,6 +81,14 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/create-signing-request`
+    });
+  }
+
+  async declineTransaction(transactionId: string, body: CancelTransaction): Promise<Transaction> {
+    return this.http.request<Transaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/decline`,
+      body
     });
   }
 

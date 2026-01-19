@@ -148,7 +148,7 @@
         "type" : "object"
       },
       "ActivityType" : {
-        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "account-pins-reset", "shard-access-request-updated", "transaction-completed", "subscription-updated" ],
+        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "account-pins-reset", "shard-access-request-updated", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated" ],
         "type" : "string"
       },
       "Address" : {
@@ -377,6 +377,10 @@
         "title" : "Allowance",
         "type" : "object"
       },
+      "ApproveTransaction" : {
+        "properties" : { },
+        "type" : "object"
+      },
       "Asset" : {
         "properties" : {
           "assetId" : {
@@ -419,6 +423,10 @@
           }
         },
         "required" : [ "assetId" ],
+        "type" : "object"
+      },
+      "AssetMarketPrices" : {
+        "properties" : { },
         "type" : "object"
       },
       "AssetType" : {
@@ -785,7 +793,7 @@
             "type" : "array"
           },
           "rewardInfo" : {
-            "$ref" : "#/components/schemas/RewardInfo",
+            "$ref" : "#/components/schemas/StakeRewardInfo",
             "description" : "Detail information for earn reward.",
             "type" : "object"
           },
@@ -797,7 +805,7 @@
           "stakeInfo" : {
             "description" : "Detail information for 'stake' operations. ",
             "items" : {
-              "$ref" : "#/components/schemas/StakeInfo"
+              "$ref" : "#/components/schemas/EventStakeInfo"
             },
             "type" : "array"
           },
@@ -862,8 +870,12 @@
         },
         "type" : "object"
       },
+      "EventStakeInfo" : {
+        "properties" : { },
+        "type" : "object"
+      },
       "EventType" : {
-        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-claim", "stake-earn-reward", "stake-reward-accrued", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "canton-reward", "message-signed", "deposit-offer" ],
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-delegation", "stake-undelegation", "stake-withdrawn", "stake-earn-reward", "stake-reward-accrued", "stake-pool-created", "stake-pool-unjailed", "stake-transferred", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "canton-reward", "message-signed", "deposit-offer" ],
         "type" : "string"
       },
       "FeeLevel" : {
@@ -1300,10 +1312,6 @@
         },
         "type" : "object"
       },
-      "RewardInfo" : {
-        "properties" : { },
-        "type" : "object"
-      },
       "SetupParams" : {
         "properties" : {
           "assetId" : {
@@ -1419,6 +1427,10 @@
         },
         "type" : "object"
       },
+      "SortBy" : {
+        "enum" : [ "updated", "activity" ],
+        "type" : "string"
+      },
       "SortingDirection" : {
         "enum" : [ "ASC", "DESC" ],
         "type" : "string"
@@ -1455,7 +1467,7 @@
         "title" : "Stake delegation",
         "type" : "object"
       },
-      "StakeInfo" : {
+      "StakeRewardInfo" : {
         "properties" : { },
         "type" : "object"
       },
@@ -2010,7 +2022,7 @@
         "type" : "string"
       },
       "TransactionType" : {
-        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "swap-lifi", "intents", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "canton-reward", "nft-deposit", "nft-withdrawal", "nft-allowance" ],
+        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "stake-delegation", "stake-undelegation", "stake-claim", "stake-withdrawal", "stake-take-reward", "stake-earn-reward", "swap-lifi", "intents", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "canton-reward", "nft-deposit", "nft-withdrawal", "nft-allowance" ],
         "type" : "string"
       },
       "Transactions" : {
@@ -2288,6 +2300,88 @@
   },
   "openapi" : "3.1.0",
   "paths" : {
+    "/dictionary/asset-market-prices" : {
+      "get" : {
+        "description" : "Provides market pricing data for asset ids\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AssetMarketPrices"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Asset Prices",
+        "tags" : [ "assets" ]
+      }
+    },
     "/dictionary/assets" : {
       "get" : {
         "description" : "Assets represent specific implementations of symbols on particular networks or exchanges. They are the concrete, actionable instances that users can actually hold, trade, or interact with.\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
@@ -2798,7 +2892,7 @@
     },
     "/dictionary/symbol-market-prices" : {
       "get" : {
-        "description" : "Provides market pricing data for symbols across different quote currencies\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
+        "description" : "Provides market pricing data for symbol ids\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
         "parameters" : [ {
           "description" : "The symbol IDs you want to get market prices for",
           "example" : [ "s2001,s2002" ],
@@ -5469,6 +5563,15 @@
             "type" : "string"
           }
         }, {
+          "description" : "[See details](/enums/SortBy)",
+          "in" : "query",
+          "name" : "sortBy",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/SortBy",
+            "type" : "string"
+          }
+        }, {
           "description" : "[See details](/enums/SortingDirection)",
           "in" : "query",
           "name" : "sortDirection",
@@ -6096,6 +6199,112 @@
         "tags" : [ "transactions" ]
       }
     },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/approve" : {
+      "post" : {
+        "description" : "Approve a transaction that triggered approval workflow due to transfer limits\n\n<sup>API Key permissions: Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ApproveTransaction"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Transaction"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Approve Transaction",
+        "tags" : [ "transactions" ]
+      }
+    },
     "/workspaces/{workspaceId}/transactions/{transactionId}/cancel" : {
       "post" : {
         "description" : "<sup>API Key permissions: Manage Transfers</sup>",
@@ -6296,6 +6505,112 @@
           }
         },
         "summary" : "Create signing request",
+        "tags" : [ "transactions" ]
+      }
+    },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/decline" : {
+      "post" : {
+        "description" : "Decline a transaction pending approval due to limit restrictions\n\n<sup>API Key permissions: Manage Transfers</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CancelTransaction"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Transaction"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Decline Transaction",
         "tags" : [ "transactions" ]
       }
     },

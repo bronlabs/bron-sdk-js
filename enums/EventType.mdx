@@ -8,11 +8,14 @@ title: 'EventType'
 | <nobr>`out`</nobr> | Withdrawal |
 | <nobr>`fee`</nobr> | Network fee (gas or signature costs) |
 | <nobr>`negative-deposit`</nobr> | Negative deposit |
-| <nobr>`stake-delegation`</nobr> | Stake delegation |
-| <nobr>`stake-undelegation`</nobr> | Stake undelegation |
-| <nobr>`stake-claim`</nobr> | Stake claim |
-| <nobr>`stake-earn-reward`</nobr> | Stake earn reward |
-| <nobr>`stake-reward-accrued`</nobr> | Stake reward accrued |
+| <nobr>`stake-delegation`</nobr> | Stake delegation. You stake to validator and your funds are locked in it. |
+| <nobr>`stake-undelegation`</nobr> | Initiates the process of undelegating stake from a validator. Funds may be returned immediately or after an unbonding period. |
+| <nobr>`stake-withdrawn`</nobr> | Stake funds became available in your balance after undelegation, either automatically or after a separate claim transaction. |
+| <nobr>`stake-earn-reward`</nobr> | Stake rewards increased your available balance, either automatically or via an explicit reward claim. |
+| <nobr>`stake-reward-accrued`</nobr> | Stake rewards were credited to your staking balance or a separate staking rewards balance, without increasing the available balance yet. |
+| <nobr>`stake-pool-created`</nobr> | A new stake pool was created from the account. If an initial delegation was made during creation, the amount reflects it. |
+| <nobr>`stake-pool-unjailed`</nobr> | A previously jailed stake pool was restored and allowed to participate in staking again. |
+| <nobr>`stake-transferred`</nobr> | Stake or staking position was transferred between validators or pools, depending on the network protocol. |
 | <nobr>`allowance`</nobr> | Allowance approval |
 | <nobr>`nft-in`</nobr> | NFT incoming |
 | <nobr>`nft-out`</nobr> | NFT outgoing |

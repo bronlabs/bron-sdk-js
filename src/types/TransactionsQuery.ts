@@ -17,6 +17,7 @@ export interface TransactionsQuery {
   updatedAtFrom?: string;
   updatedAtTo?: string;
   canSignWithDeviceId?: string;
+  sortBy?: string;
   sortDirection?: string;
   limit?: string;
   offset?: string;
