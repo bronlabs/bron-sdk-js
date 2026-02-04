@@ -23,4 +23,5 @@ export interface TransactionsQuery {
   offset?: string;
   externalId?: string;
   includeEvents?: boolean;
+  includeCurrentSigningRequest?: boolean;
 }

@@ -4419,6 +4419,14 @@
       "get" : {
         "description" : "When you perform request without accountIds or assetId or balanceIds, the method returns all balances which has non-zero balances only\n\n<sup>API Key permissions: View only, Manage Transfers</sup>",
         "parameters" : [ {
+          "description" : "Filter by account ID",
+          "in" : "query",
+          "name" : "accountId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "description" : "Filter by account ids",
           "in" : "query",
           "name" : "accountIds",
@@ -4452,6 +4460,17 @@
           "description" : "Filter balances by assetIds list",
           "in" : "query",
           "name" : "assetIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Filter balances by assetNotIn",
+          "in" : "query",
+          "name" : "assetNotIn",
           "required" : false,
           "schema" : {
             "items" : {
@@ -4499,6 +4518,14 @@
               "$ref" : "#/components/schemas/AccountType"
             },
             "type" : "array"
+          }
+        }, {
+          "description" : "Filter balances updated since timestamp",
+          "in" : "query",
+          "name" : "updatedSince",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
           }
         }, {
           "description" : "Filter only balances with non-zero balance",
@@ -5610,6 +5637,14 @@
           "description" : "Include events in the response _embedded field",
           "in" : "query",
           "name" : "includeEvents",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "description" : "Include current signing requests in the response _embedded field",
+          "in" : "query",
+          "name" : "includeCurrentSigningRequest",
           "required" : false,
           "schema" : {
             "type" : "boolean"
