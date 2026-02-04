@@ -1,3 +1,5 @@
+generate:
+	pnpm run generate
 
 publish:
 	pnpm run build

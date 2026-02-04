@@ -59,6 +59,23 @@ export class OpenApiSdkGenerator {
   generate(): void {
     this.generateTypes();
     this.generateApi();
+    this.generateIndexes();
+  }
+
+  private generateIndexes(): void {
+    this.generateIndex(this.typesDir);
+    this.generateIndex(path.dirname(this.typesDir) + '/utils', ['generator.ts', 'keyGenerator.ts', 'version.ts']);
+  }
+
+  private generateIndex(dir: string, exclude: string[] = []): void {
+    const files = fs.readdirSync(dir)
+      .filter(f => f.endsWith('.ts') && f !== 'index.ts' && !exclude.includes(f))
+      .map(f => f.replace('.ts', ''))
+      .sort();
+
+    const content = files.map(f => `export * from './${f}.js';`).join('\n') + '\n';
+    fs.writeFileSync(path.join(dir, 'index.ts'), content);
+    console.log(`Generated ${path.basename(dir)}/index.ts (${files.length} exports)`);
   }
 
   private generateTypes(): void {
