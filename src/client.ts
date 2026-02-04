@@ -7,6 +7,8 @@ import { AddressesAPI } from "./api/addresses.js";
 import { HttpClient } from "./utils/http.js";
 import { TransactionLimitsAPI } from "./api/transactionLimits.js";
 import { TransactionsAPI } from "./api/transactions.js";
+import { IntentsAPI } from "./api/intents.js";
+import { StakeAPI } from "./api/stake.js";
 
 export default class BronClient {
   public workspaceId: string;
@@ -19,6 +21,8 @@ export default class BronClient {
   public addresses: AddressesAPI;
   public transactionLimits: TransactionLimitsAPI;
   public transactions: TransactionsAPI;
+  public intents: IntentsAPI;
+  public stakes: StakeAPI;
 
   constructor({
     apiKey,
@@ -40,5 +44,7 @@ export default class BronClient {
     this.addresses = new AddressesAPI(http, workspaceId);
     this.transactionLimits = new TransactionLimitsAPI(http, workspaceId);
     this.transactions = new TransactionsAPI(http, workspaceId);
+    this.intents = new IntentsAPI(http, workspaceId);
+    this.stakes = new StakeAPI(http, workspaceId);
   }
 }
