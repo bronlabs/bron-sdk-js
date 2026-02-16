@@ -56,19 +56,19 @@
     "prepublishOnly": "pnpm run build && pnpm test"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "jwk-to-pem": "^2.0.7"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/jwk-to-pem": "^2.0.3",
-    "@types/node": "^24.10.1",
-    "dotenv": "^17.2.1",
+    "@types/node": "^24.10.13",
     "cuid": "^3.0.0",
-    "eslint": "^9.0.0",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.39.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "vitest": "^4.0.15"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   },
   "engines": {
     "node": ">=18.0.0"
