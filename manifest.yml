@@ -1,0 +1,18 @@
+info:
+  name: bron-sdk
+  version: "1.0"
+  category: libs
+
+include:
+  - file: /etc/serve/include.d/library.yml
+
+build:
+  - node: pnpm install && pnpm run build
+
+promote:
+  - node: >
+      pnpm install &&
+      pnpm run build &&
+      pnpm version {{ info.build-version }} --no-git-tag-version &&
+      script -qec "pnpm publish --no-git-checks" /dev/null
+
