@@ -8,14 +8,19 @@ export interface HttpRequestOptions {
   query?: object;
 }
 
+export type FetchFunction = (url: string, init?: RequestInit) => Promise<Response>;
+
 export class HttpClient {
   private readonly userAgent: string;
+  private readonly fetchFn: FetchFunction;
 
   constructor(
     private baseUrl: string,
-    private apiKeyJwk: string
+    private apiKeyJwk: string,
+    fetchFn?: FetchFunction
   ) {
     this.userAgent = `Bron SDK JS/${SDK_VERSION}`;
+    this.fetchFn = fetchFn ?? fetch;
   }
 
   async request<T>({
@@ -66,7 +71,7 @@ export class HttpClient {
       headers["Content-Type"] = "application/json";
     }
 
-    const res = await fetch(url, {
+    const res = await this.fetchFn(url, {
       method,
       headers,
       body: body ? jsonStringify(body) : undefined
