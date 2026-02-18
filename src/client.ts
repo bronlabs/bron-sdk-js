@@ -4,7 +4,7 @@ import { AddressBookAPI } from "./api/addressBook.js";
 import { AssetsAPI } from "./api/assets.js";
 import { AccountsAPI } from "./api/accounts.js";
 import { AddressesAPI } from "./api/addresses.js";
-import { HttpClient } from "./utils/http.js";
+import { HttpClient, type FetchFunction } from "./utils/http.js";
 import { TransactionLimitsAPI } from "./api/transactionLimits.js";
 import { TransactionsAPI } from "./api/transactions.js";
 import { IntentsAPI } from "./api/intents.js";
@@ -27,13 +27,15 @@ export default class BronClient {
   constructor({
     apiKey,
     workspaceId,
-    baseUrl = 'https://api.bron.org'
+    baseUrl = 'https://api.bron.org',
+    fetchFn
   }: {
     apiKey: string;
     workspaceId: string;
     baseUrl?: string;
+    fetchFn?: FetchFunction;
   }) {
-    const http = new HttpClient(baseUrl, apiKey);
+    const http = new HttpClient(baseUrl, apiKey, fetchFn);
     this.workspaceId = workspaceId;
 
     this.balances = new BalancesAPI(http, workspaceId);
