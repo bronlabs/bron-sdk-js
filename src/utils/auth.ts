@@ -16,7 +16,7 @@ export interface BronJwtOptions {
 export function generateBronJwt({ method, path, body = "", kid, privateKey }: BronJwtOptions): string {
   const iat = Math.floor(Date.now() / 1000);
   const exp = iat + 300;
-  const messageString = `${iat}${method?.toUpperCase() || ""}${path || ""}${body}`;
+  const messageString = `${iat}\n${method?.toUpperCase() || ""}\n${path || ""}\n${body}`;
   const hash = crypto.createHash("sha256").update(messageString).digest("hex");
 
   const header = { alg: "ES256", kid };
