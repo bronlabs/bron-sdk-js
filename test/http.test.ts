@@ -17,10 +17,16 @@ describe("jsonStringify", () => {
     expect(jsonStringify(arr)).toBe("[1,2,3]");
   });
 
-  it("should convert bigint to number", () => {
+  it("should convert bigint to string", () => {
     const obj = { amount: BigInt(123456789012345) };
     const result = jsonStringify(obj);
-    expect(result).toBe('{"amount":123456789012345}');
+    expect(result).toBe('{"amount":"123456789012345"}');
+  });
+
+  it("should preserve precision for large bigint values", () => {
+    const obj = { amount: BigInt("9007199254740993") };
+    const result = jsonStringify(obj);
+    expect(result).toBe('{"amount":"9007199254740993"}');
   });
 
   it("should handle multiple bigint values", () => {
@@ -30,7 +36,7 @@ describe("jsonStringify", () => {
       nested: { amount3: BigInt(300) }
     };
     const result = jsonStringify(obj);
-    expect(result).toBe('{"amount1":100,"amount2":200,"nested":{"amount3":300}}');
+    expect(result).toBe('{"amount1":"100","amount2":"200","nested":{"amount3":"300"}}');
   });
 
   it("should filter out null values", () => {
@@ -110,6 +116,6 @@ describe("jsonStringify", () => {
   it("should handle zero values", () => {
     const obj = { count: 0, balance: BigInt(0) };
     const result = jsonStringify(obj);
-    expect(result).toBe('{"count":0,"balance":0}');
+    expect(result).toBe('{"count":0,"balance":"0"}');
   });
 });

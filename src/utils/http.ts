@@ -92,7 +92,7 @@ export function jsonStringify(obj: unknown, space?: string | number): string {
         return undefined; // Filtering out properties
       }
 
-      return typeof value === 'bigint' ? Number(value) : value;
+      return typeof value === 'bigint' ? value.toString() : value;
     },
     space
   );
