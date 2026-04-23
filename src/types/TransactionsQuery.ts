@@ -6,6 +6,7 @@ export interface TransactionsQuery {
   accountIds?: string[];
   transactionStatuses?: string[];
   transactionStatusNotIn?: string[];
+  assetIds?: string[];
   blockchainTxId?: string;
   toAccountId?: string;
   toAddress?: string;

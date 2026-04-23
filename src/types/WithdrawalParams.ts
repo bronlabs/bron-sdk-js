@@ -13,4 +13,5 @@ export interface WithdrawalParams {
   toAccountId?: string;
   toAddress?: string;
   toAddressBookRecordId?: string;
+  toWorkspaceTag?: string;
 }

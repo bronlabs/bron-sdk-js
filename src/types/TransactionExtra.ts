@@ -11,9 +11,15 @@ export interface TransactionExtra {
   description?: string;
   fromAccountId?: string;
   fromAddress?: string;
+  fromWorkspaceImageId?: string;
+  fromWorkspaceName?: string;
+  fromWorkspaceTag?: string;
   memo?: string;
   signingRequestId?: string;
   toAccountId?: string;
   toAddress?: string;
+  toWorkspaceImageId?: string;
+  toWorkspaceName?: string;
+  toWorkspaceTag?: string;
   withdrawTransactionId?: string;
 }

@@ -1,1 +1,6 @@
-export type Signed = Record<string, any>;
+import { Signature } from './Signature.js';
+
+export interface Signed {
+  signature?: string;
+  signatures?: Signature[];
+}

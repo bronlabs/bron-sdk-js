@@ -5,6 +5,7 @@ export interface AssetsQuery {
   contractAddress?: string;
   contractIssuer?: string;
   assetType?: string;
+  search?: string;
   limit?: string;
   offset?: string;
 }

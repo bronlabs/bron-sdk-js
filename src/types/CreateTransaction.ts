@@ -9,6 +9,9 @@ import { StakeClaimParams } from './StakeClaimParams.js';
 import { StakeDelegationParams } from './StakeDelegationParams.js';
 import { StakeUnDelegationParams } from './StakeUnDelegationParams.js';
 import { SwapParams } from './SwapParams.js';
+import { FiatExchangeParams } from './FiatExchangeParams.js';
+import { FiatOutParams } from './FiatOutParams.js';
+import { FiatInParams } from './FiatInParams.js';
 import { TransactionType } from './TransactionType.js';
 
 export interface CreateTransaction {
