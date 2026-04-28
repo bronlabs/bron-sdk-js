@@ -1,5 +1,5 @@
 export interface UserProfile {
-  imageId?: string;
+  icon?: string;
   name?: string;
   userId: string;
 }

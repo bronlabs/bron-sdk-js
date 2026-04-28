@@ -10,6 +10,7 @@ export interface Account {
   createdBy?: string;
   externalId: string;
   extra?: AccountExtra;
+  icon?: string;
   isTestnet?: boolean;
   parentAccountId?: string;
   status: AccountStatus;

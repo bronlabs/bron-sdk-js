@@ -1,5 +1,5 @@
 export interface Workspace {
-  imageId?: string;
+  icon?: string;
   name: string;
   tag: string;
   workspaceId: string;
