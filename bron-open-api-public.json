@@ -450,8 +450,38 @@
         "required" : [ "assetId" ],
         "type" : "object"
       },
+      "AssetMarketPrice" : {
+        "properties" : {
+          "baseAssetId" : {
+            "type" : "string"
+          },
+          "baseSymbolId" : {
+            "type" : "string"
+          },
+          "price" : {
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "quoteAssetId" : {
+            "type" : "string"
+          },
+          "quoteSymbolId" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "baseSymbolId", "baseAssetId", "quoteSymbolId", "quoteAssetId", "price" ],
+        "type" : "object"
+      },
       "AssetMarketPrices" : {
-        "properties" : { },
+        "properties" : {
+          "prices" : {
+            "items" : {
+              "$ref" : "#/components/schemas/AssetMarketPrice"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "prices" ],
         "type" : "object"
       },
       "AssetType" : {
@@ -2692,6 +2722,19 @@
     "/dictionary/asset-market-prices" : {
       "get" : {
         "description" : "Provides market pricing data for asset ids\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "parameters" : [ {
+          "description" : "The asset IDs you want to get market prices for",
+          "example" : [ "1,2,3" ],
+          "in" : "query",
+          "name" : "baseAssetIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        } ],
         "responses" : {
           "200" : {
             "content" : {
