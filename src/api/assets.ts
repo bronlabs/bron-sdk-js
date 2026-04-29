@@ -1,4 +1,5 @@
 import { AssetMarketPrices } from "../types/AssetMarketPrices.js";
+import { AssetPricesQuery } from "../types/AssetPricesQuery.js";
 import { Assets } from "../types/Assets.js";
 import { AssetsQuery } from "../types/AssetsQuery.js";
 import { Asset } from "../types/Asset.js";
@@ -16,10 +17,11 @@ export class AssetsAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
 
-  async getAssetPrices(): Promise<AssetMarketPrices> {
+  async getAssetPrices(query?: AssetPricesQuery): Promise<AssetMarketPrices> {
     return this.http.request<AssetMarketPrices>({
       method: "GET",
-      path: `/dictionary/asset-market-prices`
+      path: `/dictionary/asset-market-prices`,
+      query
     });
   }
 

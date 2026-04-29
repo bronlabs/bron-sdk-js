@@ -1,1 +1,5 @@
-export type AssetMarketPrices = Record<string, any>;
+import { AssetMarketPrice } from './AssetMarketPrice.js';
+
+export interface AssetMarketPrices {
+  prices: AssetMarketPrice[];
+}
