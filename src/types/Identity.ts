@@ -3,6 +3,7 @@ import { IdentityType } from './IdentityType.js';
 export interface Identity {
   createdAt: string;
   createdBy?: string;
+  expiresAt?: string;
   identityId: string;
   identityType: IdentityType;
   identityValue: string;

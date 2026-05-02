@@ -13,4 +13,5 @@ export interface EventExtra {
   signingMessage?: SigningMessage;
   stakeInfo?: EventStakeInfo[];
   transactionFailed?: boolean;
+  walletStateInit?: string;
 }

@@ -1,4 +1,5 @@
 export interface TransactionsQuery {
+  transactionId?: string;
   transactionIds?: string[];
   transactionTypes?: string[];
   accountTypes?: string[];

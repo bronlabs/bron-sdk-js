@@ -628,7 +628,7 @@
           }
         },
         "required" : [ "sourceAssetId", "amount" ],
-        "title" : "Bridge asset between connected networks (e.g. hyperEVM <-> hyperCORE). Destination asset is resolved by the bridge handler.",
+        "title" : "Bridge asset between connected networks (e.g. hyperEVM ↔ hyperCORE). Destination asset is resolved by the bridge handler.",
         "type" : "object"
       },
       "CancelTransaction" : {
@@ -828,14 +828,20 @@
       "DefiParams" : {
         "properties" : {
           "data" : {
+            "description" : "Hex-encoded transaction data payload for contract interaction (EVM networks)",
             "type" : "string"
           },
           "externalBroadcast" : {
+            "description" : "If true, the transaction will be broadcast externally by the client instead of the wallet",
             "type" : "boolean"
           },
           "feeLevel" : {
             "$ref" : "#/components/schemas/FeeLevel",
             "description" : "[See details](/enums/FeeLevel)"
+          },
+          "method" : {
+            "description" : "WalletConnect method name that defines the requested operation (e.g. eth_sendTransaction, solana_signTransaction)",
+            "type" : "string"
           },
           "networkId" : {
             "type" : "string"
@@ -844,20 +850,27 @@
             "description" : "Origin of defi operation",
             "type" : "string"
           },
+          "rawTransaction" : {
+            "description" : "Fully formed serialized transaction to be signed or broadcast (used for TON network)",
+            "type" : "string"
+          },
           "rawTransactions" : {
+            "description" : "List of fully formed serialized transactions to be signed or broadcast (used for Solana network)",
             "items" : {
               "type" : "string"
             },
             "type" : "array"
           },
           "to" : {
+            "description" : "Recipient address for EVM-compatible transaction",
             "type" : "string"
           },
           "value" : {
+            "description" : "Hex-encoded amount (EVM networks)",
             "type" : "string"
           }
         },
-        "required" : [ "networkId", "origin" ],
+        "required" : [ "networkId", "origin", "method" ],
         "type" : "object"
       },
       "DepositParams" : {
@@ -976,6 +989,10 @@
           "transactionFailed" : {
             "description" : "If transaction was added to block, but transaction execution failed (e.g. smart contract execution failed)",
             "type" : "boolean"
+          },
+          "walletStateInit" : {
+            "description" : "TON-only. Base64 BoC of the wallet contract StateInit, required for TonConnect proof verification",
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -1118,6 +1135,11 @@
           },
           "createdBy" : {
             "examples" : [ "b20ca4a07143d20126634d3da2c" ],
+            "type" : "string"
+          },
+          "expiresAt" : {
+            "examples" : [ "1749637592257" ],
+            "format" : "date-time-millis",
             "type" : "string"
           },
           "identityId" : {
@@ -5037,6 +5059,7 @@
           "name" : "limit",
           "required" : false,
           "schema" : {
+            "default" : "1000",
             "format" : "int64",
             "type" : "string"
           }
@@ -5928,6 +5951,14 @@
       "get" : {
         "description" : "<sup>API Key permissions: View only, Transaction Operator, Full Access, MPC Hot Signer</sup>",
         "parameters" : [ {
+          "description" : "Transaction ID",
+          "in" : "query",
+          "name" : "transactionId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
           "description" : "Comma-separated transaction ids",
           "in" : "query",
           "name" : "transactionIds",
