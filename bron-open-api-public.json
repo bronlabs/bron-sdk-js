@@ -67,8 +67,12 @@
         "properties" : { },
         "type" : "object"
       },
+      "AccountHolderType" : {
+        "enum" : [ "individual", "business" ],
+        "type" : "string"
+      },
       "AccountStatus" : {
-        "enum" : [ "active", "archived", "shard-generating" ],
+        "enum" : [ "active", "archived", "shard-generating", "error-on-generating" ],
         "type" : "string"
       },
       "AccountType" : {
@@ -155,7 +159,7 @@
         "type" : "object"
       },
       "ActivityType" : {
-        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "tag-relinked", "tag-auto-relinked", "tag-deactivated", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "account-pins-reset", "shard-access-request-updated", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated", "ownership-takeover-request-created", "ownership-takeover-request-cancelled", "ownership-takeover-new-beneficiary-added", "ownership-takeover-beneficiary-left", "ownership-takeover-request-completed" ],
+        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "tag-relinked", "tag-auto-relinked", "tag-deactivated", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "email-change", "account-pins-reset", "shard-access-request-updated", "signing-share-requested", "signing-share-in-progress", "signing-share-cancelled", "signing-share-rejected", "signing-recovery-requested", "signing-recovery-in-progress", "signing-recovery-cancelled", "signing-recovery-rejected", "signing-access-revoked", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated", "ownership-takeover-request-created", "ownership-takeover-request-cancelled", "ownership-takeover-new-beneficiary-added", "ownership-takeover-beneficiary-left", "ownership-takeover-request-completed" ],
         "type" : "string"
       },
       "Address" : {
@@ -484,6 +488,19 @@
         "required" : [ "prices" ],
         "type" : "object"
       },
+      "AssetPriceSeries" : {
+        "properties" : {
+          "points" : {
+            "description" : "Time series of close prices, oldest first",
+            "items" : {
+              "$ref" : "#/components/schemas/PriceSeriesPoint"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "points" ],
+        "type" : "object"
+      },
       "AssetType" : {
         "enum" : [ "blockchain", "exchange", "fiat", "nft" ],
         "type" : "string"
@@ -576,6 +593,134 @@
         "required" : [ "balances" ],
         "type" : "object"
       },
+      "BankAccountType" : {
+        "enum" : [ "checking", "savings" ],
+        "type" : "string"
+      },
+      "BankAddress" : {
+        "properties" : {
+          "address" : {
+            "description" : "Street address, line 1",
+            "examples" : [ "1 Main St" ],
+            "type" : "string"
+          },
+          "city" : {
+            "description" : "City",
+            "examples" : [ "New York" ],
+            "type" : "string"
+          },
+          "country" : {
+            "description" : "ISO-3166-1 alpha-2 country code; defaults to BankDetails.country when omitted",
+            "examples" : [ "US" ],
+            "type" : "string"
+          },
+          "postalCode" : {
+            "description" : "Postal / ZIP code",
+            "examples" : [ "10001" ],
+            "type" : "string"
+          },
+          "state" : {
+            "description" : "State / province",
+            "examples" : [ "NY" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "BankChannelType" : {
+        "enum" : [ "sepa", "ach", "swift", "fedwire", "local" ],
+        "type" : "string"
+      },
+      "BankDetails" : {
+        "properties" : {
+          "accountHolderType" : {
+            "$ref" : "#/components/schemas/AccountHolderType",
+            "description" : "Account holder type. [See details](/enums/AccountHolderType)",
+            "examples" : [ "individual" ]
+          },
+          "accountNumber" : {
+            "description" : "Account number / IBAN",
+            "examples" : [ "DE89370400440532013000" ],
+            "type" : "string"
+          },
+          "accountType" : {
+            "$ref" : "#/components/schemas/BankAccountType",
+            "description" : "Account type — required by Noah for ACH and international SWIFT (USD-style). [See details](/enums/BankAccountType)",
+            "examples" : [ "checking" ]
+          },
+          "bankAddress" : {
+            "$ref" : "#/components/schemas/BankAddress",
+            "description" : "Structured bank address — required by Noah for ACH/Wire/SWIFT channels, omit for SEPA"
+          },
+          "bankCode" : {
+            "description" : "Bank code: BIC (SWIFT) / 9-digit routing number (US ACH) / sort code (UK)",
+            "examples" : [ "DEUTDEFF" ],
+            "type" : "string"
+          },
+          "businessName" : {
+            "description" : "Business name (for Business holder)",
+            "examples" : [ "Acme LLC" ],
+            "type" : "string"
+          },
+          "businessRegistrationNumber" : {
+            "description" : "Company registration number (for Business holder)",
+            "examples" : [ "12019991" ],
+            "type" : "string"
+          },
+          "channelType" : {
+            "$ref" : "#/components/schemas/BankChannelType",
+            "description" : "Payment channel type. [See details](/enums/BankChannelType)",
+            "examples" : [ "sepa" ]
+          },
+          "correspondentBankCode" : {
+            "description" : "Correspondent bank SWIFT/BIC code for international SWIFT payments",
+            "examples" : [ "IRVTUS3N" ],
+            "type" : "string"
+          },
+          "country" : {
+            "description" : "ISO-3166-1 alpha-2 country code, or 'XX' for global SWIFT-like fallback",
+            "examples" : [ "DE" ],
+            "type" : "string"
+          },
+          "fiatCurrency" : {
+            "description" : "Fiat currency code (ISO-4217)",
+            "examples" : [ "EUR" ],
+            "type" : "string"
+          },
+          "firstName" : {
+            "description" : "First name (for Individual holder)",
+            "examples" : [ "Dmitry" ],
+            "type" : "string"
+          },
+          "issuer" : {
+            "description" : "Bank name and address — free-form text shown to the user as a single block",
+            "examples" : [ "Acme Bank. 1 Example Street, London, UK" ],
+            "type" : "string"
+          },
+          "lastName" : {
+            "description" : "Last name (for Individual holder)",
+            "examples" : [ "Tokarev" ],
+            "type" : "string"
+          },
+          "paymentPurpose" : {
+            "description" : "Payment purpose — required by Noah for ACH/Fedwire/SWIFT-EUR",
+            "examples" : [ "Vendor / Contractor Payouts" ],
+            "type" : "string"
+          },
+          "reference" : {
+            "description" : "Reference shown on the beneficiary's bank statement",
+            "examples" : [ "Invoice 1234" ],
+            "type" : "string"
+          },
+          "registeredAddress" : {
+            "description" : "Registered address (for Business holder)",
+            "examples" : [ "123 Business Street, London, UK" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "country", "fiatCurrency", "channelType", "accountHolderType", "accountNumber", "issuer" ],
+        "type" : "object"
+      },
       "BlockchainRequest" : {
         "properties" : {
           "externalBroadcast" : {
@@ -639,6 +784,42 @@
         },
         "type" : "object"
       },
+      "CantonLedgerQuery" : {
+        "properties" : {
+          "accountId" : {
+            "description" : "Account whose Canton party identifiers are used as the calling parties for the forwarded request.",
+            "type" : "string"
+          },
+          "params" : {
+            "description" : "Canton Ledger JSON API request envelope; mirrors the @canton-network/dapp-sdk LedgerApiParams shape ({ requestMethod, resource, body?, query?, path? }). This route forwards a whitelisted set of read-only requests on behalf of a wallet connected via WalletConnect.",
+            "type" : "com.fasterxml.jackson.databind.JsonNode"
+          },
+          "sessionTopic" : {
+            "description" : "WalletConnect session topic for audit correlation.",
+            "type" : "string"
+          }
+        },
+        "required" : [ "accountId", "sessionTopic", "params" ],
+        "type" : "object"
+      },
+      "CantonLedgerQueryResult" : {
+        "properties" : {
+          "result" : {
+            "description" : "Raw response body returned by the Canton Ledger JSON API; forwarded unchanged.",
+            "type" : "com.fasterxml.jackson.databind.JsonNode"
+          },
+          "status" : {
+            "description" : "HTTP status returned by the Canton Ledger JSON API.",
+            "format" : "int32",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ChartPeriod" : {
+        "enum" : [ "1h", "1d", "1w", "1m", "6m", "1y", "all" ],
+        "type" : "string"
+      },
       "CreateAddressBookRecord" : {
         "properties" : {
           "accountIds" : {
@@ -651,6 +832,10 @@
           "address" : {
             "description" : "Address",
             "type" : "string"
+          },
+          "bankDetails" : {
+            "$ref" : "#/components/schemas/BankDetails",
+            "description" : "Bank details (for bank type records)"
           },
           "externalId" : {
             "description" : "Address book entry external ID",
@@ -717,6 +902,16 @@
           }
         },
         "required" : [ "accountId", "intentId", "fromAssetId", "toAssetId" ],
+        "type" : "object"
+      },
+      "CreateSigningRequest" : {
+        "properties" : {
+          "primitivesVersion" : {
+            "description" : "Version of the primitives used for signing.",
+            "format" : "int32",
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "CreateTransaction" : {
@@ -850,12 +1045,8 @@
             "description" : "Origin of defi operation",
             "type" : "string"
           },
-          "rawTransaction" : {
-            "description" : "Fully formed serialized transaction to be signed or broadcast (used for TON network)",
-            "type" : "string"
-          },
           "rawTransactions" : {
-            "description" : "List of fully formed serialized transactions to be signed or broadcast (used for Solana network)",
+            "description" : "List of fully formed serialized transactions to be signed or broadcast (used for Solana, TON networks)",
             "items" : {
               "type" : "string"
             },
@@ -1076,11 +1267,6 @@
             "description" : "Target crypto asset to receive",
             "type" : "string"
           },
-          "fiatAmount" : {
-            "description" : "Fiat amount to pay",
-            "format" : "decimal",
-            "type" : "string"
-          },
           "fiatAssetId" : {
             "description" : "Source fiat asset",
             "type" : "string"
@@ -1109,16 +1295,12 @@
             "description" : "Target fiat asset",
             "type" : "string"
           },
-          "networkId" : {
-            "description" : "Network to send crypto from",
-            "type" : "string"
-          },
           "toAddressBookRecordId" : {
             "description" : "Bank account record ID from address book",
             "type" : "string"
           }
         },
-        "required" : [ "amount", "assetId", "networkId", "fiatAssetId", "toAddressBookRecordId" ],
+        "required" : [ "amount", "assetId", "fiatAssetId", "toAddressBookRecordId" ],
         "title" : "Fiat out (sell crypto to fiat)",
         "type" : "object"
       },
@@ -1260,6 +1442,58 @@
         },
         "required" : [ "intentId" ],
         "title" : "Intent",
+        "type" : "object"
+      },
+      "IntentsQuote" : {
+        "properties" : {
+          "fromAmount" : {
+            "description" : "Amount of the from-asset (echo of the request)",
+            "examples" : [ "120.015" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "fromAssetId" : {
+            "description" : "ID of the source asset",
+            "examples" : [ "2" ],
+            "type" : "string"
+          },
+          "minPrice" : {
+            "description" : "Minimum acceptable price (quote/base) for the on-chain order. Solvers cannot fill below this. Multiply by `10^18` and pass as `CreateOrderParams.maxPrice_e18` (the contract's legacy field name).",
+            "examples" : [ "973.4500" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "minToAmount" : {
+            "description" : "Hard floor on the to-asset amount, enforced by `minPrice` in the on-chain order. Solvers cannot fill below this.",
+            "examples" : [ "116912.53" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "oracleFeePercent" : {
+            "description" : "Oracle protocol fee in percent applied to the order",
+            "examples" : [ "0.02" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "solverFeePercent" : {
+            "description" : "Solver protocol fee in percent applied to the order",
+            "examples" : [ "0.05" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "toAmount" : {
+            "description" : "Indicative expected amount of the to-asset. May drift slightly toward `minToAmount` between quote time and order execution.",
+            "examples" : [ "117500.03" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "toAssetId" : {
+            "description" : "ID of the destination asset",
+            "examples" : [ "5002" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "fromAssetId", "toAssetId", "fromAmount", "toAmount", "minToAmount", "minPrice", "solverFeePercent", "oracleFeePercent" ],
         "type" : "object"
       },
       "KeyType" : {
@@ -1436,6 +1670,11 @@
             },
             "type" : "array"
           },
+          "primitivesVersion" : {
+            "description" : "Version of the primitives used for signing.",
+            "format" : "int32",
+            "type" : "string"
+          },
           "publicKey" : {
             "description" : "Public key that corresponds to the private key used for signing these messages",
             "type" : "string"
@@ -1601,6 +1840,10 @@
           }
         },
         "required" : [ "accept" ],
+        "type" : "object"
+      },
+      "PriceSeriesPoint" : {
+        "properties" : { },
         "type" : "object"
       },
       "RawTransactionParams" : {
@@ -2833,6 +3076,108 @@
           }
         },
         "summary" : "Get Asset Prices",
+        "tags" : [ "assets" ]
+      }
+    },
+    "/dictionary/asset-price-series" : {
+      "get" : {
+        "description" : "Returns time-series of close prices for a given asset over a chart period (1h/1d/1w/1m/1y/all).\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "parameters" : [ {
+          "description" : "The base symbol ID to get the price chart for",
+          "example" : [ "s01" ],
+          "in" : "query",
+          "name" : "baseSymbolId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Chart period (1h, 1d, 1w, 1m, 1y, all). [See details](/enums/ChartPeriod)",
+          "example" : [ "1y" ],
+          "in" : "query",
+          "name" : "period",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ChartPeriod",
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AssetPriceSeries"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Asset Price Series",
         "tags" : [ "assets" ]
       }
     },
@@ -5256,6 +5601,105 @@
         "tags" : [ "balances" ]
       }
     },
+    "/workspaces/{workspaceId}/canton/ledger-query" : {
+      "post" : {
+        "description" : "Forwards a whitelisted Canton JSON Ledger API request on behalf of a wallet connected via WalletConnect. This route only proxies a read-only set of requests after validating ownership of the calling parties.\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CantonLedgerQuery"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CantonLedgerQueryResult"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Canton Ledger API passthrough",
+        "tags" : [ "canton" ]
+      }
+    },
     "/workspaces/{workspaceId}/intents" : {
       "post" : {
         "description" : "Creates an intent for swaps between two assets. [More details](/intents/about).\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
@@ -5352,6 +5796,134 @@
           }
         },
         "summary" : "Create Intent request",
+        "tags" : [ "intents" ]
+      }
+    },
+    "/workspaces/{workspaceId}/intents/quote" : {
+      "post" : {
+        "description" : "Request an indicative price for a potential swap between two assets without creating an on-chain order. Used by broadcaster integrators to display rates before initiating `createOrder`. Includes a hard floor (`minToAmount`) enforced on-chain via `maxPrice`.\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "parameters" : [ {
+          "description" : "ID of the source asset",
+          "example" : [ "2" ],
+          "in" : "query",
+          "name" : "fromAssetId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "ID of the destination asset",
+          "example" : [ "5002" ],
+          "in" : "query",
+          "name" : "toAssetId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Amount of the from-asset. Exactly one of `fromAmount` or `toAmount` must be specified.",
+          "example" : [ "120.015" ],
+          "in" : "query",
+          "name" : "fromAmount",
+          "required" : false,
+          "schema" : {
+            "format" : "decimal",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Amount of the to-asset. Exactly one of `fromAmount` or `toAmount` must be specified.",
+          "example" : [ "117500.03" ],
+          "in" : "query",
+          "name" : "toAmount",
+          "required" : false,
+          "schema" : {
+            "format" : "decimal",
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntentsQuote"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Request indicative swap quote",
         "tags" : [ "intents" ]
       }
     },
@@ -5687,6 +6259,16 @@
       "get" : {
         "description" : "<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
         "parameters" : [ {
+          "in" : "query",
+          "name" : "limitIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
           "description" : "[See details](/enums/TransactionLimitStatus)",
           "in" : "query",
           "name" : "statuses",
@@ -5730,16 +6312,6 @@
         }, {
           "in" : "query",
           "name" : "appliesToUserIds",
-          "required" : false,
-          "schema" : {
-            "items" : {
-              "type" : "string"
-            },
-            "type" : "array"
-          }
-        }, {
-          "in" : "query",
-          "name" : "appliesToGroupIds",
           "required" : false,
           "schema" : {
             "items" : {
@@ -7013,6 +7585,15 @@
             "type" : "string"
           }
         } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CreateSigningRequest"
+              }
+            }
+          }
+        },
         "responses" : {
           "200" : {
             "content" : {
@@ -7418,6 +7999,8 @@
     "name" : "assets"
   }, {
     "name" : "transaction-limits"
+  }, {
+    "name" : "canton"
   }, {
     "name" : "address-book"
   }, {

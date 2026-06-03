@@ -103,12 +103,12 @@ export class OpenApiSdkGenerator {
         const fileName = this.getFileName(op);
         if (!fileData[fileName]) fileData[fileName] = { types: new Set(), methods: [] };
 
-        const { paramType, paramOptional, pathParams, isQueryInterface } = this.processParameters(op, route, method);
+        const { paramType, paramOptional, pathParams, isQueryInterface, isRefParam } = this.processParameters(op, route, method);
         const returnType = this.getReturnType(op);
 
         if (isQueryInterface) this.saveQueryInterface(paramType);
         if (returnType) fileData[fileName].types.add(returnType);
-        if (this.isRefType(paramType) || isQueryInterface) fileData[fileName].types.add(paramType);
+        if (this.isRefType(paramType) || isQueryInterface || isRefParam) fileData[fileName].types.add(paramType);
 
         fileData[fileName].methods.push(
           this.generateMethod(this.toCamelCase(op.summary).replace(/ID/g, 'Id'), method, route, paramType, paramOptional, returnType, pathParams, op)
@@ -149,7 +149,8 @@ export class OpenApiSdkGenerator {
     paramType: string;
     paramOptional: string;
     pathParams?: Array<{ name: string, required: boolean }>;
-    isQueryInterface?: boolean
+    isQueryInterface?: boolean;
+    isRefParam?: boolean
   } {
     const isWorkspaceGetEndpoint = method === 'get' && route === '/workspaces/{workspaceId}';
     const pathParams = op.parameters?.filter(p => p.in === 'path' && (isWorkspaceGetEndpoint || p.name !== 'workspaceId')).map(p => ({
@@ -168,7 +169,8 @@ export class OpenApiSdkGenerator {
         return {
           paramType: this.extractRefName(schema.$ref),
           paramOptional: '',
-          pathParams
+          pathParams,
+          isRefParam: true
         };
       }
       if (schema.type === 'object' && schema.properties) {
@@ -244,7 +246,7 @@ export class OpenApiSdkGenerator {
 
     const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
     if (paramType !== 'any') {
-      const argName = hasRequestBody ? 'body' : (['get', 'delete'].includes(method) ? 'query' : 'body');
+      const argName = hasRequestBody ? 'body' : 'query';
       args.push(argName);
     }
 

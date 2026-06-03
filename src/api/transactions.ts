@@ -7,6 +7,7 @@ import { DryRunTransaction } from "../types/DryRunTransaction.js";
 import { OfferActions } from "../types/OfferActions.js";
 import { ApproveTransaction } from "../types/ApproveTransaction.js";
 import { CancelTransaction } from "../types/CancelTransaction.js";
+import { CreateSigningRequest } from "../types/CreateSigningRequest.js";
 import { TransactionEvents } from "../types/TransactionEvents.js";
 import { HttpClient } from "../utils/http.js";
 
@@ -77,10 +78,11 @@ export class TransactionsAPI {
     });
   }
 
-  async createSigningRequest(transactionId: string): Promise<Transaction> {
+  async createSigningRequest(transactionId: string, body: CreateSigningRequest): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "POST",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/create-signing-request`
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/create-signing-request`,
+      body
     });
   }
 

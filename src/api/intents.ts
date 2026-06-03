@@ -1,5 +1,7 @@
 import { Intent } from "../types/Intent.js";
 import { CreateIntent } from "../types/CreateIntent.js";
+import { IntentsQuote } from "../types/IntentsQuote.js";
+import { RequestIndicativeSwapQuoteQuery } from "../types/RequestIndicativeSwapQuoteQuery.js";
 import { HttpClient } from "../utils/http.js";
 
 export class IntentsAPI {
@@ -11,6 +13,14 @@ export class IntentsAPI {
       method: "POST",
       path: `/workspaces/${this.workspaceId}/intents`,
       body
+    });
+  }
+
+  async requestIndicativeSwapQuote(query?: RequestIndicativeSwapQuoteQuery): Promise<IntentsQuote> {
+    return this.http.request<IntentsQuote>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/intents/quote`,
+      query
     });
   }
 

@@ -1,5 +1,7 @@
 import { AssetMarketPrices } from "../types/AssetMarketPrices.js";
 import { AssetPricesQuery } from "../types/AssetPricesQuery.js";
+import { AssetPriceSeries } from "../types/AssetPriceSeries.js";
+import { AssetPriceSeriesQuery } from "../types/AssetPriceSeriesQuery.js";
 import { Assets } from "../types/Assets.js";
 import { AssetsQuery } from "../types/AssetsQuery.js";
 import { Asset } from "../types/Asset.js";
@@ -21,6 +23,14 @@ export class AssetsAPI {
     return this.http.request<AssetMarketPrices>({
       method: "GET",
       path: `/dictionary/asset-market-prices`,
+      query
+    });
+  }
+
+  async getAssetPriceSeries(query?: AssetPriceSeriesQuery): Promise<AssetPriceSeries> {
+    return this.http.request<AssetPriceSeries>({
+      method: "GET",
+      path: `/dictionary/asset-price-series`,
       query
     });
   }

@@ -5,6 +5,5 @@ export interface FiatOutParams {
   assetId: string;
   feeLevel?: FeeLevel;
   fiatAssetId: string;
-  networkId: string;
   toAddressBookRecordId: string;
 }

@@ -1,8 +1,10 @@
+import { BankDetails } from './BankDetails.js';
 import { RecordType } from './RecordType.js';
 
 export interface CreateAddressBookRecord {
   accountIds?: string[];
   address?: string;
+  bankDetails?: BankDetails;
   externalId: string;
   imageId?: string;
   memo?: string;

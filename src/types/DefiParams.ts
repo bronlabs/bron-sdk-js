@@ -7,7 +7,6 @@ export interface DefiParams {
   method: string;
   networkId: string;
   origin: string;
-  rawTransaction?: string;
   rawTransactions?: string[];
   to?: string;
   value?: string;
