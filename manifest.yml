@@ -10,9 +10,13 @@ build:
   - node: pnpm install && pnpm run build
 
 promote:
-  - node: >
-      pnpm install &&
-      pnpm run build &&
-      pnpm version {{ info.build-version }} --no-git-tag-version &&
-      script -qec "pnpm publish --no-git-checks" /dev/null
+  - node:
+      node: >
+        pnpm install &&
+        pnpm run build &&
+        pnpm version {{ info.build-version }} --no-git-tag-version &&
+        npm_config_https_proxy="$BRON_HTTP_PROXY" npm_config_proxy="$BRON_HTTP_PROXY"
+        script -qec "pnpm publish --no-git-checks" /dev/null
+      envs:
+        BRON_HTTP_PROXY: ""
 
