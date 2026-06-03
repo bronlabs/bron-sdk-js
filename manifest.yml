@@ -15,7 +15,7 @@ promote:
         pnpm install &&
         pnpm run build &&
         pnpm version {{ info.build-version }} --no-git-tag-version &&
-        echo "publish via proxy [$BRON_HTTP_PROXY]" &&
+        echo "publish via proxy [$BRON_HTTP_PROXY], npm token len ${#NPMJS_ORG_TOKEN}" &&
         HTTPS_PROXY="$BRON_HTTP_PROXY" HTTP_PROXY="$BRON_HTTP_PROXY"
         script -qec "pnpm publish --no-git-checks" /dev/null
       envs:
