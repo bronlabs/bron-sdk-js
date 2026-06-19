@@ -7,7 +7,12 @@ include:
   - file: /etc/serve/include.d/library.yml
 
 build:
-  - node: pnpm install && pnpm run build
+  - node:
+      node: |
+        pnpm install && \
+        pnpm run build && \
+        pnpm version {{ info.build-version }} --no-git-tag-version && \
+        (if test "{{ vars.no-push }}" != "true"; then npm pkg delete publishConfig.registry && pnpm publish --no-git-checks --registry "$NPM_RELEASES_REGISTRY"; fi)
 
 promote:
   - node:
