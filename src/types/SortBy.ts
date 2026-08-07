@@ -1,1 +1,1 @@
-export type SortBy = "updated" | "activity";
+export type SortBy = "updated" | "activity" | "created";

@@ -13,6 +13,7 @@ import { PricesQuery } from "../types/PricesQuery.js";
 import { Symbols } from "../types/Symbols.js";
 import { SymbolsQuery } from "../types/SymbolsQuery.js";
 import { Symbol } from "../types/Symbol.js";
+import { WorkspacePricesQuery } from "../types/WorkspacePricesQuery.js";
 import { HttpClient } from "../utils/http.js";
 
 export class AssetsAPI {
@@ -85,6 +86,14 @@ export class AssetsAPI {
     return this.http.request<Symbol>({
       method: "GET",
       path: `/dictionary/symbols/${symbolId}`
+    });
+  }
+
+  async getWorkspacePrices(query?: WorkspacePricesQuery): Promise<SymbolMarketPrices> {
+    return this.http.request<SymbolMarketPrices>({
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/symbol-market-prices`,
+      query
     });
   }
 }

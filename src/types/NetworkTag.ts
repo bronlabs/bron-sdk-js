@@ -1,1 +1,1 @@
-export type NetworkTag = "show-vault" | "supports-rbf" | "supports-rbf-cancel" | "supports-memo" | "swap" | "supports-parallel-signing" | "supports-chained-signing" | "supports-fee-levels" | "evm" | "bridge";
+export type NetworkTag = "show-vault" | "supports-rbf" | "supports-rbf-cancel" | "supports-memo" | "swap" | "supports-parallel-signing" | "supports-chained-signing" | "supports-fee-levels" | "supports-sponsored-transactions" | "has-token-activation" | "has-address-creation" | "has-address-server-creation" | "has-address-activation" | "evm" | "bridge";

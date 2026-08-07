@@ -1,4 +1,4 @@
-export interface DepositAddressesQuery {
+export interface AddressesQuery {
   accountId?: string;
   addressIds?: string[];
   externalId?: string;

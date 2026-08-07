@@ -610,13 +610,13 @@ describe("BronClient", () => {
   });
 
   describe("addresses API", () => {
-    it("should call getDepositAddresses with correct path", async () => {
+    it("should call getAddresses with correct path", async () => {
       const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ addresses: [] })
       } as Response);
 
-      await client.addresses.getDepositAddresses();
+      await client.addresses.getAddresses();
 
       expect(fetchSpy).toHaveBeenCalledWith(
         expect.stringContaining("/workspaces/test-workspace-id/addresses"),
@@ -626,13 +626,13 @@ describe("BronClient", () => {
       fetchSpy.mockRestore();
     });
 
-    it("should call getDepositAddresses with query parameters", async () => {
+    it("should call getAddresses with query parameters", async () => {
       const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue({
         ok: true,
         json: () => Promise.resolve({ addresses: [] })
       } as Response);
 
-      await client.addresses.getDepositAddresses({ accountId: "acc-123" });
+      await client.addresses.getAddresses({ accountId: "acc-123" });
 
       expect(fetchSpy).toHaveBeenCalledWith(
         expect.stringContaining("accountId=acc-123"),

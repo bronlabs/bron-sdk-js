@@ -5,12 +5,15 @@ export interface TransactionsQuery {
   accountTypes?: string[];
   accountId?: string;
   accountIds?: string[];
+  isTestnet?: boolean;
   transactionStatuses?: string[];
   transactionStatusNotIn?: string[];
   assetIds?: string[];
   blockchainTxId?: string;
   toAccountId?: string;
   toAddress?: string;
+  fromAddress?: string;
+  address?: string;
   isTerminated?: boolean;
   terminatedAtFrom?: string;
   terminatedAtTo?: string;
@@ -26,4 +29,5 @@ export interface TransactionsQuery {
   externalId?: string;
   includeEvents?: boolean;
   includeCurrentSigningRequest?: boolean;
+  includeAttestationSignature?: boolean;
 }

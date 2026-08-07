@@ -11,6 +11,8 @@ export interface BalancesQuery {
   excludedAccountTypes?: string[];
   updatedSince?: string;
   nonEmpty?: boolean;
+  riskScoreThreshold?: string;
+  isTestnet?: boolean;
   limit?: string;
   offset?: string;
 }

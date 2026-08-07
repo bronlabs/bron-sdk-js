@@ -5,6 +5,7 @@ import { Warning } from './Warning.js';
 
 export interface DryRunTransaction {
   accountId: string;
+  description?: string;
   estimations?: TransactionEstimation[];
   externalId?: string;
   extra?: TransactionExtra;

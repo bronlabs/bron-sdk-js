@@ -1,11 +1,13 @@
 import { TransactionApprovers } from './TransactionApprovers.js';
 import { BlockchainTxDetails } from './BlockchainTxDetails.js';
 import { BlockchainRequest } from './BlockchainRequest.js';
+import { BronLockExtra } from './BronLockExtra.js';
 
 export interface TransactionExtra {
   approvers?: TransactionApprovers;
   blockchainDetails?: BlockchainTxDetails[];
   blockchainRequest?: BlockchainRequest;
+  bronLock?: BronLockExtra;
   confirmations?: string;
   depositTransactionId?: string;
   description?: string;

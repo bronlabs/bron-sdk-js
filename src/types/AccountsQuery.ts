@@ -3,7 +3,6 @@ export interface AccountsQuery {
   excludedAccountTypes?: string[];
   statuses?: string[];
   accountIds?: string[];
-  isDefiVault?: boolean;
   offset?: string;
   limit?: string;
   isTestnet?: boolean;

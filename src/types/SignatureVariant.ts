@@ -1,1 +1,1 @@
-export type SignatureVariant = "zilliqa" | "mina";
+export type SignatureVariant = "zilliqa" | "mina" | "taproot";

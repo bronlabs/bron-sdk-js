@@ -1,12 +1,12 @@
 import { FeeLevel } from './FeeLevel.js';
 import { RequestedNetworkFees } from './RequestedNetworkFees.js';
 
-export interface WithdrawalParams {
+export interface IntentSolverSettlementParams {
   amount: string;
   assetId?: string;
-  feeAssetId?: string;
   feeLevel?: FeeLevel;
   includeFee?: boolean;
+  intentId: string;
   memo?: string;
   networkFees?: RequestedNetworkFees;
   networkId?: string;

@@ -6,6 +6,8 @@ export interface AddressBookRecordsQuery {
   tag?: string;
   limit?: string;
   offset?: string;
+  sortBy?: string;
+  sortDirection?: string;
   recordType?: string;
   recordTypes?: string[];
   statuses?: string[];

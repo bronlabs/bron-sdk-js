@@ -9,6 +9,7 @@
           },
           "accountName" : {
             "examples" : [ "Default vault" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "accountType" : {
@@ -140,10 +141,12 @@
           },
           "description" : {
             "examples" : [ "Vault account was added. Safari 18" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "title" : {
             "examples" : [ "Created Vault account" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "userId" : {
@@ -159,7 +162,7 @@
         "type" : "object"
       },
       "ActivityType" : {
-        "enum" : [ "login", "new-device-login", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "tag-relinked", "tag-auto-relinked", "tag-deactivated", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "email-change", "account-pins-reset", "shard-access-request-updated", "signing-share-requested", "signing-share-in-progress", "signing-share-cancelled", "signing-share-rejected", "signing-recovery-requested", "signing-recovery-in-progress", "signing-recovery-cancelled", "signing-recovery-rejected", "signing-access-revoked", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated", "ownership-takeover-request-created", "ownership-takeover-request-cancelled", "ownership-takeover-new-beneficiary-added", "ownership-takeover-beneficiary-left", "ownership-takeover-request-completed" ],
+        "enum" : [ "login", "new-device-login", "failed-login", "failed-2fa", "guardian-declined", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "tag-relinked", "tag-auto-relinked", "tag-deactivated", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "email-change", "account-pins-reset", "shard-access-request-updated", "signing-share-requested", "signing-share-in-progress", "signing-share-cancelled", "signing-share-rejected", "signing-recovery-requested", "signing-recovery-in-progress", "signing-recovery-cancelled", "signing-recovery-rejected", "face-scan-enrolled", "face-scan-enrolment-removed", "face-scan-recovery-verified", "face-scan-recovery-failed", "shard-recovery-face-verified", "shard-recovery-face-failed", "signing-access-revoked", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated", "ownership-takeover-request-created", "ownership-takeover-request-cancelled", "ownership-takeover-new-beneficiary-added", "ownership-takeover-beneficiary-left", "ownership-takeover-request-completed", "user-frozen", "user-unfrozen", "workspace-frozen", "workspace-unfrozen", "user-deletion-scheduled", "user-deletion-canceled" ],
         "type" : "string"
       },
       "Address" : {
@@ -291,11 +294,13 @@
           },
           "memo" : {
             "description" : "Address memo (destination tag for XRP)",
+            "format" : "external-text",
             "type" : "string"
           },
           "name" : {
             "description" : "Name of the address",
             "examples" : [ "My address" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "networkId" : {
@@ -319,6 +324,7 @@
           "tag" : {
             "description" : "Workspace tag (for tag type records)",
             "examples" : [ "$myworkspace" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "updatedAt" : {
@@ -353,6 +359,10 @@
         "required" : [ "records" ],
         "type" : "object"
       },
+      "AddressBookSortBy" : {
+        "enum" : [ "date-added", "type", "name" ],
+        "type" : "string"
+      },
       "AddressCreationParams" : {
         "properties" : {
           "assetId" : {
@@ -364,7 +374,7 @@
         "type" : "object"
       },
       "AddressStatus" : {
-        "enum" : [ "new", "pending", "address-activation-required", "address-creation-required", "approval-pending", "enabled", "disabled", "error", "account-archived" ],
+        "enum" : [ "new", "pending", "address-activation-required", "address-creation-required", "address-activation-in-progress", "approval-pending", "enabled", "disabled", "error", "account-archived" ],
         "type" : "string"
       },
       "Addresses" : {
@@ -516,6 +526,19 @@
         },
         "type" : "object"
       },
+      "AttestationSignature" : {
+        "properties" : {
+          "publicKey" : {
+            "description" : "Public key (0x-hex) that controls the settlement-from address and signed the attestation",
+            "type" : "string"
+          },
+          "signature" : {
+            "description" : "Order-bound attestation signature (0x-hex)",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "Balance" : {
         "properties" : {
           "accountId" : {
@@ -641,6 +664,7 @@
           "accountNumber" : {
             "description" : "Account number / IBAN",
             "examples" : [ "DE89370400440532013000" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "accountType" : {
@@ -655,16 +679,19 @@
           "bankCode" : {
             "description" : "Bank code: BIC (SWIFT) / 9-digit routing number (US ACH) / sort code (UK)",
             "examples" : [ "DEUTDEFF" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "businessName" : {
             "description" : "Business name (for Business holder)",
             "examples" : [ "Acme LLC" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "businessRegistrationNumber" : {
             "description" : "Company registration number (for Business holder)",
             "examples" : [ "12019991" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "channelType" : {
@@ -675,6 +702,7 @@
           "correspondentBankCode" : {
             "description" : "Correspondent bank SWIFT/BIC code for international SWIFT payments",
             "examples" : [ "IRVTUS3N" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "country" : {
@@ -690,31 +718,37 @@
           "firstName" : {
             "description" : "First name (for Individual holder)",
             "examples" : [ "Dmitry" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "issuer" : {
             "description" : "Bank name and address — free-form text shown to the user as a single block",
             "examples" : [ "Acme Bank. 1 Example Street, London, UK" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "lastName" : {
             "description" : "Last name (for Individual holder)",
             "examples" : [ "Tokarev" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "paymentPurpose" : {
             "description" : "Payment purpose — required by Noah for ACH/Fedwire/SWIFT-EUR",
             "examples" : [ "Vendor / Contractor Payouts" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "reference" : {
             "description" : "Reference shown on the beneficiary's bank statement",
             "examples" : [ "Invoice 1234" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "registeredAddress" : {
             "description" : "Registered address (for Business holder)",
             "examples" : [ "123 Business Street, London, UK" ],
+            "format" : "external-text",
             "type" : "string"
           }
         },
@@ -763,17 +797,42 @@
           "feeLevel" : {
             "$ref" : "#/components/schemas/FeeLevel",
             "default" : "medium",
-            "description" : "The fee level for the source-network withdrawal. [See details](/enums/FeeLevel)",
+            "description" : "The fee level for the source-network transfer. [See details](/enums/FeeLevel)",
             "examples" : [ "medium" ]
           },
           "sourceAssetId" : {
-            "description" : "The asset ID on the source network",
+            "description" : "The asset ID on the source network. The destination asset is resolved by the bridge handler between connected networks (e.g. hyperEVM ↔ hyperCORE)",
             "examples" : [ "11" ],
             "type" : "string"
           }
         },
         "required" : [ "sourceAssetId", "amount" ],
-        "title" : "Bridge asset between connected networks (e.g. hyperEVM ↔ hyperCORE). Destination asset is resolved by the bridge handler.",
+        "title" : "Bridge",
+        "type" : "object"
+      },
+      "BronLockBurnExtra" : {
+        "properties" : {
+          "redeemRequestId" : {
+            "type" : "string"
+          },
+          "releaseBlockchainTxId" : {
+            "type" : "string"
+          },
+          "releaseSigningRequestId" : {
+            "type" : "string"
+          },
+          "releaseTransactionId" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "BronLockExtra" : {
+        "properties" : {
+          "burn" : {
+            "$ref" : "#/components/schemas/BronLockBurnExtra"
+          }
+        },
         "type" : "object"
       },
       "CancelTransaction" : {
@@ -817,7 +876,7 @@
         "type" : "object"
       },
       "ChartPeriod" : {
-        "enum" : [ "1h", "1d", "1w", "1m", "6m", "1y", "all" ],
+        "enum" : [ "1h", "1d", "1w", "1m", "6m", "1y", "ytd", "all" ],
         "type" : "string"
       },
       "CreateAddressBookRecord" : {
@@ -886,6 +945,10 @@
             "examples" : [ "2" ],
             "type" : "string"
           },
+          "fromTokenId" : {
+            "description" : "Token ID of the from-asset. Required when the from-asset is a tokenized asset (NFT or Bron Lock).",
+            "type" : "string"
+          },
           "intentId" : {
             "description" : "Unique intent identifier from client (should be unique per the account)",
             "examples" : [ "w2u573pjj5wl975z4a9" ],
@@ -898,6 +961,10 @@
           },
           "toAssetId" : {
             "examples" : [ "5002" ],
+            "type" : "string"
+          },
+          "toTokenId" : {
+            "description" : "Token ID of the to-asset. Required when the to-asset is a tokenized asset (NFT or Bron Lock).",
             "type" : "string"
           }
         },
@@ -952,15 +1019,9 @@
             }, {
               "$ref" : "#/components/schemas/DefiParams"
             }, {
-              "$ref" : "#/components/schemas/DepositParams"
-            }, {
-              "$ref" : "#/components/schemas/FiatInParams"
-            }, {
-              "$ref" : "#/components/schemas/FiatOutParams"
-            }, {
               "$ref" : "#/components/schemas/IntentsParams"
             }, {
-              "$ref" : "#/components/schemas/LoyaltyParams"
+              "$ref" : "#/components/schemas/IntentSolverSettlementParams"
             }, {
               "$ref" : "#/components/schemas/NFTAllowanceParams"
             }, {
@@ -1018,6 +1079,7 @@
           }
         },
         "required" : [ "networkId", "origin", "message" ],
+        "title" : "DeFi message signing (WalletConnect)",
         "type" : "object"
       },
       "DefiParams" : {
@@ -1045,6 +1107,10 @@
             "description" : "Origin of defi operation",
             "type" : "string"
           },
+          "rawTransaction" : {
+            "description" : "Fully formed transaction to be signed or broadcast (used for TRON network)",
+            "type" : "string"
+          },
           "rawTransactions" : {
             "description" : "List of fully formed serialized transactions to be signed or broadcast (used for Solana, TON networks)",
             "items" : {
@@ -1062,6 +1128,7 @@
           }
         },
         "required" : [ "networkId", "origin", "method" ],
+        "title" : "DeFi transaction (WalletConnect)",
         "type" : "object"
       },
       "DepositParams" : {
@@ -1084,11 +1151,17 @@
           }
         },
         "required" : [ "amount", "assetId", "networkId" ],
+        "title" : "Incoming transfer",
         "type" : "object"
       },
       "DryRunTransaction" : {
         "properties" : {
           "accountId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "The description of the transaction",
+            "examples" : [ "Withdrawal to an exchange" ],
             "type" : "string"
           },
           "estimations" : {
@@ -1249,60 +1322,12 @@
         "type" : "object"
       },
       "EventType" : {
-        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-deposit", "stake-delegation", "stake-undelegation", "stake-withdrawn", "stake-earn-reward", "stake-reward-accrued", "stake-pool-created", "stake-pool-unjailed", "stake-transferred", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "canton-reward", "message-signed", "deposit-offer" ],
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-deposit", "stake-withdrawal-requested", "stake-delegation", "stake-undelegation", "stake-withdrawn", "stake-earn-reward", "stake-reward-accrued", "stake-pool-created", "stake-pool-unjailed", "stake-transferred", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "canton-reward", "message-signed", "deposit-offer" ],
         "type" : "string"
       },
       "FeeLevel" : {
         "enum" : [ "low", "medium", "high" ],
         "type" : "string"
-      },
-      "FiatInParams" : {
-        "properties" : {
-          "amount" : {
-            "description" : "Amount to deposit",
-            "format" : "decimal",
-            "type" : "string"
-          },
-          "assetId" : {
-            "description" : "Target crypto asset to receive",
-            "type" : "string"
-          },
-          "fiatAssetId" : {
-            "description" : "Source fiat asset",
-            "type" : "string"
-          }
-        },
-        "required" : [ "amount", "assetId", "fiatAssetId" ],
-        "title" : "Fiat in (buy crypto with fiat)",
-        "type" : "object"
-      },
-      "FiatOutParams" : {
-        "properties" : {
-          "amount" : {
-            "description" : "Crypto amount to sell",
-            "format" : "decimal",
-            "type" : "string"
-          },
-          "assetId" : {
-            "description" : "Crypto asset to sell",
-            "type" : "string"
-          },
-          "feeLevel" : {
-            "$ref" : "#/components/schemas/FeeLevel",
-            "description" : "[See details](/enums/FeeLevel)"
-          },
-          "fiatAssetId" : {
-            "description" : "Target fiat asset",
-            "type" : "string"
-          },
-          "toAddressBookRecordId" : {
-            "description" : "Bank account record ID from address book",
-            "type" : "string"
-          }
-        },
-        "required" : [ "amount", "assetId", "fiatAssetId", "toAddressBookRecordId" ],
-        "title" : "Fiat out (sell crypto to fiat)",
-        "type" : "object"
       },
       "HashFunction" : {
         "enum" : [ "none", "sha256d", "keccak256", "blake2b256", "sha256", "sha512", "sha512_half", "sha512_256", "poseidon" ],
@@ -1383,6 +1408,10 @@
             "examples" : [ "2" ],
             "type" : "string"
           },
+          "fromTokenId" : {
+            "description" : "Token ID of the from-asset for a tokenized asset (NFT or Bron Lock)",
+            "type" : "string"
+          },
           "intentId" : {
             "description" : "Unique user-generated ID of the intent",
             "examples" : [ "rzsdziq1iknnzszmmtqz" ],
@@ -1410,6 +1439,10 @@
             "examples" : [ "5002" ],
             "type" : "string"
           },
+          "toTokenId" : {
+            "description" : "Token ID of the to-asset for a tokenized asset (NFT or Bron Lock)",
+            "type" : "string"
+          },
           "updatedAt" : {
             "description" : "Last update timestamp of the intent (epoch millis)",
             "examples" : [ "1794764800000" ],
@@ -1429,6 +1462,78 @@
       "IntentOrderStatus" : {
         "enum" : [ "not-exist", "user-initiated", "auction-in-progress", "wait-for-user-tx", "wait-for-oracle-confirm-user-tx", "wait-for-solver-tx", "wait-for-oracle-confirm-solver-tx", "completed", "liquidated", "cancelled" ],
         "type" : "string"
+      },
+      "IntentSolverSettlementParams" : {
+        "properties" : {
+          "amount" : {
+            "description" : "The amount of transaction",
+            "examples" : [ "10.123" ],
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "The asset ID for the transaction",
+            "examples" : [ "20145" ],
+            "type" : "string"
+          },
+          "feeLevel" : {
+            "$ref" : "#/components/schemas/FeeLevel",
+            "default" : "medium",
+            "description" : "The fee level for the withdrawal. [See details](/enums/FeeLevel)",
+            "examples" : [ "medium" ]
+          },
+          "includeFee" : {
+            "default" : "false",
+            "description" : "Indicates whether the fee should be included in the withdrawal amount or added on top of it",
+            "examples" : [ "false" ],
+            "type" : "boolean"
+          },
+          "intentId" : {
+            "description" : "The ID of the intent this settlement fulfils. The signer also produces an intent-bound attestation, retrievable with includeAttestationSignature.",
+            "examples" : [ "rzsdziq1iknnzszmmtqz" ],
+            "type" : "string"
+          },
+          "memo" : {
+            "description" : "Memo for the transaction",
+            "type" : "string"
+          },
+          "networkFees" : {
+            "$ref" : "#/components/schemas/RequestedNetworkFees",
+            "description" : "Custom network fees parameters"
+          },
+          "networkId" : {
+            "description" : "The asset's blockchain network name for the transaction",
+            "examples" : [ "BTC" ],
+            "type" : "string"
+          },
+          "symbol" : {
+            "description" : "The asset's symbol for the transaction",
+            "examples" : [ "BTC" ],
+            "type" : "string"
+          },
+          "toAccountId" : {
+            "description" : "In case of a transfer on a different account, the ID of the destination account",
+            "examples" : [ "w9jh0gf3w9qaxlre7enezt17" ],
+            "type" : "string"
+          },
+          "toAddress" : {
+            "description" : "Destination address for the transaction",
+            "examples" : [ "TKAduQVqNaTLyBzVvRrcctY6FFraowJ3Uc" ],
+            "type" : "string"
+          },
+          "toAddressBookRecordId" : {
+            "description" : "In case of a withdrawal to address from address book, the ID of the address book record",
+            "examples" : [ "a30lin1p2zr1wzqqt1l8n652" ],
+            "type" : "string"
+          },
+          "toWorkspaceTag" : {
+            "description" : "Destination workspace tag for the transaction (e.g. 'tesla')",
+            "type" : "string"
+          }
+        },
+        "required" : [ "intentId", "amount" ],
+        "title" : "Intent solver settlement",
+        "type" : "object"
       },
       "IntentsParams" : {
         "properties" : {
@@ -1622,16 +1727,6 @@
         },
         "type" : "object"
       },
-      "LoyaltyParams" : {
-        "properties" : {
-          "amount" : {
-            "format" : "decimal",
-            "type" : "string"
-          }
-        },
-        "required" : [ "amount" ],
-        "type" : "object"
-      },
       "MemberStatus" : {
         "enum" : [ "new", "active", "rejected", "deactivated" ],
         "type" : "string"
@@ -1819,7 +1914,7 @@
         "type" : "object"
       },
       "NetworkTag" : {
-        "enum" : [ "show-vault", "supports-rbf", "supports-rbf-cancel", "supports-memo", "swap", "supports-parallel-signing", "supports-chained-signing", "supports-fee-levels", "evm", "bridge" ],
+        "enum" : [ "show-vault", "supports-rbf", "supports-rbf-cancel", "supports-memo", "swap", "supports-parallel-signing", "supports-chained-signing", "supports-fee-levels", "supports-sponsored-transactions", "has-token-activation", "has-address-creation", "has-address-server-creation", "has-address-activation", "evm", "bridge" ],
         "type" : "string"
       },
       "Networks" : {
@@ -1849,7 +1944,7 @@
       "RawTransactionParams" : {
         "properties" : {
           "amount" : {
-            "format" : "decimal",
+            "format" : "bigint",
             "type" : "string"
           },
           "assetId" : {
@@ -1858,6 +1953,9 @@
           "data" : {
             "type" : "string"
           },
+          "externalBroadcast" : {
+            "type" : "boolean"
+          },
           "feeLevel" : {
             "$ref" : "#/components/schemas/FeeLevel",
             "description" : "[See details](/enums/FeeLevel)"
@@ -1865,6 +1963,9 @@
           "networkFees" : {
             "$ref" : "#/components/schemas/RequestedNetworkFees",
             "description" : "Custom network fees parameters"
+          },
+          "networkId" : {
+            "type" : "string"
           },
           "rawTransactions" : {
             "items" : {
@@ -1879,7 +1980,6 @@
             "type" : "string"
           }
         },
-        "required" : [ "assetId", "toAddress" ],
         "type" : "object"
       },
       "RecordStatus" : {
@@ -1926,7 +2026,27 @@
         "type" : "object"
       },
       "Signature" : {
-        "properties" : { },
+        "properties" : {
+          "e" : {
+            "type" : "string"
+          },
+          "r" : {
+            "type" : "string"
+          },
+          "rx" : {
+            "type" : "string"
+          },
+          "s" : {
+            "type" : "string"
+          },
+          "signature" : {
+            "type" : "string"
+          },
+          "v" : {
+            "format" : "int32",
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "SignatureScheme" : {
@@ -1934,7 +2054,7 @@
         "type" : "string"
       },
       "SignatureVariant" : {
-        "enum" : [ "zilliqa", "mina" ],
+        "enum" : [ "zilliqa", "mina", "taproot" ],
         "type" : "string"
       },
       "Signed" : {
@@ -1949,6 +2069,10 @@
               "$ref" : "#/components/schemas/Signature"
             },
             "type" : "array"
+          },
+          "txRaw" : {
+            "description" : "Raw transaction in case of single signature scenario",
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -2028,7 +2152,7 @@
         "type" : "object"
       },
       "SigningRequestStatus" : {
-        "enum" : [ "new", "signing", "signed", "broadcasted", "under-rbf", "completed", "manual-resolving", "canceled", "error-on-broadcast", "failed-on-chain", "marked-as-error" ],
+        "enum" : [ "new", "signing", "signed", "broadcasted", "under-rbf", "waiting-external-broadcast", "waiting-sponsored-broadcast", "completed", "manual-resolving", "canceled", "error-on-broadcast", "failed-on-chain", "marked-as-error" ],
         "type" : "string"
       },
       "SmartContractInformation" : {
@@ -2045,7 +2169,7 @@
         "type" : "object"
       },
       "SortBy" : {
-        "enum" : [ "updated", "activity" ],
+        "enum" : [ "updated", "activity", "created" ],
         "type" : "string"
       },
       "SortingDirection" : {
@@ -2080,11 +2204,19 @@
           },
           "poolId" : {
             "type" : "string"
+          },
+          "resource" : {
+            "$ref" : "#/components/schemas/StakeResource",
+            "description" : "[See details](/enums/StakeResource)"
           }
         },
         "required" : [ "assetId" ],
         "title" : "Stake delegation",
         "type" : "object"
+      },
+      "StakeResource" : {
+        "enum" : [ "energy", "bandwidth" ],
+        "type" : "string"
       },
       "StakeRewardInfo" : {
         "properties" : { },
@@ -2098,6 +2230,10 @@
           },
           "assetId" : {
             "type" : "string"
+          },
+          "resource" : {
+            "$ref" : "#/components/schemas/StakeResource",
+            "description" : "[See details](/enums/StakeResource)"
           },
           "stakeId" : {
             "type" : "string"
@@ -2121,6 +2257,7 @@
           }
         },
         "required" : [ "assetId" ],
+        "title" : "Stake release",
         "type" : "object"
       },
       "Stakes" : {
@@ -2374,6 +2511,10 @@
       },
       "TransactionEmbedded" : {
         "properties" : {
+          "attestationSignature" : {
+            "$ref" : "#/components/schemas/AttestationSignature",
+            "description" : "Order-bound payer attestation (public key + signature) for an intents settlement transfer"
+          },
           "currentSigningRequest" : {
             "$ref" : "#/components/schemas/SigningRequest",
             "description" : "Current signing request"
@@ -2529,6 +2670,9 @@
           "blockchainRequest" : {
             "$ref" : "#/components/schemas/BlockchainRequest"
           },
+          "bronLock" : {
+            "$ref" : "#/components/schemas/BronLockExtra"
+          },
           "confirmations" : {
             "description" : "Number of confirmations for a blockchain transaction",
             "examples" : [ "12" ],
@@ -2543,6 +2687,7 @@
           "description" : {
             "description" : "The description of the transaction",
             "examples" : [ "Withdrawal to an exchange" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "fromAccountId" : {
@@ -2561,15 +2706,18 @@
           },
           "fromWorkspaceName" : {
             "description" : "Name of the sender workspace (resolved at send time)",
+            "format" : "external-text",
             "type" : "string"
           },
           "fromWorkspaceTag" : {
             "description" : "Workspace tag the deposit was received from",
             "examples" : [ "bron" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "memo" : {
             "description" : "Withdrawal memo (destination tag for XRP)",
+            "format" : "external-text",
             "type" : "string"
           },
           "signingRequestId" : {
@@ -2592,11 +2740,13 @@
           },
           "toWorkspaceName" : {
             "description" : "Name of the destination workspace (resolved at send time)",
+            "format" : "external-text",
             "type" : "string"
           },
           "toWorkspaceTag" : {
             "description" : "Workspace tag the withdrawal was sent to",
             "examples" : [ "tesla" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "withdrawTransactionId" : {
@@ -2691,7 +2841,7 @@
         "type" : "string"
       },
       "TransactionType" : {
-        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "stake-delegation", "stake-undelegation", "stake-claim", "stake-withdrawal", "stake-take-reward", "stake-earn-reward", "swap-lifi", "intents", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "canton-reward", "nft-deposit", "nft-withdrawal", "nft-allowance", "fiat-out", "fiat-in", "bridge" ],
+        "enum" : [ "deposit", "withdrawal", "multi-withdrawal", "negative-deposit", "auto-withdrawal", "allowance", "defi", "defi-message", "address-activation", "address-creation", "stake-delegation", "stake-undelegation", "stake-claim", "stake-withdrawal", "stake-take-reward", "stake-earn-reward", "swap-lifi", "intents", "intent-solver-settlement", "loyalty-lock", "loyalty-unlock", "loyalty-collect-rewards", "canton-reward", "nft-deposit", "nft-withdrawal", "nft-allowance", "fiat-out", "fiat-in", "bridge", "earn-buy", "earn-sell", "power-bank-crypto-top-up", "power-bank-card-top-up", "power-bank-usage" ],
         "type" : "string"
       },
       "Transactions" : {
@@ -2753,6 +2903,7 @@
           },
           "name" : {
             "examples" : [ "Bron Developer" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "userId" : {
@@ -2808,6 +2959,10 @@
           "assetId" : {
             "description" : "The asset ID for the transaction",
             "examples" : [ "20145" ],
+            "type" : "string"
+          },
+          "feeAssetId" : {
+            "description" : "The asset ID to pay the network fee in. When set to one of the network's supported fee assets, the network fee is paid in that token instead of the network's native asset.",
             "type" : "string"
           },
           "feeLevel" : {
@@ -2874,11 +3029,13 @@
           "name" : {
             "description" : "Workspace name",
             "examples" : [ "Bron Workspace" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "tag" : {
             "description" : "Workspace tag",
             "examples" : [ "bron" ],
+            "format" : "external-text",
             "type" : "string"
           },
           "workspaceId" : {
@@ -3092,7 +3249,7 @@
             "type" : "string"
           }
         }, {
-          "description" : "Chart period (1h, 1d, 1w, 1m, 1y, all). [See details](/enums/ChartPeriod)",
+          "description" : "Chart period (1h, 1d, 1w, 1m, 6m, 1y, all). [See details](/enums/ChartPeriod)",
           "example" : [ "1y" ],
           "in" : "query",
           "name" : "period",
@@ -3244,6 +3401,14 @@
           "schema" : {
             "$ref" : "#/components/schemas/AssetType",
             "type" : "string"
+          }
+        }, {
+          "description" : "Filter results to only include assets that were ever used in this workspace's transactions",
+          "in" : "query",
+          "name" : "used",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
           }
         }, {
           "description" : "Full-text search across symbol, name, and contract address. Minimum 2 characters.",
@@ -3412,6 +3577,14 @@
           "schema" : {
             "$ref" : "#/components/schemas/AssetType",
             "type" : "string"
+          }
+        }, {
+          "description" : "Filter results to only include assets that were ever used in this workspace's transactions",
+          "in" : "query",
+          "name" : "used",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
           }
         }, {
           "description" : "Full-text search across symbol, name, and contract address. Minimum 2 characters.",
@@ -3735,6 +3908,14 @@
               "type" : "string"
             },
             "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include prices for assets that were ever used in this workspace's transactions. Cannot be combined with baseSymbolIds or baseAssetIds",
+          "in" : "query",
+          "name" : "used",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
           }
         } ],
         "responses" : {
@@ -4239,14 +4420,6 @@
             "type" : "array"
           }
         }, {
-          "description" : "Filter only DeFi vaults",
-          "in" : "query",
-          "name" : "isDefiVault",
-          "required" : false,
-          "schema" : {
-            "type" : "boolean"
-          }
-        }, {
           "description" : "Offset for pagination",
           "in" : "query",
           "name" : "offset",
@@ -4688,6 +4861,24 @@
             "type" : "string"
           }
         }, {
+          "description" : "[See details](/enums/AddressBookSortBy)",
+          "in" : "query",
+          "name" : "sortBy",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/AddressBookSortBy",
+            "type" : "string"
+          }
+        }, {
+          "description" : "[See details](/enums/SortingDirection)",
+          "in" : "query",
+          "name" : "sortDirection",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/SortingDirection",
+            "type" : "string"
+          }
+        }, {
           "description" : "Filter by record type. [See details](/enums/RecordType)",
           "in" : "query",
           "name" : "recordType",
@@ -5096,7 +5287,7 @@
     },
     "/workspaces/{workspaceId}/addresses" : {
       "get" : {
-        "description" : "Retrieve information about all deposit addresses in an workspace\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "description" : "Retrieve information about all receiving addresses in a workspace\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
         "parameters" : [ {
           "description" : "Filter addresses by account id",
           "in" : "query",
@@ -5272,7 +5463,7 @@
             "description" : "Conflict"
           }
         },
-        "summary" : "Get Deposit Addresses",
+        "summary" : "Get Addresses",
         "tags" : [ "addresses" ]
       }
     },
@@ -5396,6 +5587,23 @@
           "required" : false,
           "schema" : {
             "default" : "true",
+            "type" : "boolean"
+          }
+        }, {
+          "description" : "Keep only balances whose asset risk score is below the threshold, e.g. 10 hides spam and scam airdrops",
+          "in" : "query",
+          "name" : "riskScoreThreshold",
+          "required" : false,
+          "schema" : {
+            "format" : "int32",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Keep only balances of testnet accounts (true) or of mainnet accounts (false)",
+          "in" : "query",
+          "name" : "isTestnet",
+          "required" : false,
+          "schema" : {
             "type" : "boolean"
           }
         }, {
@@ -6054,6 +6262,26 @@
             "type" : "boolean"
           }
         }, {
+          "description" : "Limit for pagination",
+          "in" : "query",
+          "name" : "limit",
+          "required" : false,
+          "schema" : {
+            "default" : "1000",
+            "format" : "int64",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Offset for pagination",
+          "in" : "query",
+          "name" : "offset",
+          "required" : false,
+          "schema" : {
+            "default" : "0",
+            "format" : "int64",
+            "type" : "string"
+          }
+        }, {
           "in" : "path",
           "name" : "workspaceId",
           "required" : true,
@@ -6253,6 +6481,128 @@
         },
         "summary" : "Get Stakes",
         "tags" : [ "stake" ]
+      }
+    },
+    "/workspaces/{workspaceId}/symbol-market-prices" : {
+      "get" : {
+        "description" : "Provides market pricing data for symbol ids. Enable the used filter to limit results to assets ever used in this workspace's transactions.\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "parameters" : [ {
+          "description" : "The symbol IDs you want to get market prices for",
+          "example" : [ "s2001,s2002" ],
+          "in" : "query",
+          "name" : "baseSymbolIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "The asset IDs you want to get market prices for",
+          "example" : [ "1,2,3" ],
+          "in" : "query",
+          "name" : "baseAssetIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "description" : "Filter results to only include prices for assets that were ever used in this workspace's transactions. Cannot be combined with baseSymbolIds or baseAssetIds",
+          "in" : "query",
+          "name" : "used",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SymbolMarketPrices"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Workspace Prices",
+        "tags" : [ "assets" ]
       }
     },
     "/workspaces/{workspaceId}/transaction-limits" : {
@@ -6582,6 +6932,14 @@
             "type" : "array"
           }
         }, {
+          "description" : "Keep only transactions of testnet accounts (true) or of mainnet accounts (false)",
+          "in" : "query",
+          "name" : "isTestnet",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
           "description" : "Comma-separated transaction statuses. [See details](/enums/TransactionStatus)",
           "in" : "query",
           "name" : "transactionStatuses",
@@ -6634,6 +6992,22 @@
           "description" : "Address to where the transaction was sent to",
           "in" : "query",
           "name" : "toAddress",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Address from where the transaction was sent",
+          "in" : "query",
+          "name" : "fromAddress",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "description" : "Address to search for, matching either fromAddress or toAddress",
+          "in" : "query",
+          "name" : "address",
           "required" : false,
           "schema" : {
             "type" : "string"
@@ -6766,6 +7140,14 @@
           "description" : "Include current signing requests in the response _embedded field",
           "in" : "query",
           "name" : "includeCurrentSigningRequest",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "description" : "Include the order-bound payer attestation signature in the response _embedded field",
+          "in" : "query",
+          "name" : "includeAttestationSignature",
           "required" : false,
           "schema" : {
             "type" : "boolean"
