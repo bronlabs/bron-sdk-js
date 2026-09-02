@@ -1,1 +1,9 @@
-export type StakeRewardInfo = Record<string, any>;
+import { RewardSource } from './RewardSource.js';
+
+export interface StakeRewardInfo {
+  increaseOperableBalance?: boolean;
+  poolIds?: string[];
+  rewardSource?: RewardSource;
+  rewardWithoutTransaction?: boolean;
+  stakeId?: string;
+}

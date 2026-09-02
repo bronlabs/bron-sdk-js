@@ -1,1 +1,3 @@
-export type AccountExtra = Record<string, any>;
+export interface AccountExtra {
+  onlyAddressBookWithdrawals?: boolean;
+}

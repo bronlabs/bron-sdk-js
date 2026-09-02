@@ -1,3 +1,4 @@
+import { PublicIntentPairs } from "../types/PublicIntentPairs.js";
 import { Intent } from "../types/Intent.js";
 import { CreateIntent } from "../types/CreateIntent.js";
 import { IntentsQuote } from "../types/IntentsQuote.js";
@@ -7,6 +8,13 @@ import { HttpClient } from "../utils/http.js";
 export class IntentsAPI {
 
   constructor(private http: HttpClient, private workspaceId?: string) {}
+
+  async getIntentSwapPairs(): Promise<PublicIntentPairs> {
+    return this.http.request<PublicIntentPairs>({
+      method: "GET",
+      path: `/dictionary/intent-pairs`
+    });
+  }
 
   async createIntentRequest(body: CreateIntent): Promise<Intent> {
     return this.http.request<Intent>({

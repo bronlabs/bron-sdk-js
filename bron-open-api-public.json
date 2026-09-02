@@ -65,7 +65,12 @@
         "type" : "object"
       },
       "AccountExtra" : {
-        "properties" : { },
+        "properties" : {
+          "onlyAddressBookWithdrawals" : {
+            "description" : "Withdrawals are restricted to address-book records",
+            "type" : "boolean"
+          }
+        },
         "type" : "object"
       },
       "AccountHolderType" : {
@@ -104,7 +109,24 @@
         "type" : "object"
       },
       "ActivatedAsset" : {
-        "properties" : { },
+        "properties" : {
+          "activationId" : {
+            "description" : "Unique identifier of the activation",
+            "type" : "string"
+          },
+          "address" : {
+            "description" : "Activated address, if it differs from the base address",
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "Activated asset",
+            "type" : "string"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/AddressStatus",
+            "description" : "Activation status. [See details](/enums/AddressStatus)"
+          }
+        },
         "type" : "object"
       },
       "Activities" : {
@@ -162,7 +184,7 @@
         "type" : "object"
       },
       "ActivityType" : {
-        "enum" : [ "login", "new-device-login", "failed-login", "failed-2fa", "guardian-declined", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "tag-relinked", "tag-auto-relinked", "tag-deactivated", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "email-change", "account-pins-reset", "shard-access-request-updated", "signing-share-requested", "signing-share-in-progress", "signing-share-cancelled", "signing-share-rejected", "signing-recovery-requested", "signing-recovery-in-progress", "signing-recovery-cancelled", "signing-recovery-rejected", "face-scan-enrolled", "face-scan-enrolment-removed", "face-scan-recovery-verified", "face-scan-recovery-failed", "shard-recovery-face-verified", "shard-recovery-face-failed", "signing-access-revoked", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated", "ownership-takeover-request-created", "ownership-takeover-request-cancelled", "ownership-takeover-new-beneficiary-added", "ownership-takeover-beneficiary-left", "ownership-takeover-request-completed", "user-frozen", "user-unfrozen", "workspace-frozen", "workspace-unfrozen", "user-deletion-scheduled", "user-deletion-canceled" ],
+        "enum" : [ "login", "new-device-login", "failed-login", "failed-2fa", "guardian-declined", "approval-request-created", "approval-request-approved", "approval-request-cancelled", "new-address-book-record", "update-address-book-record", "delete-address-book-record", "workspace-creation", "workspace-settings-approval-update", "workspace-name-change", "workspace-tag-change", "tag-relinked", "tag-auto-relinked", "tag-deactivated", "only-address-book-withdrawals-settings-update", "transaction-approval-settings-update", "workspace-members-approval-update", "address-book-settings-approval-update", "transaction-limits-approval-settings-update", "member-creation", "member-update", "member-removal", "member-left", "service-member-creation", "transaction-limit-creation", "transaction-limit-update", "account-creation", "passkey-creation", "passkey-deletion", "2fa-change", "email-change", "account-pins-reset", "shard-access-request-updated", "signing-share-requested", "signing-share-in-progress", "signing-share-cancelled", "signing-share-rejected", "signing-recovery-requested", "signing-recovery-in-progress", "signing-recovery-cancelled", "signing-recovery-rejected", "face-scan-enrolled", "face-scan-enrolment-removed", "face-scan-recovery-verified", "face-scan-recovery-failed", "shard-recovery-face-verified", "shard-recovery-face-failed", "signing-access-revoked", "transaction-completed", "subscription-updated", "trial-prolongation-requested", "trial-prolongated", "ownership-takeover-request-created", "ownership-takeover-request-cancelled", "ownership-takeover-new-beneficiary-added", "ownership-takeover-beneficiary-left", "ownership-takeover-request-completed", "user-frozen", "user-unfrozen", "workspace-frozen", "workspace-unfrozen", "user-deletion-scheduled", "user-deletion-canceled" ],
         "type" : "string"
       },
       "Address" : {
@@ -768,7 +790,28 @@
         "type" : "object"
       },
       "BlockchainSigningRequest" : {
-        "properties" : { },
+        "properties" : {
+          "assetId" : {
+            "description" : "Asset being signed for",
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "Network of the signing request",
+            "type" : "string"
+          },
+          "publicKey" : {
+            "description" : "Signer public key",
+            "type" : "string"
+          },
+          "sponsored" : {
+            "description" : "Sponsored EIP-7702 token-fee request",
+            "type" : "boolean"
+          },
+          "transactionType" : {
+            "$ref" : "#/components/schemas/TransactionType",
+            "description" : "Transaction type being signed. [See details](/enums/TransactionType)"
+          }
+        },
         "type" : "object"
       },
       "BlockchainTxDetails" : {
@@ -1318,7 +1361,25 @@
         "type" : "object"
       },
       "EventStakeInfo" : {
-        "properties" : { },
+        "properties" : {
+          "amount" : {
+            "description" : "Staked amount (TRX nominations)",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "poolId" : {
+            "description" : "Pool the stake is delegated to",
+            "type" : "string"
+          },
+          "resource" : {
+            "description" : "Rented resource type, where applicable",
+            "type" : "string"
+          },
+          "stakeId" : {
+            "description" : "Stake identifier (e.g. SOL stake account)",
+            "type" : "string"
+          }
+        },
         "type" : "object"
       },
       "EventType" : {
@@ -1463,6 +1524,43 @@
         "enum" : [ "not-exist", "user-initiated", "auction-in-progress", "wait-for-user-tx", "wait-for-oracle-confirm-user-tx", "wait-for-solver-tx", "wait-for-oracle-confirm-solver-tx", "completed", "liquidated", "cancelled" ],
         "type" : "string"
       },
+      "IntentPairAsset" : {
+        "properties" : {
+          "assetId" : {
+            "description" : "ID of the asset in the Bron dictionary",
+            "examples" : [ "5002" ],
+            "type" : "string"
+          },
+          "contractAddress" : {
+            "description" : "Token contract address, `null` for native assets",
+            "examples" : [ "0xdac17f958d2ee523a2206206994597c13d831ec7" ],
+            "type" : "string"
+          },
+          "decimals" : {
+            "description" : "Number of decimal places used by the asset",
+            "examples" : [ "6" ],
+            "format" : "int32",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Human-readable name of the asset",
+            "examples" : [ "Tether" ],
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "Blockchain network the asset lives on",
+            "examples" : [ "ETH" ],
+            "type" : "string"
+          },
+          "symbol" : {
+            "description" : "Ticker of the asset. Note: it can be changed by the issuer at any time",
+            "examples" : [ "USDT" ],
+            "type" : "string"
+          }
+        },
+        "required" : [ "assetId", "symbol", "networkId", "decimals" ],
+        "type" : "object"
+      },
       "IntentSolverSettlementParams" : {
         "properties" : {
           "amount" : {
@@ -1537,6 +1635,9 @@
       },
       "IntentsParams" : {
         "properties" : {
+          "feeAssetId" : {
+            "type" : "string"
+          },
           "feeLevel" : {
             "$ref" : "#/components/schemas/FeeLevel",
             "description" : "[See details](/enums/FeeLevel)"
@@ -1626,6 +1727,18 @@
             "type" : "array"
           }
         },
+        "type" : "object"
+      },
+      "LimitApproverCandidates" : {
+        "properties" : {
+          "userIds" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "userIds" ],
         "type" : "object"
       },
       "LimitDestinations" : {
@@ -1764,6 +1877,10 @@
               "$ref" : "#/components/schemas/MessageForSigning"
             },
             "type" : "array"
+          },
+          "parallelSigning" : {
+            "description" : "Flag indicating whether to use parallel signing",
+            "type" : "boolean"
           },
           "primitivesVersion" : {
             "description" : "Version of the primitives used for signing.",
@@ -1937,8 +2054,94 @@
         "required" : [ "accept" ],
         "type" : "object"
       },
+      "Pool" : {
+        "properties" : {
+          "poolId" : {
+            "description" : "Pool identifier",
+            "type" : "string"
+          },
+          "poolName" : {
+            "description" : "Pool name",
+            "type" : "string"
+          },
+          "totalBonded" : {
+            "description" : "Amount of current all stakes for pool",
+            "format" : "decimal",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "PriceSeriesPoint" : {
-        "properties" : { },
+        "properties" : {
+          "baseSymbolId" : {
+            "description" : "Symbol the point is quoted for",
+            "type" : "string"
+          },
+          "close" : {
+            "description" : "Close price in USD",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "high" : {
+            "description" : "High price in USD",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "low" : {
+            "description" : "Low price in USD",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "open" : {
+            "description" : "Open price in USD",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "timestamp" : {
+            "description" : "Point timestamp in milliseconds",
+            "format" : "date-time-millis",
+            "type" : "string"
+          },
+          "volume24h" : {
+            "description" : "24h trading volume",
+            "format" : "decimal",
+            "type" : "string"
+          }
+        },
+        "required" : [ "baseSymbolId", "timestamp", "open", "high", "low", "close", "volume24h" ],
+        "type" : "object"
+      },
+      "PublicIntentPair" : {
+        "properties" : {
+          "assetA" : {
+            "$ref" : "#/components/schemas/IntentPairAsset",
+            "description" : "First asset of the pair. For a one-way pair it is the source asset"
+          },
+          "assetB" : {
+            "$ref" : "#/components/schemas/IntentPairAsset",
+            "description" : "Second asset of the pair. For a one-way pair it is the destination asset"
+          },
+          "isBidirectional" : {
+            "description" : "`true` if swaps are supported in both directions, `false` if only from `assetA` to `assetB`",
+            "examples" : [ "true" ],
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "assetA", "assetB", "isBidirectional" ],
+        "type" : "object"
+      },
+      "PublicIntentPairs" : {
+        "properties" : {
+          "pairs" : {
+            "description" : "Swap pairs available for intents",
+            "items" : {
+              "$ref" : "#/components/schemas/PublicIntentPair"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "pairs" ],
         "type" : "object"
       },
       "RawTransactionParams" : {
@@ -2010,6 +2213,24 @@
           },
           "maxPriorityFeePerGas" : {
             "format" : "decimal",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RewardSource" : {
+        "enum" : [ "protocol-voting", "resource-rental" ],
+        "type" : "string"
+      },
+      "RewardsAmount" : {
+        "properties" : {
+          "amount" : {
+            "description" : "Amount of rewards",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "By current assetId",
             "type" : "string"
           }
         },
@@ -2176,6 +2397,57 @@
         "enum" : [ "ASC", "DESC" ],
         "type" : "string"
       },
+      "Stake" : {
+        "properties" : {
+          "accountId" : {
+            "description" : "Unique identifier of the account, for which the stake was created",
+            "type" : "string"
+          },
+          "amount" : {
+            "description" : "Stake amount",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "assetId" : {
+            "description" : "Staked asset Id",
+            "type" : "string"
+          },
+          "networkId" : {
+            "description" : "NetworkId",
+            "type" : "string"
+          },
+          "poolId" : {
+            "description" : "Pool that this stake connected to",
+            "type" : "string"
+          },
+          "stakeId" : {
+            "description" : "Unique identifier of the stake",
+            "type" : "string"
+          },
+          "stakeInfo" : {
+            "$ref" : "#/components/schemas/StakeInfo",
+            "description" : "Stake additional information"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/StakeStatus",
+            "description" : "The status of a stake. [See details](/enums/StakeStatus)"
+          },
+          "updatedAt" : {
+            "description" : "Timestamp of the latest stake update",
+            "format" : "date-time-millis",
+            "type" : "string"
+          },
+          "warning" : {
+            "$ref" : "#/components/schemas/Warning",
+            "description" : "Warning message that describe that there is a problem with this stake (e.g. you don't get rewards because of some problem)"
+          },
+          "workspaceId" : {
+            "description" : "Unique ID of the organisation",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
       "StakeClaimParams" : {
         "properties" : {
           "amount" : {
@@ -2214,13 +2486,105 @@
         "title" : "Stake delegation",
         "type" : "object"
       },
+      "StakeInfo" : {
+        "properties" : {
+          "bondingAmount" : {
+            "description" : "The bonding amount for the case when there is an opportunity to increase the stake",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "bondingEndAt" : {
+            "description" : "Bonding end date",
+            "format" : "date-time-millis",
+            "type" : "string"
+          },
+          "claimableRewardsAmount" : {
+            "description" : "Amount of rewards, that can still be claimed from this active stake using TAKE_REWARD transaction",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "originPool" : {
+            "$ref" : "#/components/schemas/Pool",
+            "description" : "In case if CHANGING_VALIDATOR here we specify pools from which stake was moved"
+          },
+          "readyToClaimStakeAt" : {
+            "description" : "If unbonding stake is not ready to claim, when it will be ready",
+            "format" : "date-time-millis",
+            "type" : "string"
+          },
+          "readyToIncrement" : {
+            "description" : "Can this stake be increased or not",
+            "type" : "boolean"
+          },
+          "readyToRedelegate" : {
+            "description" : "In some cases your active stake can't be redelegated (e.g. you just redelegated stake from one pool to other in cosmos based stakes)",
+            "type" : "boolean"
+          },
+          "readyToUnstake" : {
+            "description" : "Can this stake be unstaked or not",
+            "type" : "boolean"
+          },
+          "readyToUnstakeAt" : {
+            "description" : "If stake is not ready to unstake, when it will be ready",
+            "format" : "date-time-millis",
+            "type" : "string"
+          },
+          "rewardsRequireClaim" : {
+            "description" : "If rewards require TAKE_REWARD transaction to do claim",
+            "type" : "boolean"
+          },
+          "unbondingAmount" : {
+            "description" : "The unbonding amount for the case when there is an opportunity to partial withdrawal",
+            "format" : "decimal",
+            "type" : "string"
+          },
+          "unbondingEndAt" : {
+            "description" : "Bonding end date",
+            "format" : "date-time-millis",
+            "type" : "string"
+          },
+          "warning" : {
+            "$ref" : "#/components/schemas/Warning",
+            "description" : "Warning message that describe that there is a problem with this stake (e.g. you don't get rewards because of some problem)"
+          }
+        },
+        "type" : "object"
+      },
       "StakeResource" : {
         "enum" : [ "energy", "bandwidth" ],
         "type" : "string"
       },
       "StakeRewardInfo" : {
-        "properties" : { },
+        "properties" : {
+          "increaseOperableBalance" : {
+            "description" : "Whether the reward lands on the operable (wallet) balance",
+            "type" : "boolean"
+          },
+          "poolIds" : {
+            "description" : "Pools the reward was received from",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "rewardSource" : {
+            "$ref" : "#/components/schemas/RewardSource",
+            "description" : "Where the reward comes from. [See details](/enums/RewardSource)"
+          },
+          "rewardWithoutTransaction" : {
+            "description" : "Whether the reward accrued without an on-chain transaction",
+            "type" : "boolean"
+          },
+          "stakeId" : {
+            "description" : "Unique identifier of the stake",
+            "type" : "string"
+          }
+        },
         "type" : "object"
+      },
+      "StakeStatus" : {
+        "enum" : [ "bonding", "active", "unbonding", "require-claim", "exited" ],
+        "type" : "string"
       },
       "StakeUnDelegationParams" : {
         "properties" : {
@@ -2261,7 +2625,38 @@
         "type" : "object"
       },
       "Stakes" : {
-        "properties" : { },
+        "properties" : {
+          "_embedded" : {
+            "$ref" : "#/components/schemas/StakesEmbedded",
+            "description" : "Reward totals per asset"
+          },
+          "stakes" : {
+            "description" : "List of stakes",
+            "items" : {
+              "$ref" : "#/components/schemas/Stake"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "StakesEmbedded" : {
+        "properties" : {
+          "resourceRentalRewardsAmounts" : {
+            "description" : "Accrued resource-rental rewards per asset",
+            "items" : {
+              "$ref" : "#/components/schemas/RewardsAmount"
+            },
+            "type" : "array"
+          },
+          "rewardsAmounts" : {
+            "description" : "Accrued staking rewards per asset",
+            "items" : {
+              "$ref" : "#/components/schemas/RewardsAmount"
+            },
+            "type" : "array"
+          }
+        },
         "type" : "object"
       },
       "SwapParams" : {
@@ -2837,7 +3232,7 @@
         "type" : "object"
       },
       "TransactionStatus" : {
-        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "partially-completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit", "awaiting-conversion", "awaiting-payout", "awaiting-defi-execution", "acceptance-required" ],
+        "enum" : [ "new", "waiting-confirmations", "waiting-approval", "approved", "awaiting-security-policy", "completed", "partially-completed", "canceled", "expired", "signing-required", "signing", "signed", "broadcasted", "manual-resolving", "failed-on-blockchain", "removed-from-blockchain", "error", "awaiting-deposit", "awaiting-conversion", "awaiting-payout", "awaiting-user-response", "awaiting-defi-execution", "acceptance-required" ],
         "type" : "string"
       },
       "TransactionType" : {
@@ -3695,6 +4090,88 @@
         },
         "summary" : "Get Asset by ID",
         "tags" : [ "assets" ]
+      }
+    },
+    "/dictionary/intent-pairs" : {
+      "get" : {
+        "description" : "Returns every swap pair currently available for intents, with inline token metadata for both sides. No authentication is required for this endpoint. Intended for broadcaster integrators to discover the tradable universe. The list is advisory and cached for a few minutes — the quote endpoint is authoritative for a specific route and amount.\n\n",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PublicIntentPairs"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get intent swap pairs",
+        "tags" : [ "intents" ]
       }
     },
     "/dictionary/networks" : {
@@ -4660,7 +5137,7 @@
             "type" : "string"
           }
         }, {
-          "description" : "Search string based on activity name and description",
+          "description" : "Case-insensitive substring match over activity type, IP, user agent, location, country code and device id",
           "in" : "query",
           "name" : "search",
           "required" : false,
@@ -6772,6 +7249,106 @@
         "tags" : [ "transaction-limits" ]
       }
     },
+    "/workspaces/{workspaceId}/transaction-limits/approver-candidates" : {
+      "get" : {
+        "description" : "<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "accountIds",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        }, {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LimitApproverCandidates"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get Limit Approver Candidates",
+        "tags" : [ "transaction-limits" ]
+      }
+    },
     "/workspaces/{workspaceId}/transaction-limits/{limitId}" : {
       "get" : {
         "description" : "<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
@@ -7239,7 +7816,7 @@
         "tags" : [ "transactions" ]
       },
       "post" : {
-        "description" : "Universal Create Transaction endpoint for moving on-chain assets with full control over parameters. Use it to:\n\n* Transfer base currencies (BTC, ETH, etc.) or any supported token between your own accounts.\n\n* Send funds to any external blockchain address — directly or via a saved address-book record.\n\n* Fine-tune fees and network settings.\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
+        "description" : "Universal Create Transaction endpoint for moving on-chain assets with full control over parameters. Use it to:\n\n* Transfer base currencies (BTC, ETH, etc.) or any supported token between your own accounts.\n\n* Send funds to any external blockchain address — directly or via a saved address-book record.\n\n* Fine-tune fees and network settings.\n\n`externalId` is the idempotency key: a repeated call with the same `externalId` and `accountId` answers 409 `already-exists` with the existing `transactionId` under `_embedded` — never a second transaction.\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
         "parameters" : [ {
           "in" : "path",
           "name" : "workspaceId",
@@ -8372,11 +8949,11 @@
   "tags" : [ {
     "name" : "stake"
   }, {
+    "name" : "intents"
+  }, {
     "name" : "balances"
   }, {
     "name" : "addresses"
-  }, {
-    "name" : "intents"
   }, {
     "name" : "assets"
   }, {

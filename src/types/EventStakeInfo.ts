@@ -1,1 +1,6 @@
-export type EventStakeInfo = Record<string, any>;
+export interface EventStakeInfo {
+  amount?: string;
+  poolId?: string;
+  resource?: string;
+  stakeId?: string;
+}

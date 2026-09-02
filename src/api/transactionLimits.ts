@@ -1,5 +1,7 @@
 import { TransactionLimits } from "../types/TransactionLimits.js";
 import { TransactionLimitsQuery } from "../types/TransactionLimitsQuery.js";
+import { LimitApproverCandidates } from "../types/LimitApproverCandidates.js";
+import { LimitApproverCandidatesQuery } from "../types/LimitApproverCandidatesQuery.js";
 import { TransactionLimit } from "../types/TransactionLimit.js";
 import { HttpClient } from "../utils/http.js";
 
@@ -11,6 +13,14 @@ export class TransactionLimitsAPI {
     return this.http.request<TransactionLimits>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transaction-limits`,
+      query
+    });
+  }
+
+  async getLimitApproverCandidates(query?: LimitApproverCandidatesQuery): Promise<LimitApproverCandidates> {
+    return this.http.request<LimitApproverCandidates>({
+      method: "GET",
+      path: `/workspaces/${this.workspaceId}/transaction-limits/approver-candidates`,
       query
     });
   }
