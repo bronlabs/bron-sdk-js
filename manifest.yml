@@ -20,7 +20,7 @@ promote:
         pnpm install &&
         pnpm run build &&
         pnpm version {{ info.build-version }} --no-git-tag-version &&
-        HTTPS_PROXY="$BRON_HTTP_PROXY" HTTP_PROXY="$BRON_HTTP_PROXY"
+        HTTPS_PROXY="$NPM_PUBLISH_PROXY" HTTP_PROXY="$NPM_PUBLISH_PROXY"
         script -qec "pnpm publish --no-git-checks" /dev/null
       envs:
-        BRON_HTTP_PROXY: ""
+        NPM_PUBLISH_PROXY: ""
