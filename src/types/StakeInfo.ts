@@ -1,5 +1,5 @@
-import { Pool } from './Pool.js';
-import { Warning } from './Warning.js';
+import type { Pool } from "./Pool.js";
+import type { Warning } from "./Warning.js";
 
 export interface StakeInfo {
   bondingAmount?: string;

@@ -1,7 +1,7 @@
-import { TransactionEstimation } from './TransactionEstimation.js';
-import { TransactionExtra } from './TransactionExtra.js';
-import { TransactionType } from './TransactionType.js';
-import { Warning } from './Warning.js';
+import type { TransactionEstimation } from "./TransactionEstimation.js";
+import type { TransactionExtra } from "./TransactionExtra.js";
+import type { TransactionType } from "./TransactionType.js";
+import type { Warning } from "./Warning.js";
 
 export interface DryRunTransaction {
   accountId: string;

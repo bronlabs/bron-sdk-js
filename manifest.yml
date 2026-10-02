@@ -8,6 +8,7 @@ include:
 
 build:
   - node:
+      image: docker.nobr.io/infra/node:26-build
       node: |
         pnpm install && \
         pnpm run build && \
@@ -16,6 +17,7 @@ build:
 
 promote:
   - node:
+      image: docker.nobr.io/infra/node:26-build
       node: >
         pnpm install &&
         pnpm run build &&

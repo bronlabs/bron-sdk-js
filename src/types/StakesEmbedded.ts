@@ -1,4 +1,4 @@
-import { RewardsAmount } from './RewardsAmount.js';
+import type { RewardsAmount } from "./RewardsAmount.js";
 
 export interface StakesEmbedded {
   resourceRentalRewardsAmounts?: RewardsAmount[];

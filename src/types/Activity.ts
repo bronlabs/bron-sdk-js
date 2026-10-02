@@ -1,4 +1,4 @@
-import { ActivityType } from './ActivityType.js';
+import type { ActivityType } from "./ActivityType.js";
 
 export interface Activity {
   accountId?: string;

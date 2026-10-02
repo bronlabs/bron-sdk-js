@@ -1,5 +1,5 @@
-import { RecordType } from './RecordType.js';
-import { RecordStatus } from './RecordStatus.js';
+import type { RecordStatus } from "./RecordStatus.js";
+import type { RecordType } from "./RecordType.js";
 
 export interface AddressBookRecord {
   accountIds?: string[];

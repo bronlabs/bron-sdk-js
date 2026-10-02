@@ -1,4 +1,4 @@
-import { PublicIntentPair } from './PublicIntentPair.js';
+import type { PublicIntentPair } from "./PublicIntentPair.js";
 
 export interface PublicIntentPairs {
   pairs: PublicIntentPair[];

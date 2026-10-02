@@ -1,5 +1,5 @@
-import { WorkspaceMemberEmbedded } from './WorkspaceMemberEmbedded.js';
-import { MemberStatus } from './MemberStatus.js';
+import type { MemberStatus } from "./MemberStatus.js";
+import type { WorkspaceMemberEmbedded } from "./WorkspaceMemberEmbedded.js";
 
 export interface WorkspaceMember {
   _embedded?: WorkspaceMemberEmbedded;

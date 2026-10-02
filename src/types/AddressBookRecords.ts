@@ -1,4 +1,4 @@
-import { AddressBookRecord } from './AddressBookRecord.js';
+import type { AddressBookRecord } from "./AddressBookRecord.js";
 
 export interface AddressBookRecords {
   records: AddressBookRecord[];

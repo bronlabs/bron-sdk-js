@@ -1,6 +1,6 @@
-import { AccountType } from './AccountType.js';
-import { AccountExtra } from './AccountExtra.js';
-import { AccountStatus } from './AccountStatus.js';
+import type { AccountExtra } from "./AccountExtra.js";
+import type { AccountStatus } from "./AccountStatus.js";
+import type { AccountType } from "./AccountType.js";
 
 export interface Account {
   accountId: string;

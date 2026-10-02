@@ -1,4 +1,4 @@
-import { MessageForSigning } from './MessageForSigning.js';
+import type { MessageForSigning } from "./MessageForSigning.js";
 
 export interface MessagesForSigning {
   messages?: MessageForSigning[];

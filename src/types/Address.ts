@@ -1,6 +1,6 @@
-import { AccountType } from './AccountType.js';
-import { ActivatedAsset } from './ActivatedAsset.js';
-import { AddressStatus } from './AddressStatus.js';
+import type { AccountType } from "./AccountType.js";
+import type { ActivatedAsset } from "./ActivatedAsset.js";
+import type { AddressStatus } from "./AddressStatus.js";
 
 export interface Address {
   acceptsAllAssets: boolean;

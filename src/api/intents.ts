@@ -1,18 +1,20 @@
-import { PublicIntentPairs } from "../types/PublicIntentPairs.js";
-import { Intent } from "../types/Intent.js";
-import { CreateIntent } from "../types/CreateIntent.js";
-import { IntentsQuote } from "../types/IntentsQuote.js";
-import { RequestIndicativeSwapQuoteQuery } from "../types/RequestIndicativeSwapQuoteQuery.js";
-import { HttpClient } from "../utils/http.js";
+import type { CreateIntent } from "../types/CreateIntent.js";
+import type { Intent } from "../types/Intent.js";
+import type { IntentsQuote } from "../types/IntentsQuote.js";
+import type { PublicIntentPairs } from "../types/PublicIntentPairs.js";
+import type { RequestIndicativeSwapQuoteQuery } from "../types/RequestIndicativeSwapQuoteQuery.js";
+import type { HttpClient } from "../utils/http.js";
 
 export class IntentsAPI {
-
-  constructor(private http: HttpClient, private workspaceId?: string) {}
+  constructor(
+    private http: HttpClient,
+    private workspaceId?: string,
+  ) {}
 
   async getIntentSwapPairs(): Promise<PublicIntentPairs> {
     return this.http.request<PublicIntentPairs>({
       method: "GET",
-      path: `/dictionary/intent-pairs`
+      path: `/dictionary/intent-pairs`,
     });
   }
 
@@ -20,7 +22,7 @@ export class IntentsAPI {
     return this.http.request<Intent>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/intents`,
-      body
+      body,
     });
   }
 
@@ -28,14 +30,14 @@ export class IntentsAPI {
     return this.http.request<IntentsQuote>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/intents/quote`,
-      query
+      query,
     });
   }
 
   async getIntentRequestById(intentId: string): Promise<Intent> {
     return this.http.request<Intent>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/intents/${intentId}`
+      path: `/workspaces/${this.workspaceId}/intents/${intentId}`,
     });
   }
 }

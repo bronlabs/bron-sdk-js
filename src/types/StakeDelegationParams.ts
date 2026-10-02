@@ -1,4 +1,4 @@
-import { StakeResource } from './StakeResource.js';
+import type { StakeResource } from "./StakeResource.js";
 
 export interface StakeDelegationParams {
   amount?: string;

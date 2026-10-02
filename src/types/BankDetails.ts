@@ -1,7 +1,7 @@
-import { AccountHolderType } from './AccountHolderType.js';
-import { BankAccountType } from './BankAccountType.js';
-import { BankAddress } from './BankAddress.js';
-import { BankChannelType } from './BankChannelType.js';
+import type { AccountHolderType } from "./AccountHolderType.js";
+import type { BankAccountType } from "./BankAccountType.js";
+import type { BankAddress } from "./BankAddress.js";
+import type { BankChannelType } from "./BankChannelType.js";
 
 export interface BankDetails {
   accountHolderType: AccountHolderType;

@@ -1,4 +1,4 @@
-import { AddressStatus } from './AddressStatus.js';
+import type { AddressStatus } from "./AddressStatus.js";
 
 export interface ActivatedAsset {
   activationId?: string;

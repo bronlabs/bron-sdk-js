@@ -1,5 +1,5 @@
-import { FeeLevel } from './FeeLevel.js';
-import { RequestedNetworkFees } from './RequestedNetworkFees.js';
+import type { FeeLevel } from "./FeeLevel.js";
+import type { RequestedNetworkFees } from "./RequestedNetworkFees.js";
 
 export interface IntentSolverSettlementParams {
   amount: string;

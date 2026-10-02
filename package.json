@@ -49,10 +49,11 @@
     "update-version": "node scripts/update-version.js",
     "build": "pnpm run update-version && tsc",
     "test": "vitest run",
-    "lint": "eslint src --ext .ts",
+    "lint": "biome check .",
+    "lint-fix": "biome check --write .",
     "generate-keys": "pnpm run build && node dist/utils/keyGenerator.js",
-    "build:generator": "tsc src/utils/generator.ts --outDir dist/utils --module NodeNext --target ES2024 --skipLibCheck",
-    "generate": "rm -rf dist && pnpm run build:generator && node dist/utils/generator.js && pnpm run build",
+    "build:generator": "tsc src/utils/generator.ts --ignoreConfig --types node --outDir dist/utils --module NodeNext --target ES2024 --skipLibCheck",
+    "generate": "rm -rf dist && pnpm run build:generator && node dist/utils/generator.js && biome lint --write --unsafe --only=correctness/noUnusedImports src/types src/api && biome check --write src/types src/api && pnpm run build",
     "prepublishOnly": "pnpm run build && pnpm test"
   },
   "dependencies": {
@@ -60,15 +61,15 @@
     "jwk-to-pem": "^2.0.7"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/jwk-to-pem": "^2.0.3",
-    "@types/node": "^24.10.13",
+    "@types/node": "^26.6.2",
     "cuid": "^3.0.0",
     "dotenv": "^17.3.1",
-    "eslint": "^9.39.2",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "typescript": "7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
   },
   "engines": {
     "node": ">=18.0.0"

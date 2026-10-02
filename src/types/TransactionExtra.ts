@@ -1,7 +1,7 @@
-import { TransactionApprovers } from './TransactionApprovers.js';
-import { BlockchainTxDetails } from './BlockchainTxDetails.js';
-import { BlockchainRequest } from './BlockchainRequest.js';
-import { BronLockExtra } from './BronLockExtra.js';
+import type { BlockchainRequest } from "./BlockchainRequest.js";
+import type { BlockchainTxDetails } from "./BlockchainTxDetails.js";
+import type { BronLockExtra } from "./BronLockExtra.js";
+import type { TransactionApprovers } from "./TransactionApprovers.js";
 
 export interface TransactionExtra {
   approvers?: TransactionApprovers;

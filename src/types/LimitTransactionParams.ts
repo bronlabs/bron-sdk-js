@@ -1,4 +1,4 @@
-import { LimitAmount } from './LimitAmount.js';
+import type { LimitAmount } from "./LimitAmount.js";
 
 export interface LimitTransactionParams {
   aboveAmount?: LimitAmount;

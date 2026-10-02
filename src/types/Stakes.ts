@@ -1,5 +1,5 @@
-import { StakesEmbedded } from './StakesEmbedded.js';
-import { Stake } from './Stake.js';
+import type { Stake } from "./Stake.js";
+import type { StakesEmbedded } from "./StakesEmbedded.js";
 
 export interface Stakes {
   _embedded?: StakesEmbedded;

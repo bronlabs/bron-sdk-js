@@ -1,4 +1,4 @@
-import { RewardSource } from './RewardSource.js';
+import type { RewardSource } from "./RewardSource.js";
 
 export interface StakeRewardInfo {
   increaseOperableBalance?: boolean;

@@ -1,4 +1,4 @@
-import { IdentityType } from './IdentityType.js';
+import type { IdentityType } from "./IdentityType.js";
 
 export interface Identity {
   createdAt: string;

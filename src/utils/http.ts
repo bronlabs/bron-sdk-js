@@ -16,17 +16,12 @@ export class HttpClient {
   constructor(
     private baseUrl: string,
     private apiKeyJwk: string,
-    private readonly fetchFn?: FetchFunction
+    private readonly fetchFn?: FetchFunction,
   ) {
     this.userAgent = `Bron SDK JS/${SDK_VERSION}`;
   }
 
-  async request<T>({
-    method,
-    path,
-    body,
-    query
-  }: HttpRequestOptions): Promise<T> {
+  async request<T>({ method, path, body, query }: HttpRequestOptions): Promise<T> {
     let fullPath = path;
 
     if (query && Object.keys(query).length) {
@@ -34,9 +29,9 @@ export class HttpClient {
 
       for (const [key, value] of Object.entries(query)) {
         if (Array.isArray(value)) {
-          const filtered = value.filter(v => v != null);
+          const filtered = value.filter((v) => v != null);
           if (filtered.length > 0) {
-            params.append(key, filtered.join(','));
+            params.append(key, filtered.join(","));
           }
         } else if (value != null) {
           params.append(key, value);
@@ -57,12 +52,12 @@ export class HttpClient {
       path: fullPath,
       kid,
       privateKey,
-      body: body ? jsonStringify(body) : ""
+      body: body ? jsonStringify(body) : "",
     });
 
     const headers: Record<string, string> = {
       Authorization: `ApiKey ${jwt}`,
-      "User-Agent": this.userAgent
+      "User-Agent": this.userAgent,
     };
 
     if (body) {
@@ -72,7 +67,7 @@ export class HttpClient {
     const res = await (this.fetchFn ?? fetch)(url, {
       method,
       headers,
-      body: body ? jsonStringify(body) : undefined
+      body: body ? jsonStringify(body) : undefined,
     });
 
     if (!res.ok) {
@@ -92,8 +87,8 @@ export function jsonStringify(obj: unknown, space?: string | number): string {
         return undefined; // Filtering out properties
       }
 
-      return typeof value === 'bigint' ? value.toString() : value;
+      return typeof value === "bigint" ? value.toString() : value;
     },
-    space
+    space,
   );
 }

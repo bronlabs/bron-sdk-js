@@ -1,4 +1,4 @@
-import { NetworkTag } from './NetworkTag.js';
+import type { NetworkTag } from "./NetworkTag.js";
 
 export interface Network {
   addressExplorerUrl?: string;

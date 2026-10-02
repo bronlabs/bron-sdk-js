@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { jsonStringify } from "../src/utils/http.js";
 
 describe("jsonStringify", () => {
@@ -33,7 +33,7 @@ describe("jsonStringify", () => {
     const obj = {
       amount1: BigInt(100),
       amount2: BigInt(200),
-      nested: { amount3: BigInt(300) }
+      nested: { amount3: BigInt(300) },
     };
     const result = jsonStringify(obj);
     expect(result).toBe('{"amount1":"100","amount2":"200","nested":{"amount3":"300"}}');
@@ -99,10 +99,10 @@ describe("jsonStringify", () => {
       level1: {
         level2: {
           level3: {
-            value: "deep"
-          }
-        }
-      }
+            value: "deep",
+          },
+        },
+      },
     };
     const result = jsonStringify(obj);
     expect(result).toBe('{"level1":{"level2":{"level3":{"value":"deep"}}}}');

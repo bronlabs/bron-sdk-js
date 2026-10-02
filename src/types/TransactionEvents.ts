@@ -1,4 +1,4 @@
-import { TransactionEvent } from './TransactionEvent.js';
+import type { TransactionEvent } from "./TransactionEvent.js";
 
 export interface TransactionEvents {
   events: TransactionEvent[];

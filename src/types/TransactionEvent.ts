@@ -1,6 +1,6 @@
-import { AccountType } from './AccountType.js';
-import { EventType } from './EventType.js';
-import { EventExtra } from './EventExtra.js';
+import type { AccountType } from "./AccountType.js";
+import type { EventExtra } from "./EventExtra.js";
+import type { EventType } from "./EventType.js";
 
 export interface TransactionEvent {
   accountId: string;

@@ -1,4 +1,4 @@
-import { IntentOrderStatus } from './IntentOrderStatus.js';
+import type { IntentOrderStatus } from "./IntentOrderStatus.js";
 
 export interface Intent {
   createdAt: string;

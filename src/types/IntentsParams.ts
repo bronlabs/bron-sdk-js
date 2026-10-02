@@ -1,4 +1,4 @@
-import { FeeLevel } from './FeeLevel.js';
+import type { FeeLevel } from "./FeeLevel.js";
 
 export interface IntentsParams {
   feeAssetId?: string;

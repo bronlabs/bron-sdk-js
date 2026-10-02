@@ -1,14 +1,14 @@
-import { BalancesAPI } from "./api/balances.js";
-import { WorkspacesAPI } from "./api/workspaces.js";
-import { AddressBookAPI } from "./api/addressBook.js";
-import { AssetsAPI } from "./api/assets.js";
 import { AccountsAPI } from "./api/accounts.js";
+import { AddressBookAPI } from "./api/addressBook.js";
 import { AddressesAPI } from "./api/addresses.js";
-import { HttpClient, type FetchFunction } from "./utils/http.js";
-import { TransactionLimitsAPI } from "./api/transactionLimits.js";
-import { TransactionsAPI } from "./api/transactions.js";
+import { AssetsAPI } from "./api/assets.js";
+import { BalancesAPI } from "./api/balances.js";
 import { IntentsAPI } from "./api/intents.js";
 import { StakeAPI } from "./api/stake.js";
+import { TransactionLimitsAPI } from "./api/transactionLimits.js";
+import { TransactionsAPI } from "./api/transactions.js";
+import { WorkspacesAPI } from "./api/workspaces.js";
+import { type FetchFunction, HttpClient } from "./utils/http.js";
 
 export default class BronClient {
   public workspaceId: string;
@@ -27,8 +27,8 @@ export default class BronClient {
   constructor({
     apiKey,
     workspaceId,
-    baseUrl = 'https://api.bron.org',
-    fetchFn
+    baseUrl = "https://api.bron.org",
+    fetchFn,
   }: {
     apiKey: string;
     workspaceId: string;

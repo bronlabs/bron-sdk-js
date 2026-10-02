@@ -1,4 +1,4 @@
-import { IntentPairAsset } from './IntentPairAsset.js';
+import type { IntentPairAsset } from "./IntentPairAsset.js";
 
 export interface PublicIntentPair {
   assetA: IntentPairAsset;

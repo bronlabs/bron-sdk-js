@@ -1,4 +1,4 @@
-import { TokenStandard } from './TokenStandard.js';
+import type { TokenStandard } from "./TokenStandard.js";
 
 export interface SmartContractInformation {
   contractAddress?: string;

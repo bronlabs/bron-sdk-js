@@ -1,7 +1,7 @@
-import { HashFunction } from './HashFunction.js';
-import { KeyType } from './KeyType.js';
-import { SignatureScheme } from './SignatureScheme.js';
-import { SignatureVariant } from './SignatureVariant.js';
+import type { HashFunction } from "./HashFunction.js";
+import type { KeyType } from "./KeyType.js";
+import type { SignatureScheme } from "./SignatureScheme.js";
+import type { SignatureVariant } from "./SignatureVariant.js";
 
 export interface MessageForSigning {
   hashFunction?: HashFunction;

@@ -1,4 +1,4 @@
-import { Signature } from './Signature.js';
+import type { Signature } from "./Signature.js";
 
 export interface Signed {
   signature?: string;

@@ -1,5 +1,5 @@
-import { AssetType } from './AssetType.js';
-import { SmartContractInformation } from './SmartContractInformation.js';
+import type { AssetType } from "./AssetType.js";
+import type { SmartContractInformation } from "./SmartContractInformation.js";
 
 export interface Asset {
   assetId: string;

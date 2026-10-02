@@ -1,6 +1,6 @@
-import { AttestationSignature } from './AttestationSignature.js';
-import { SigningRequest } from './SigningRequest.js';
-import { TransactionEvent } from './TransactionEvent.js';
+import type { AttestationSignature } from "./AttestationSignature.js";
+import type { SigningRequest } from "./SigningRequest.js";
+import type { TransactionEvent } from "./TransactionEvent.js";
 
 export interface TransactionEmbedded {
   attestationSignature?: AttestationSignature;

@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import BronClient from "../src/client.js";
 import { config } from "dotenv";
+import { beforeAll, describe, expect, it } from "vitest";
+import BronClient from "../src/client.js";
 
 config();
 
@@ -15,7 +15,7 @@ async function checkApiAvailability(): Promise<boolean> {
     const testClient = new BronClient({
       apiKey: process.env.BRON_API_KEY!,
       workspaceId: process.env.BRON_WORKSPACE_ID!,
-      baseUrl: process.env.BRON_API_URL || "https://api.bron.org"
+      baseUrl: process.env.BRON_API_URL || "https://api.bron.org",
     });
 
     await testClient.workspaces.getWorkspaceById();
@@ -50,7 +50,7 @@ describe("Authentication Integration Tests", () => {
     client = new BronClient({
       apiKey: process.env.BRON_API_KEY!,
       workspaceId: process.env.BRON_WORKSPACE_ID!,
-      baseUrl: process.env.BRON_API_URL || "https://api.bron.org"
+      baseUrl: process.env.BRON_API_URL || "https://api.bron.org",
     });
   }, 30000);
 
@@ -76,7 +76,7 @@ describe("Authentication Integration Tests", () => {
     it("should handle authentication errors gracefully", async () => {
       const invalidClient = new BronClient({
         apiKey: "invalid-jwk-key",
-        workspaceId: "test-workspace"
+        workspaceId: "test-workspace",
       });
 
       await expect(invalidClient.workspaces.getWorkspaceById()).rejects.toThrow();
@@ -85,7 +85,7 @@ describe("Authentication Integration Tests", () => {
     it("should handle missing API key", async () => {
       const clientWithoutKey = new BronClient({
         apiKey: "",
-        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace"
+        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace",
       });
 
       await expect(clientWithoutKey.workspaces.getWorkspaceById()).rejects.toThrow();
@@ -98,12 +98,12 @@ describe("Authentication Integration Tests", () => {
         x: "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
         y: "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
         d: "870MB6gfuTJ4H3UnuUpxs5SwSxH2yf5K0uR49f6OzcP",
-        kid: "test-key-id"
+        kid: "test-key-id",
       });
 
       const clientWithoutWorkspace = new BronClient({
         apiKey: mockJwk,
-        workspaceId: ""
+        workspaceId: "",
       });
 
       await expect(clientWithoutWorkspace.workspaces.getWorkspaceById()).rejects.toThrow();
@@ -112,7 +112,7 @@ describe("Authentication Integration Tests", () => {
     it("should handle malformed API key", async () => {
       const malformedClient = new BronClient({
         apiKey: "not-a-jwt-token",
-        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace"
+        workspaceId: process.env.BRON_WORKSPACE_ID || "test-workspace",
       });
 
       await expect(malformedClient.workspaces.getWorkspaceById()).rejects.toThrow();
@@ -125,13 +125,13 @@ describe("Authentication Integration Tests", () => {
         x: "MKBCTNIcKUSDii11ySs3526iDZ8AiTo7Tu6KPAqv7D4",
         y: "4Etl6SRW2YiLUrN5vfvVHuhp7x8PxltmWWlbbM4IFyM",
         d: "870MB6gfuTJ4H3UnuUpxs5SwSxH2yf5K0uR49f6OzcP",
-        kid: "test-key-id"
+        kid: "test-key-id",
       });
 
       const invalidUrlClient = new BronClient({
         apiKey: mockJwk,
         workspaceId: "test-workspace",
-        baseUrl: "https://invalid-domain-that-does-not-exist-12345.com"
+        baseUrl: "https://invalid-domain-that-does-not-exist-12345.com",
       });
 
       await expect(invalidUrlClient.workspaces.getWorkspaceById()).rejects.toThrow();
@@ -140,10 +140,7 @@ describe("Authentication Integration Tests", () => {
     it("should maintain authentication across multiple requests", async () => {
       if (skipIfNoApi()) return;
 
-      const [workspace, accounts] = await Promise.all([
-        client!.workspaces.getWorkspaceById(),
-        client!.accounts.getAccounts()
-      ]);
+      const [workspace, accounts] = await Promise.all([client!.workspaces.getWorkspaceById(), client!.accounts.getAccounts()]);
 
       expect(workspace).toBeDefined();
       expect(accounts).toBeDefined();
@@ -153,12 +150,10 @@ describe("Authentication Integration Tests", () => {
     it("should handle concurrent authentication requests", async () => {
       if (skipIfNoApi()) return;
 
-      const promises = Array.from({ length: 5 }, () =>
-        client!.workspaces.getWorkspaceById()
-      );
+      const promises = Array.from({ length: 5 }, () => client!.workspaces.getWorkspaceById());
 
       const results = await Promise.allSettled(promises);
-      const successful = results.filter(r => r.status === "fulfilled").length;
+      const successful = results.filter((r) => r.status === "fulfilled").length;
 
       expect(successful).toBeGreaterThan(0);
     }, 30000);
@@ -171,19 +166,16 @@ describe("Authentication Integration Tests", () => {
       const client1 = new BronClient({
         apiKey: process.env.BRON_API_KEY!,
         workspaceId: process.env.BRON_WORKSPACE_ID!,
-        baseUrl
+        baseUrl,
       });
 
       const client2 = new BronClient({
         apiKey: process.env.BRON_API_KEY!,
         workspaceId: process.env.BRON_WORKSPACE_ID!,
-        baseUrl
+        baseUrl,
       });
 
-      const [workspace1, workspace2] = await Promise.all([
-        client1.workspaces.getWorkspaceById(),
-        client2.workspaces.getWorkspaceById()
-      ]);
+      const [workspace1, workspace2] = await Promise.all([client1.workspaces.getWorkspaceById(), client2.workspaces.getWorkspaceById()]);
 
       expect(workspace1).toBeDefined();
       expect(workspace2).toBeDefined();

@@ -1,4 +1,4 @@
-import { AccountType } from './AccountType.js';
+import type { AccountType } from "./AccountType.js";
 
 export interface Balance {
   accountId: string;

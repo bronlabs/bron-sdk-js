@@ -1,25 +1,27 @@
-import { Transactions } from "../types/Transactions.js";
-import { TransactionsQuery } from "../types/TransactionsQuery.js";
-import { Transaction } from "../types/Transaction.js";
-import { CreateTransaction } from "../types/CreateTransaction.js";
-import { CreateTransactions } from "../types/CreateTransactions.js";
-import { DryRunTransaction } from "../types/DryRunTransaction.js";
-import { OfferActions } from "../types/OfferActions.js";
-import { ApproveTransaction } from "../types/ApproveTransaction.js";
-import { CancelTransaction } from "../types/CancelTransaction.js";
-import { CreateSigningRequest } from "../types/CreateSigningRequest.js";
-import { TransactionEvents } from "../types/TransactionEvents.js";
-import { HttpClient } from "../utils/http.js";
+import type { ApproveTransaction } from "../types/ApproveTransaction.js";
+import type { CancelTransaction } from "../types/CancelTransaction.js";
+import type { CreateSigningRequest } from "../types/CreateSigningRequest.js";
+import type { CreateTransaction } from "../types/CreateTransaction.js";
+import type { CreateTransactions } from "../types/CreateTransactions.js";
+import type { DryRunTransaction } from "../types/DryRunTransaction.js";
+import type { OfferActions } from "../types/OfferActions.js";
+import type { Transaction } from "../types/Transaction.js";
+import type { TransactionEvents } from "../types/TransactionEvents.js";
+import type { Transactions } from "../types/Transactions.js";
+import type { TransactionsQuery } from "../types/TransactionsQuery.js";
+import type { HttpClient } from "../utils/http.js";
 
 export class TransactionsAPI {
-
-  constructor(private http: HttpClient, private workspaceId?: string) {}
+  constructor(
+    private http: HttpClient,
+    private workspaceId?: string,
+  ) {}
 
   async getTransactions(query?: TransactionsQuery): Promise<Transactions> {
     return this.http.request<Transactions>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transactions`,
-      query
+      query,
     });
   }
 
@@ -27,7 +29,7 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions`,
-      body
+      body,
     });
   }
 
@@ -35,7 +37,7 @@ export class TransactionsAPI {
     return this.http.request<Transactions>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/bulk-create`,
-      body
+      body,
     });
   }
 
@@ -43,14 +45,14 @@ export class TransactionsAPI {
     return this.http.request<DryRunTransaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/dry-run`,
-      body
+      body,
     });
   }
 
   async getTransactionById(transactionId: string): Promise<Transaction> {
     return this.http.request<Transaction>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}`
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}`,
     });
   }
 
@@ -58,7 +60,7 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/accept-deposit-offer`,
-      body
+      body,
     });
   }
 
@@ -66,7 +68,7 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/approve`,
-      body
+      body,
     });
   }
 
@@ -74,7 +76,7 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/cancel`,
-      body
+      body,
     });
   }
 
@@ -82,7 +84,7 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/create-signing-request`,
-      body
+      body,
     });
   }
 
@@ -90,14 +92,14 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/decline`,
-      body
+      body,
     });
   }
 
   async getTransactionEvents(transactionId: string): Promise<TransactionEvents> {
     return this.http.request<TransactionEvents>({
       method: "GET",
-      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/events`
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/events`,
     });
   }
 
@@ -105,7 +107,7 @@ export class TransactionsAPI {
     return this.http.request<Transaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/reject-outgoing-offer`,
-      body
+      body,
     });
   }
 }

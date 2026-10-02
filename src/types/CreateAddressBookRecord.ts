@@ -1,5 +1,5 @@
-import { BankDetails } from './BankDetails.js';
-import { RecordType } from './RecordType.js';
+import type { BankDetails } from "./BankDetails.js";
+import type { RecordType } from "./RecordType.js";
 
 export interface CreateAddressBookRecord {
   accountIds?: string[];

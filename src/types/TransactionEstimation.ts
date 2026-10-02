@@ -1,5 +1,5 @@
-import { EventType } from './EventType.js';
-import { EventExtra } from './EventExtra.js';
+import type { EventExtra } from "./EventExtra.js";
+import type { EventType } from "./EventType.js";
 
 export interface TransactionEstimation {
   amount?: string;

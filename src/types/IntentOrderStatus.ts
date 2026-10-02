@@ -1,1 +1,11 @@
-export type IntentOrderStatus = "not-exist" | "user-initiated" | "auction-in-progress" | "wait-for-user-tx" | "wait-for-oracle-confirm-user-tx" | "wait-for-solver-tx" | "wait-for-oracle-confirm-solver-tx" | "completed" | "liquidated" | "cancelled";
+export type IntentOrderStatus =
+  | "not-exist"
+  | "user-initiated"
+  | "auction-in-progress"
+  | "wait-for-user-tx"
+  | "wait-for-oracle-confirm-user-tx"
+  | "wait-for-solver-tx"
+  | "wait-for-oracle-confirm-solver-tx"
+  | "completed"
+  | "liquidated"
+  | "cancelled";

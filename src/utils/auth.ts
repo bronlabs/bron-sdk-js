@@ -1,6 +1,6 @@
-import crypto from "crypto";
-import pkg from "jsonwebtoken";
+import crypto from "node:crypto";
 import type { SignOptions } from "jsonwebtoken";
+import pkg from "jsonwebtoken";
 import jwkToPem from "jwk-to-pem";
 
 const { sign } = pkg;
@@ -27,13 +27,16 @@ export function generateBronJwt({ method, path, body = "", kid, privateKey }: Br
 }
 
 // Helper to convert JWK (EC P-256) to PEM private key and extract kid
-export function parseJwkEcPrivateKey(jwkString: string): { privateKey: string; kid: string } {
+export function parseJwkEcPrivateKey(jwkString: string): {
+  privateKey: string;
+  kid: string;
+} {
   const jwk = JSON.parse(jwkString);
   if (jwk.kty !== "EC" || jwk.crv !== "P-256" || !jwk.d || !jwk.x || !jwk.y) {
     throw new Error("Invalid or unsupported JWK format");
   }
   return {
     privateKey: jwkToPem(jwk, { private: true }),
-    kid: jwk.kid
+    kid: jwk.kid,
   };
 }

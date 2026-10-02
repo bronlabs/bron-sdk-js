@@ -1,4 +1,4 @@
-import { WorkspaceMember } from './WorkspaceMember.js';
+import type { WorkspaceMember } from "./WorkspaceMember.js";
 
 export interface WorkspaceMembers {
   members: WorkspaceMember[];

@@ -1,6 +1,6 @@
-import { StakeInfo } from './StakeInfo.js';
-import { StakeStatus } from './StakeStatus.js';
-import { Warning } from './Warning.js';
+import type { StakeInfo } from "./StakeInfo.js";
+import type { StakeStatus } from "./StakeStatus.js";
+import type { Warning } from "./Warning.js";
 
 export interface Stake {
   accountId?: string;

@@ -1,8 +1,8 @@
-import { MessagesForSigning } from './MessagesForSigning.js';
-import { Signed } from './Signed.js';
-import { BlockchainSigningRequest } from './BlockchainSigningRequest.js';
-import { SigningRequestStatus } from './SigningRequestStatus.js';
-import { TransactionType } from './TransactionType.js';
+import type { BlockchainSigningRequest } from "./BlockchainSigningRequest.js";
+import type { MessagesForSigning } from "./MessagesForSigning.js";
+import type { Signed } from "./Signed.js";
+import type { SigningRequestStatus } from "./SigningRequestStatus.js";
+import type { TransactionType } from "./TransactionType.js";
 
 export interface SigningRequest {
   accountId?: string;

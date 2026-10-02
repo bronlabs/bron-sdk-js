@@ -1,30 +1,32 @@
-import { AssetMarketPrices } from "../types/AssetMarketPrices.js";
-import { AssetPricesQuery } from "../types/AssetPricesQuery.js";
-import { AssetPriceSeries } from "../types/AssetPriceSeries.js";
-import { AssetPriceSeriesQuery } from "../types/AssetPriceSeriesQuery.js";
-import { Assets } from "../types/Assets.js";
-import { AssetsQuery } from "../types/AssetsQuery.js";
-import { Asset } from "../types/Asset.js";
-import { Networks } from "../types/Networks.js";
-import { NetworksQuery } from "../types/NetworksQuery.js";
-import { Network } from "../types/Network.js";
-import { SymbolMarketPrices } from "../types/SymbolMarketPrices.js";
-import { PricesQuery } from "../types/PricesQuery.js";
-import { Symbols } from "../types/Symbols.js";
-import { SymbolsQuery } from "../types/SymbolsQuery.js";
-import { Symbol } from "../types/Symbol.js";
-import { WorkspacePricesQuery } from "../types/WorkspacePricesQuery.js";
-import { HttpClient } from "../utils/http.js";
+import type { Asset } from "../types/Asset.js";
+import type { AssetMarketPrices } from "../types/AssetMarketPrices.js";
+import type { AssetPriceSeries } from "../types/AssetPriceSeries.js";
+import type { AssetPriceSeriesQuery } from "../types/AssetPriceSeriesQuery.js";
+import type { AssetPricesQuery } from "../types/AssetPricesQuery.js";
+import type { Assets } from "../types/Assets.js";
+import type { AssetsQuery } from "../types/AssetsQuery.js";
+import type { Network } from "../types/Network.js";
+import type { Networks } from "../types/Networks.js";
+import type { NetworksQuery } from "../types/NetworksQuery.js";
+import type { PricesQuery } from "../types/PricesQuery.js";
+import type { Symbol } from "../types/Symbol.js";
+import type { SymbolMarketPrices } from "../types/SymbolMarketPrices.js";
+import type { Symbols } from "../types/Symbols.js";
+import type { SymbolsQuery } from "../types/SymbolsQuery.js";
+import type { WorkspacePricesQuery } from "../types/WorkspacePricesQuery.js";
+import type { HttpClient } from "../utils/http.js";
 
 export class AssetsAPI {
-
-  constructor(private http: HttpClient, private workspaceId?: string) {}
+  constructor(
+    private http: HttpClient,
+    private workspaceId?: string,
+  ) {}
 
   async getAssetPrices(query?: AssetPricesQuery): Promise<AssetMarketPrices> {
     return this.http.request<AssetMarketPrices>({
       method: "GET",
       path: `/dictionary/asset-market-prices`,
-      query
+      query,
     });
   }
 
@@ -32,7 +34,7 @@ export class AssetsAPI {
     return this.http.request<AssetPriceSeries>({
       method: "GET",
       path: `/dictionary/asset-price-series`,
-      query
+      query,
     });
   }
 
@@ -40,14 +42,14 @@ export class AssetsAPI {
     return this.http.request<Assets>({
       method: "GET",
       path: `/dictionary/assets`,
-      query
+      query,
     });
   }
 
   async getAssetById(assetId: string): Promise<Asset> {
     return this.http.request<Asset>({
       method: "GET",
-      path: `/dictionary/assets/${assetId}`
+      path: `/dictionary/assets/${assetId}`,
     });
   }
 
@@ -55,14 +57,14 @@ export class AssetsAPI {
     return this.http.request<Networks>({
       method: "GET",
       path: `/dictionary/networks`,
-      query
+      query,
     });
   }
 
   async getNetworkById(networkId: string): Promise<Network> {
     return this.http.request<Network>({
       method: "GET",
-      path: `/dictionary/networks/${networkId}`
+      path: `/dictionary/networks/${networkId}`,
     });
   }
 
@@ -70,7 +72,7 @@ export class AssetsAPI {
     return this.http.request<SymbolMarketPrices>({
       method: "GET",
       path: `/dictionary/symbol-market-prices`,
-      query
+      query,
     });
   }
 
@@ -78,14 +80,14 @@ export class AssetsAPI {
     return this.http.request<Symbols>({
       method: "GET",
       path: `/dictionary/symbols`,
-      query
+      query,
     });
   }
 
   async getSymbolById(symbolId: string): Promise<Symbol> {
     return this.http.request<Symbol>({
       method: "GET",
-      path: `/dictionary/symbols/${symbolId}`
+      path: `/dictionary/symbols/${symbolId}`,
     });
   }
 
@@ -93,7 +95,7 @@ export class AssetsAPI {
     return this.http.request<SymbolMarketPrices>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/symbol-market-prices`,
-      query
+      query,
     });
   }
 }
