@@ -11,4 +11,7 @@ export interface AddressBookRecordsQuery {
   recordType?: string;
   recordTypes?: string[];
   statuses?: string[];
+  label?: string;
+  isFavorite?: boolean;
+  includeLabels?: boolean;
 }

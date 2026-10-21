@@ -5,8 +5,11 @@ export interface CreateAddressBookRecord {
   accountIds?: string[];
   address?: string;
   bankDetails?: BankDetails;
+  email?: string;
   externalId: string;
   imageId?: string;
+  isFavorite?: boolean;
+  labels?: string[];
   memo?: string;
   name: string;
   networkId?: string;

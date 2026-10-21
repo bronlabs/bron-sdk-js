@@ -27,6 +27,7 @@ export interface TransactionsQuery {
   limit?: string;
   offset?: string;
   externalId?: string;
+  loanId?: string;
   includeEvents?: boolean;
   includeCurrentSigningRequest?: boolean;
   includeAttestationSignature?: boolean;

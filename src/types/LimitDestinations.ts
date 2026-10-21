@@ -4,4 +4,5 @@ export interface LimitDestinations {
   toAccounts?: boolean;
   toAddressBook?: boolean;
   toExternalAddresses?: boolean;
+  toFirstTimeRecipients?: boolean;
 }

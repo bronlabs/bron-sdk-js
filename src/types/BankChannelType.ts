@@ -1,1 +1,1 @@
-export type BankChannelType = "sepa" | "ach" | "swift" | "fedwire" | "local";
+export type BankChannelType = "sepa" | "ach" | "swift" | "fedwire" | "fednow" | "local";

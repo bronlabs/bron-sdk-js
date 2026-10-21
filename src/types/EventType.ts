@@ -20,6 +20,10 @@ export type EventType =
   | "loyalty-lock"
   | "loyalty-unlock"
   | "loyalty-reward"
+  | "loan-lock-collateral"
+  | "loan-unlock-collateral"
+  | "loan-borrow"
+  | "loan-repay"
   | "canton-reward"
   | "message-signed"
   | "deposit-offer";

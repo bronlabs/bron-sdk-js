@@ -5,6 +5,7 @@ import type { SignatureVariant } from "./SignatureVariant.js";
 
 export interface MessageForSigning {
   hashFunction?: HashFunction;
+  hashPersonalization?: string;
   keyType?: KeyType;
   message?: string;
   signatureScheme?: SignatureScheme;

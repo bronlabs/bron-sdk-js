@@ -5,6 +5,7 @@ import type { CreateTransaction } from "../types/CreateTransaction.js";
 import type { CreateTransactions } from "../types/CreateTransactions.js";
 import type { DryRunTransaction } from "../types/DryRunTransaction.js";
 import type { OfferActions } from "../types/OfferActions.js";
+import type { SwapRoute } from "../types/SwapRoute.js";
 import type { Transaction } from "../types/Transaction.js";
 import type { TransactionEvents } from "../types/TransactionEvents.js";
 import type { Transactions } from "../types/Transactions.js";
@@ -45,6 +46,14 @@ export class TransactionsAPI {
     return this.http.request<DryRunTransaction>({
       method: "POST",
       path: `/workspaces/${this.workspaceId}/transactions/dry-run`,
+      body,
+    });
+  }
+
+  async getSwapRoute(body: SwapRoute): Promise<DryRunTransaction> {
+    return this.http.request<DryRunTransaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/swap-route`,
       body,
     });
   }

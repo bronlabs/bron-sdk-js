@@ -1,9 +1,11 @@
+import type { TransactionEmbedded } from "./TransactionEmbedded.js";
 import type { TransactionEstimation } from "./TransactionEstimation.js";
 import type { TransactionExtra } from "./TransactionExtra.js";
 import type { TransactionType } from "./TransactionType.js";
 import type { Warning } from "./Warning.js";
 
 export interface DryRunTransaction {
+  _embedded?: TransactionEmbedded;
   accountId: string;
   description?: string;
   estimations?: TransactionEstimation[];

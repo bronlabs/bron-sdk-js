@@ -1,4 +1,7 @@
+import type { IntentsQuoteEmbedded } from "./IntentsQuoteEmbedded.js";
+
 export interface IntentsQuote {
+  _embedded?: IntentsQuoteEmbedded;
   fromAmount: string;
   fromAssetId: string;
   minPrice: string;

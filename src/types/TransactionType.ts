@@ -22,6 +22,7 @@ export type TransactionType =
   | "loyalty-unlock"
   | "loyalty-collect-rewards"
   | "canton-reward"
+  | "reward"
   | "nft-deposit"
   | "nft-withdrawal"
   | "nft-allowance"

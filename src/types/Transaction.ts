@@ -5,11 +5,11 @@ import type { TransactionStatus } from "./TransactionStatus.js";
 import type { TransactionType } from "./TransactionType.js";
 
 export interface Transaction {
+  _embedded?: TransactionEmbedded;
   accountId: string;
   accountType: AccountType;
   createdAt: string;
   createdBy?: string;
-  embedded?: TransactionEmbedded;
   expiresAt?: string;
   externalId: string;
   extra?: TransactionExtra;

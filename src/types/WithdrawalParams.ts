@@ -10,6 +10,7 @@ export interface WithdrawalParams {
   memo?: string;
   networkFees?: RequestedNetworkFees;
   networkId?: string;
+  recipientEmail?: string;
   symbol?: string;
   toAccountId?: string;
   toAddress?: string;
