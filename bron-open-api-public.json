@@ -959,6 +959,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           },
           "address" : {
@@ -991,6 +992,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 50,
             "type" : "array"
           },
           "memo" : {
@@ -1149,6 +1151,7 @@
             "items" : {
               "$ref" : "#/components/schemas/CreateTransaction"
             },
+            "maxItems" : 100,
             "type" : "array"
           }
         },
@@ -1209,6 +1212,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           },
           "to" : {
@@ -1980,6 +1984,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           }
         },
@@ -2004,6 +2009,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           },
           "addressBookRecordIds" : {
@@ -2011,6 +2017,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           },
           "toAccounts" : {
@@ -2053,6 +2060,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           },
           "numberOfApprovals" : {
@@ -2082,6 +2090,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         },
@@ -2525,6 +2534,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           },
           "skipSimulation" : {
@@ -4034,6 +4044,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         } ],
@@ -4231,6 +4242,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -4243,6 +4255,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 500,
             "type" : "array"
           }
         }, {
@@ -4255,6 +4268,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -4407,6 +4421,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -4419,6 +4434,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 500,
             "type" : "array"
           }
         }, {
@@ -4431,6 +4447,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -4799,6 +4816,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 500,
             "type" : "array"
           }
         } ],
@@ -4984,6 +5002,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -4996,6 +5015,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5098,6 +5118,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5109,6 +5130,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5219,6 +5241,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5230,6 +5253,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5347,6 +5371,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5472,6 +5497,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -5483,6 +5509,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -5495,6 +5522,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountStatus"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -5506,6 +5534,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5730,6 +5759,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5765,6 +5795,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5776,6 +5807,7 @@
             "items" : {
               "$ref" : "#/components/schemas/ActivityType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -5787,6 +5819,7 @@
             "items" : {
               "$ref" : "#/components/schemas/ActivityType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -5888,6 +5921,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5900,6 +5934,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 500,
             "type" : "array"
           }
         }, {
@@ -5912,6 +5947,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -5985,6 +6021,7 @@
             "items" : {
               "$ref" : "#/components/schemas/RecordType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -5996,6 +6033,7 @@
             "items" : {
               "$ref" : "#/components/schemas/RecordStatus"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -6419,6 +6457,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           }
         }, {
@@ -6438,6 +6477,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -6465,6 +6505,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AddressStatus"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -6601,6 +6642,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -6612,6 +6654,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           }
         }, {
@@ -6631,6 +6674,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -6642,6 +6686,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -6661,6 +6706,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 500,
             "type" : "array"
           }
         }, {
@@ -6672,6 +6718,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -6683,6 +6730,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -7482,6 +7530,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -7494,6 +7543,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -7602,6 +7652,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           }
         }, {
@@ -7613,6 +7664,7 @@
             "items" : {
               "$ref" : "#/components/schemas/TransactionLimitStatus"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -7623,6 +7675,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -7633,6 +7686,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           }
         }, {
@@ -7643,6 +7697,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -7653,6 +7708,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 1000,
             "type" : "array"
           }
         }, {
@@ -7769,6 +7825,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -7975,6 +8032,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -7986,6 +8044,7 @@
             "items" : {
               "$ref" : "#/components/schemas/TransactionType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -7997,6 +8056,7 @@
             "items" : {
               "$ref" : "#/components/schemas/AccountType"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -8015,6 +8075,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
@@ -8034,6 +8095,7 @@
             "items" : {
               "$ref" : "#/components/schemas/TransactionStatus"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -8045,6 +8107,7 @@
             "items" : {
               "$ref" : "#/components/schemas/TransactionStatus"
             },
+            "maxItems" : 200,
             "type" : "array"
           }
         }, {
@@ -8056,6 +8119,7 @@
             "items" : {
               "type" : "string"
             },
+            "maxItems" : 10000,
             "type" : "array"
           }
         }, {
