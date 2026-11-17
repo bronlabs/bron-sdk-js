@@ -8,4 +8,5 @@ export type AddressStatus =
   | "enabled"
   | "disabled"
   | "error"
-  | "account-archived";
+  | "account-archived"
+  | "paused";

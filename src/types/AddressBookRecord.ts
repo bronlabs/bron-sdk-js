@@ -16,6 +16,7 @@ export interface AddressBookRecord {
   memo?: string;
   name: string;
   networkId?: string;
+  note?: string;
   recordId: string;
   recordType: RecordType;
   status: RecordStatus;

@@ -24,6 +24,7 @@ export type EventType =
   | "loan-unlock-collateral"
   | "loan-borrow"
   | "loan-repay"
+  | "loan-liquidation"
   | "canton-reward"
   | "message-signed"
   | "deposit-offer";

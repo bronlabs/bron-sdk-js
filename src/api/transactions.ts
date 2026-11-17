@@ -5,6 +5,7 @@ import type { CreateTransaction } from "../types/CreateTransaction.js";
 import type { CreateTransactions } from "../types/CreateTransactions.js";
 import type { DryRunTransaction } from "../types/DryRunTransaction.js";
 import type { OfferActions } from "../types/OfferActions.js";
+import type { RecreateSigningRequest } from "../types/RecreateSigningRequest.js";
 import type { SwapRoute } from "../types/SwapRoute.js";
 import type { Transaction } from "../types/Transaction.js";
 import type { TransactionEvents } from "../types/TransactionEvents.js";
@@ -105,10 +106,26 @@ export class TransactionsAPI {
     });
   }
 
+  async dryRunRecreateSigningRequest(transactionId: string, body: RecreateSigningRequest): Promise<Transaction> {
+    return this.http.request<Transaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/dry-run-recreate-signing-request`,
+      body,
+    });
+  }
+
   async getTransactionEvents(transactionId: string): Promise<TransactionEvents> {
     return this.http.request<TransactionEvents>({
       method: "GET",
       path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/events`,
+    });
+  }
+
+  async recreateSigningRequest(transactionId: string, body: RecreateSigningRequest): Promise<Transaction> {
+    return this.http.request<Transaction>({
+      method: "POST",
+      path: `/workspaces/${this.workspaceId}/transactions/${transactionId}/recreate-signing-request`,
+      body,
     });
   }
 

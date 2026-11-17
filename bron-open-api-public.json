@@ -353,6 +353,11 @@
             "examples" : [ "BTC" ],
             "type" : "string"
           },
+          "note" : {
+            "description" : "Free-form note about the record, shared by all workspace members",
+            "format" : "external-text",
+            "type" : "string"
+          },
           "recordId" : {
             "description" : "Address book record ID",
             "examples" : [ "gx8df95a09h319dbu79rfora" ],
@@ -419,7 +424,7 @@
         "type" : "object"
       },
       "AddressStatus" : {
-        "enum" : [ "new", "pending", "address-activation-required", "address-creation-required", "address-activation-in-progress", "approval-pending", "enabled", "disabled", "error", "account-archived" ],
+        "enum" : [ "new", "pending", "address-activation-required", "address-creation-required", "address-activation-in-progress", "approval-pending", "enabled", "disabled", "error", "account-archived", "paused" ],
         "type" : "string"
       },
       "Addresses" : {
@@ -1000,6 +1005,10 @@
             "description" : "Blockchain Network Id of an address",
             "type" : "string"
           },
+          "note" : {
+            "description" : "Free-form note about the record, shared by all workspace members",
+            "type" : "string"
+          },
           "recordType" : {
             "$ref" : "#/components/schemas/RecordType",
             "description" : "Record type: address, tag, or bank. [See details](/enums/RecordType)"
@@ -1428,7 +1437,7 @@
         "type" : "object"
       },
       "EventType" : {
-        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-deposit", "stake-withdrawal-requested", "stake-delegation", "stake-undelegation", "stake-withdrawn", "stake-earn-reward", "stake-reward-accrued", "stake-pool-created", "stake-pool-unjailed", "stake-transferred", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "loan-lock-collateral", "loan-unlock-collateral", "loan-borrow", "loan-repay", "canton-reward", "message-signed", "deposit-offer" ],
+        "enum" : [ "in", "out", "fee", "negative-deposit", "stake-deposit", "stake-withdrawal-requested", "stake-delegation", "stake-undelegation", "stake-withdrawn", "stake-earn-reward", "stake-reward-accrued", "stake-pool-created", "stake-pool-unjailed", "stake-transferred", "allowance", "nft-in", "nft-out", "nft-allowance", "loyalty-lock", "loyalty-unlock", "loyalty-reward", "loan-lock-collateral", "loan-unlock-collateral", "loan-borrow", "loan-repay", "loan-liquidation", "canton-reward", "message-signed", "deposit-offer" ],
         "type" : "string"
       },
       "FeeLevel" : {
@@ -2017,7 +2026,7 @@
             "type" : "boolean"
           },
           "toFirstTimeRecipients" : {
-            "description" : "Apply to the first transfer to a destination outside the workspace that has no completed transfer yet: an external address, a Bron tag, or an Address Book record activated or changed less than 48 hours ago",
+            "description" : "Apply to the first transfer to a destination outside the workspace that has no completed transfer yet: an external address, a Bron tag or an Address Book record (a bank record counts as new again after its details change). On a multiple-transactions limit these transfers form the accumulated volume",
             "type" : "boolean"
           }
         },
@@ -2220,6 +2229,11 @@
           "networkFees" : {
             "$ref" : "#/components/schemas/RequestedNetworkFees",
             "description" : "Custom network fees parameters"
+          },
+          "recipientEmail" : {
+            "description" : "Email notified when the transfer completes, in addition to the address book record's email",
+            "format" : "external-text",
+            "type" : "string"
           },
           "toAccountId" : {
             "description" : "In case of a transfer on a different account, the ID of the destination account",
@@ -2529,6 +2543,37 @@
       "RecordType" : {
         "enum" : [ "address", "tag", "bank" ],
         "type" : "string"
+      },
+      "RecreateSigningRequest" : {
+        "properties" : {
+          "cancelTransaction" : {
+            "default" : "false",
+            "description" : "Replace the transaction with an on-chain cancellation instead of re-sending it. Only on networks that support replacement cancel",
+            "examples" : [ "false" ],
+            "type" : "boolean"
+          },
+          "feeLevel" : {
+            "$ref" : "#/components/schemas/FeeLevel",
+            "default" : "medium",
+            "description" : "Network fee level for the new signing request. [See details](/enums/FeeLevel)",
+            "examples" : [ "medium" ]
+          },
+          "networkFees" : {
+            "$ref" : "#/components/schemas/RequestedNetworkFees",
+            "description" : "Custom network fees parameters for the new signing request"
+          },
+          "primitivesVersion" : {
+            "description" : "Version of the primitives used for signing.",
+            "format" : "int32",
+            "type" : "string"
+          },
+          "signingRequestId" : {
+            "description" : "ID of the transaction's current signing request, taken from extra.signingRequestId",
+            "type" : "string"
+          }
+        },
+        "required" : [ "signingRequestId" ],
+        "type" : "object"
       },
       "RequestedNetworkFees" : {
         "properties" : {
@@ -3309,6 +3354,13 @@
             "$ref" : "#/components/schemas/SigningRequest",
             "description" : "Current signing request"
           },
+          "estimations" : {
+            "description" : "Transaction estimations, including network fees",
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionEstimation"
+            },
+            "type" : "array"
+          },
           "events" : {
             "description" : "Transaction events",
             "items" : {
@@ -3644,7 +3696,7 @@
         "type" : "string"
       },
       "TransactionLimitType" : {
-        "enum" : [ "transactions-volume", "transaction-amount" ],
+        "enum" : [ "transactions-volume", "transaction-amount", "hyperliquid-orders-volume", "hyperliquid-order-amount" ],
         "type" : "string"
       },
       "TransactionLimits" : {
@@ -4604,6 +4656,133 @@
           }
         },
         "summary" : "Get intent swap pairs",
+        "tags" : [ "intents" ]
+      }
+    },
+    "/dictionary/intent-pairs/{fromAssetId}/{toAssetId}/quote" : {
+      "get" : {
+        "description" : "Returns an indicative price for a swap of the pair without creating an on-chain order, for the amount given as `fromAmount` or `toAmount`. No authentication is required for this endpoint. Pass the fee your order will carry as `broadcasterFeePercent`: `minPrice` and `minToAmount` leave room for it, for the solver fee and for the settlement network fee, so `minPrice` can be passed on-chain as is.\n\nWithout `broadcasterFeePercent` no broadcaster fee is assumed. Amounts too small to cover the settlement network fee are still quoted, with the fee share capped at 30% of the order value: such an order is unlikely to be filled. In `toAmount` mode `minToAmount` is capped at `toAmount` and `minPrice` bounds the amount spent. The floor assumes the default price tolerance.\n\nAnswers 404 `pair-not-available` when the pair is not tradable through Intents.\n\n",
+        "parameters" : [ {
+          "description" : "Amount of the from-asset. Exactly one of `fromAmount` or `toAmount` must be specified.",
+          "example" : [ "120.015" ],
+          "in" : "query",
+          "name" : "fromAmount",
+          "required" : false,
+          "schema" : {
+            "format" : "decimal",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Amount of the to-asset. Exactly one of `fromAmount` or `toAmount` must be specified.",
+          "example" : [ "117500.03" ],
+          "in" : "query",
+          "name" : "toAmount",
+          "required" : false,
+          "schema" : {
+            "format" : "decimal",
+            "type" : "string"
+          }
+        }, {
+          "description" : "Broadcaster fee in percent the order will be created with (`_frontEndFee / 10000`). `minPrice` and the amounts leave room for it. When omitted, no broadcaster fee is assumed.",
+          "example" : [ "0.03" ],
+          "in" : "query",
+          "name" : "broadcasterFeePercent",
+          "required" : false,
+          "schema" : {
+            "format" : "decimal",
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "fromAssetId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "toAssetId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IntentsQuote"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Get indicative quote for an intent swap pair",
         "tags" : [ "intents" ]
       }
     },
@@ -6942,134 +7121,6 @@
         "tags" : [ "intents" ]
       }
     },
-    "/workspaces/{workspaceId}/intents/quote" : {
-      "post" : {
-        "description" : "Request an indicative price for a potential swap between two assets without creating an on-chain order. Used by broadcaster integrators to display rates before initiating `createOrder`. Includes a hard floor (`minToAmount`) enforced on-chain via `maxPrice`.\n\nAnswers 404 `pair-not-available` when the pair is not tradable through Intents.\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
-        "parameters" : [ {
-          "description" : "ID of the source asset",
-          "example" : [ "2" ],
-          "in" : "query",
-          "name" : "fromAssetId",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "description" : "ID of the destination asset",
-          "example" : [ "5002" ],
-          "in" : "query",
-          "name" : "toAssetId",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        }, {
-          "description" : "Amount of the from-asset. Exactly one of `fromAmount` or `toAmount` must be specified.",
-          "example" : [ "120.015" ],
-          "in" : "query",
-          "name" : "fromAmount",
-          "required" : false,
-          "schema" : {
-            "format" : "decimal",
-            "type" : "string"
-          }
-        }, {
-          "description" : "Amount of the to-asset. Exactly one of `fromAmount` or `toAmount` must be specified.",
-          "example" : [ "117500.03" ],
-          "in" : "query",
-          "name" : "toAmount",
-          "required" : false,
-          "schema" : {
-            "format" : "decimal",
-            "type" : "string"
-          }
-        }, {
-          "in" : "path",
-          "name" : "workspaceId",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "$ref" : "#/components/schemas/IntentsQuote"
-                }
-              }
-            },
-            "description" : "OK"
-          },
-          "400" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "properties" : {
-                    "error" : {
-                      "description" : "The machine-readable error code",
-                      "examples" : [ "bad-request" ],
-                      "type" : "string"
-                    },
-                    "message" : {
-                      "description" : "A human-readable message providing more details about the error",
-                      "type" : "string"
-                    }
-                  },
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "Bad Request"
-          },
-          "403" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "properties" : {
-                    "error" : {
-                      "description" : "The machine-readable error code",
-                      "examples" : [ "forbidden" ],
-                      "type" : "string"
-                    },
-                    "message" : {
-                      "description" : "A human-readable message providing more details about the error",
-                      "type" : "string"
-                    }
-                  },
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "Forbidden"
-          },
-          "409" : {
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "properties" : {
-                    "error" : {
-                      "description" : "The machine-readable error code",
-                      "examples" : [ "conflict" ],
-                      "type" : "string"
-                    },
-                    "message" : {
-                      "description" : "A human-readable message providing more details about the error",
-                      "type" : "string"
-                    }
-                  },
-                  "type" : "object"
-                }
-              }
-            },
-            "description" : "Conflict"
-          }
-        },
-        "summary" : "Request indicative swap quote",
-        "tags" : [ "intents" ]
-      }
-    },
     "/workspaces/{workspaceId}/intents/{intentId}" : {
       "get" : {
         "description" : "Returns the details of a single intents with price and status.\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
@@ -8381,7 +8432,7 @@
     },
     "/workspaces/{workspaceId}/transactions/bulk-create" : {
       "post" : {
-        "description" : "Bulk transactions creation. If the execution of an transaction fails, it will not affect the execution of other transactions. Failed transactions will be returned in the response. The bulk size should be less than 50 transactions.\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
+        "description" : "Bulk transactions creation. If the execution of an transaction fails, it will not affect the execution of other transactions. Failed transactions will be returned in the response. A bulk holds at most 100 transactions.\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
         "parameters" : [ {
           "in" : "path",
           "name" : "workspaceId",
@@ -8579,7 +8630,7 @@
     },
     "/workspaces/{workspaceId}/transactions/swap-route" : {
       "post" : {
-        "description" : "Find how a pair of assets can be swapped from an account and get a quote for it. The response is a dry-run of the transaction to create next:\n\n* `transactionType: swap-lifi` — a Li.Fi quote in `_embedded.quoteDetails`; pass its `quoteId` as `params.quoteId` to `POST /transactions` before `expiresAt`.\n\n* `transactionType: bridge` — the pair moves between connected networks; submit the returned `params` to `POST /transactions`.\n\n* `transactionType: intents` — an indicative Intents price; create the order with `POST /intents`.\n\nAnswers 404 `pair-not-available` when the pair cannot be swapped.\n\n<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
+        "description" : "Find how a pair of assets can be swapped from an account and get a quote for it. The response is a dry-run of the transaction to create next:\n\n* `transactionType: swap-lifi` — a Li.Fi quote in `_embedded.quoteDetails`; pass its `quoteId` as `params.quoteId` to `POST /transactions` before `expiresAt`.\n\n* `transactionType: bridge` — the pair moves between connected networks; submit the returned `params` to `POST /transactions`.\n\n* `transactionType: intents` — an indicative Intents price; create the order with `POST /intents`.\n\nAnswers 404 `pair-not-available` when the pair cannot be swapped.\n\n<sup>API Key permissions: Transaction Operator, Full Access</sup>",
         "parameters" : [ {
           "in" : "path",
           "name" : "workspaceId",
@@ -9303,6 +9354,112 @@
         "tags" : [ "transactions" ]
       }
     },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/dry-run-recreate-signing-request" : {
+      "post" : {
+        "description" : "Simulate recreating the current signing request of a pending transaction, returns the transaction with new estimations in _embedded.estimations without changing it\n\n<sup>API Key permissions: Full Access, MPC Hot Signer</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecreateSigningRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Transaction"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Dry-run recreate signing request",
+        "tags" : [ "transactions" ]
+      }
+    },
     "/workspaces/{workspaceId}/transactions/{transactionId}/events" : {
       "get" : {
         "description" : "<sup>API Key permissions: View only, Transaction Operator, Full Access</sup>",
@@ -9397,6 +9554,112 @@
           }
         },
         "summary" : "Get Transaction Events",
+        "tags" : [ "transactions" ]
+      }
+    },
+    "/workspaces/{workspaceId}/transactions/{transactionId}/recreate-signing-request" : {
+      "post" : {
+        "description" : "Replace the current signing request of a pending transaction with a new one, to refresh its signing data, change its network fees or cancel it on-chain. Transactions in signing or signed status can be recreated; broadcasted ones only on networks that support fee replacement. The new signing request must be signed again\n\n<sup>API Key permissions: Full Access, MPC Hot Signer</sup>",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "workspaceId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "path",
+          "name" : "transactionId",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RecreateSigningRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Transaction"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "bad-request" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "forbidden" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "properties" : {
+                    "error" : {
+                      "description" : "The machine-readable error code",
+                      "examples" : [ "conflict" ],
+                      "type" : "string"
+                    },
+                    "message" : {
+                      "description" : "A human-readable message providing more details about the error",
+                      "type" : "string"
+                    }
+                  },
+                  "type" : "object"
+                }
+              }
+            },
+            "description" : "Conflict"
+          }
+        },
+        "summary" : "Recreate signing request",
         "tags" : [ "transactions" ]
       }
     },

@@ -200,22 +200,13 @@ export class OpenApiSdkGenerator {
       }
     }
 
-    if (queryParams.length && !pathParams.length) {
+    if (queryParams.length) {
       const interfaceName = this.getInterfaceName(op, "Query");
       return {
         paramType: interfaceName,
         paramOptional: "?",
         pathParams,
         isQueryInterface: true,
-      };
-    }
-
-    if (queryParams.length && pathParams.length) {
-      const interfaceName = this.getInterfaceName(op, "Params");
-      return {
-        paramType: interfaceName,
-        paramOptional: "",
-        pathParams,
       };
     }
 
@@ -260,9 +251,14 @@ export class OpenApiSdkGenerator {
             : `\${${p1}}`,
       );
 
+      const hasQuery = paramType !== "any" && !isWorkspaceGetEndpoint;
+
       const args = [`method: "${method.toUpperCase()}"`, `path: \`${pathExpr}\``];
+      if (hasQuery) args.push("query");
+
       const methodBody = `return this.http.request${returnType ? `<${returnType}>` : ""}({\n      ${args.join(",\n      ")}\n    });`;
-      const signature = `async ${funcName}(${pathArgs})${returnType ? `: Promise<${returnType}>` : ""}`;
+      const queryArg = hasQuery ? `, query${paramOptional}: ${paramType}` : "";
+      const signature = `async ${funcName}(${pathArgs}${queryArg})${returnType ? `: Promise<${returnType}>` : ""}`;
 
       return `  ${signature} {\n    ${methodBody}\n  }`;
     }

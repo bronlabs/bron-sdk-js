@@ -7,6 +7,7 @@ export interface NFTWithdrawalParams {
   feeLevel?: FeeLevel;
   includeFee?: boolean;
   networkFees?: RequestedNetworkFees;
+  recipientEmail?: string;
   toAccountId?: string;
   toAddress?: string;
   toAddressBookRecordId?: string;

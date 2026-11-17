@@ -1,4 +1,5 @@
 import type { Asset } from "../types/Asset.js";
+import type { AssetByIDQuery } from "../types/AssetByIDQuery.js";
 import type { AssetMarketPrices } from "../types/AssetMarketPrices.js";
 import type { AssetPriceSeries } from "../types/AssetPriceSeries.js";
 import type { AssetPriceSeriesQuery } from "../types/AssetPriceSeriesQuery.js";
@@ -10,6 +11,7 @@ import type { Networks } from "../types/Networks.js";
 import type { NetworksQuery } from "../types/NetworksQuery.js";
 import type { PricesQuery } from "../types/PricesQuery.js";
 import type { Symbol } from "../types/Symbol.js";
+import type { SymbolByIDQuery } from "../types/SymbolByIDQuery.js";
 import type { SymbolMarketPrices } from "../types/SymbolMarketPrices.js";
 import type { Symbols } from "../types/Symbols.js";
 import type { SymbolsQuery } from "../types/SymbolsQuery.js";
@@ -46,10 +48,11 @@ export class AssetsAPI {
     });
   }
 
-  async getAssetById(assetId: string): Promise<Asset> {
+  async getAssetById(assetId: string, query?: AssetByIDQuery): Promise<Asset> {
     return this.http.request<Asset>({
       method: "GET",
       path: `/dictionary/assets/${assetId}`,
+      query,
     });
   }
 
@@ -84,10 +87,11 @@ export class AssetsAPI {
     });
   }
 
-  async getSymbolById(symbolId: string): Promise<Symbol> {
+  async getSymbolById(symbolId: string, query?: SymbolByIDQuery): Promise<Symbol> {
     return this.http.request<Symbol>({
       method: "GET",
       path: `/dictionary/symbols/${symbolId}`,
+      query,
     });
   }
 

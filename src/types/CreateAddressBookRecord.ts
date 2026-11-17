@@ -13,6 +13,7 @@ export interface CreateAddressBookRecord {
   memo?: string;
   name: string;
   networkId?: string;
+  note?: string;
   recordType?: RecordType;
   tag?: string;
 }
