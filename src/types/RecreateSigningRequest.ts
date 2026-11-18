@@ -5,6 +5,5 @@ export interface RecreateSigningRequest {
   cancelTransaction?: boolean;
   feeLevel?: FeeLevel;
   networkFees?: RequestedNetworkFees;
-  primitivesVersion?: string;
   signingRequestId: string;
 }

@@ -1,3 +1,1 @@
-export interface CreateSigningRequest {
-  primitivesVersion?: string;
-}
+export type CreateSigningRequest = Record<string, any>;

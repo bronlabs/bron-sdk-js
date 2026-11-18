@@ -1067,13 +1067,7 @@
         "type" : "object"
       },
       "CreateSigningRequest" : {
-        "properties" : {
-          "primitivesVersion" : {
-            "description" : "Version of the primitives used for signing.",
-            "format" : "int32",
-            "type" : "string"
-          }
-        },
+        "properties" : { },
         "type" : "object"
       },
       "CreateTransaction" : {
@@ -2164,11 +2158,6 @@
             "description" : "Flag indicating whether to use parallel signing",
             "type" : "boolean"
           },
-          "primitivesVersion" : {
-            "description" : "Version of the primitives used for signing.",
-            "format" : "int32",
-            "type" : "string"
-          },
           "publicKey" : {
             "description" : "Public key that corresponds to the private key used for signing these messages",
             "type" : "string"
@@ -2571,11 +2560,6 @@
           "networkFees" : {
             "$ref" : "#/components/schemas/RequestedNetworkFees",
             "description" : "Custom network fees parameters for the new signing request"
-          },
-          "primitivesVersion" : {
-            "description" : "Version of the primitives used for signing.",
-            "format" : "int32",
-            "type" : "string"
           },
           "signingRequestId" : {
             "description" : "ID of the transaction's current signing request, taken from extra.signingRequestId",
