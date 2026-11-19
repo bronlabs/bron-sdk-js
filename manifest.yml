@@ -22,5 +22,3 @@ promote:
         pnpm version {{ info.build-version }} --no-git-tag-version &&
         HTTPS_PROXY="$NPM_PUBLISH_PROXY" HTTP_PROXY="$NPM_PUBLISH_PROXY"
         script -qec "pnpm publish --no-git-checks" /dev/null
-      envs:
-        NPM_PUBLISH_PROXY: ""
